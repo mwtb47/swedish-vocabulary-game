@@ -1,1 +1,1 @@
-# swedish-vocabulary-game
+# Swedish Vocabulary Game
