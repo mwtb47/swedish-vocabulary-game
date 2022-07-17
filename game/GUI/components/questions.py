@@ -85,10 +85,8 @@ class Questions:
 
     def _create_retest(self) -> None:
         """Set up game for retesting incorrect answers."""
-        self.game.status.retest = True
-        self.game.settings.word_pairs = list(self.game.status.incorrect_answers) * 2
-        self.game.status.question_number = 0
-        self.game.settings.total_questions = len(self.game.settings.word_pairs)
+        self.game.status.set_up_retest()
+        self.game.settings.set_up_retest(list(self.game.status.incorrect_answers) * 2)
 
     def start_retest(self) -> None:
         """Start retesting incorrect answers."""

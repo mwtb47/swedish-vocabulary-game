@@ -11,6 +11,7 @@ import sqlite3
 import pandas as pd
 
 import GUI
+from game.GUI.components.words import WordPair
 
 
 @dataclass
@@ -58,7 +59,16 @@ class Settings:
         self.call_language = self.translation_direction.split(" ")[0]
         self.response_language = self.translation_direction.split(" ")[2]
         self.translation_direction = 1 if self.response_language == "sv" else 2
-        print("Translation direction", self.response_language, self.translation_direction)
+
+    def set_up_retest(self, incorrect_answers: "list[WordPair]") -> None:
+        """Set up settings for retesting incorrect answers.
+
+        Args:
+            incorrect_answers: List of WordPair objects.
+        """
+        self.word_pairs = incorrect_answers
+        self.n_rounds = 2
+        self.set_question_stats()
 
 
 @dataclass
@@ -89,7 +99,7 @@ class Status:
         marks.to_sql("betyg", connection, if_exists="append", index=False)
         connection.commit()
         connection.close()
-    
+
     def question_number_in_round(self, questions_per_round: int) -> int:
         """Return the question number within the round.
 
@@ -111,3 +121,8 @@ class Status:
             The current round.
         """
         return int(self.question_number // questions_per_round) + 1
+
+    def set_up_retest(self) -> None:
+        """Change retest status and set question number to 0."""
+        self.retest = True
+        self.question_number = 0
