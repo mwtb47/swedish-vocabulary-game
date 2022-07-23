@@ -1,3 +1,5 @@
 *.DS_Store
 __pycache__
 vocabulary.db
+config.py
+*.log
