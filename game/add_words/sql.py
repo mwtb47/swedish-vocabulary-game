@@ -17,7 +17,19 @@ from objects import Adjective, Generic, Noun, Verb, Word
 
 
 class Database:
-    """Class containing methods to add a new word pair to the database."""
+    """Class containing methods to add a new word pair to the database.
+    
+    Args:
+        new_word: Object representing a new word.
+    
+    Attributes:
+        new_word: Object representing a new word.
+        connection: sqlite3 connection to vocabulary database.
+        cursor: Cursor for the connection.
+        words: DataFrame containing data from words table in database.
+        found_duplicate: Boolean indicating if any word pair in word
+            object is already in the database.
+    """
 
     def __init__(self, new_word: Adjective | Generic | Noun | Verb):
         self.new_word = new_word

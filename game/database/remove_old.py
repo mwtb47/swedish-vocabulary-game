@@ -2,7 +2,7 @@
 
 Functions:
     fetch_table: Fetch a table from the database.
-    fetch_words_and_marks: fetch words and marks tables from the database.
+    fetch_words_and_marks: Fetch words and marks tables from the database.
     remove_old_marks: Remove old marks from the table.
     print_summary: Print a summary of what has been removed.
     commit: Commit the new table to the database and close connection.
@@ -21,7 +21,7 @@ def fetch_table(table_name: str) -> pd.DataFrame:
     """Fetch all columns from table.
 
     Args:
-        table_name: name of the table to fetch
+        table_name: The name of the table to fetch.
 
     Returns:
         DataFrame containing all columns from the table.
@@ -32,7 +32,7 @@ def fetch_table(table_name: str) -> pd.DataFrame:
 def fetch_words_and_marks() -> tuple[pd.DataFrame]:
     """Fetch word and marks tables.
 
-    Returns
+    Returns:
         Tuple of DataFrames. The first DataFrame is the words
         table, the second is the marks table.
     """
