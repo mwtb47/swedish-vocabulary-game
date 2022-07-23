@@ -17,7 +17,7 @@ import sqlite3
 
 import pandas as pd
 
-import GUI
+import app
 
 
 def format_text(text: str) -> str:
@@ -74,16 +74,16 @@ class WordPair:
     valid_answers: list[str] = field(init=False, compare=False)
 
     def __post_init__(self) -> None:
-        self._set_question_answer()
-        self._split_question()
-        self._split_answers()
+        self.__set_question_answer()
+        self.__split_question()
+        self.__split_answers()
 
-    def _set_question_answer(self) -> None:
+    def __set_question_answer(self) -> None:
         """Set the question and answer based on the call language."""
         self.question = self.en if self.call_language == "en" else self.sv
         self.answer = self.sv if self.call_language == "en" else self.en
 
-    def _split_question(self) -> None:
+    def __split_question(self) -> None:
         """Select only the first word or phrase option.
 
         Words and phrases can have multiple options where there is
@@ -92,7 +92,7 @@ class WordPair:
         """
         self.question = self.question.split("/")[0]
 
-    def _split_answers(self) -> None:
+    def __split_answers(self) -> None:
         """Create list of valid answers."""
         self.valid_answers = [format_text(text) for text in self.answer.split("/")]
 
@@ -114,7 +114,7 @@ class GameWords:
         unselected_word_groups: DataFrame with randomly selected words.
     """
 
-    def __init__(self, game: GUI.Game) -> None:
+    def __init__(self, game: app.Game) -> None:
         self.game = game
         self.words: pd.DataFrame = None
         self.words_per_group: int = None
@@ -123,24 +123,24 @@ class GameWords:
         self.lowest_frequency: pd.DataFrame = None
         self.unselected_word_groups: pd.DataFrame = None
 
-    def _open_connection(self) -> sqlite3.Connection:
+    def __open_connection(self) -> sqlite3.Connection:
         """Open connection to vocabulary database.
-        
+
         Returns:
             A connection to the vocabulary database.
         """
         return sqlite3.connect("game/database/vocabulary.db")
 
-    def _close_connection(self, connection: sqlite3.Connection) -> None:
+    def __close_connection(self, connection: sqlite3.Connection) -> None:
         """Commit and close connection to vocabulary database.
-        
+
         Args:
             connection: The connection to close.
         """
         connection.commit()
         connection.close()
 
-    def _fetch_words(self) -> None:
+    def __fetch_words(self) -> None:
         """Fetch words from the database.
 
         Raises:
@@ -176,9 +176,9 @@ class GameWords:
                 OT.typ = '{self.game.settings.word_type}'
                 AND OK.kategori = '{self.game.settings.word_category}'
         """
-        connection = self._open_connection()
+        connection = self.__open_connection()
         self.words = pd.read_sql_query(query, connection)
-        self._close_connection(connection)
+        self.__close_connection(connection)
         if len(self.words.index) == 0:
             raise ValueError(
                 (
@@ -187,7 +187,7 @@ class GameWords:
                 )
             )
 
-    def _select_words(self) -> list[int]:
+    def __select_words(self) -> list[int]:
         """Select the words for the game."""
 
         def select_group_word(group: pd.DataFrame) -> pd.Series:
@@ -224,13 +224,13 @@ class GameWords:
         )
         self.word_stats.id = self.word_stats.id.astype(int)
 
-        self._select_lowest_scoring_words()
-        self._select_lowest_frequency_words()
-        stats_words = self._combine_low_score_low_frequency()
-        game_words = self._select_other_words(stats_words)
+        self.__select_lowest_scoring_words()
+        self.__select_lowest_frequency_words()
+        stats_words = self.__combine_low_score_low_frequency()
+        game_words = self.__select_other_words(stats_words)
         return game_words
 
-    def _select_lowest_scoring_words(self) -> None:
+    def __select_lowest_scoring_words(self) -> None:
         """Select the lowest scoring words"""
         self.lowest_scores = (
             self.word_stats[self.word_stats.mean_score_last_3 < 1]
@@ -241,7 +241,7 @@ class GameWords:
             w for w in self.words.ordgrupp if w not in list(self.lowest_scores.ordgrupp)
         ]
 
-    def _select_lowest_frequency_words(self) -> None:
+    def __select_lowest_frequency_words(self) -> None:
         """Select the words answered least often."""
         self.lowest_frequency = (
             self.word_stats[self.word_stats.ordgrupp.isin(self.unselected_word_groups)]
@@ -255,7 +255,7 @@ class GameWords:
             and w not in list(self.lowest_frequency.ordgrupp)
         ]
 
-    def _combine_low_score_low_frequency(self) -> list[int]:
+    def __combine_low_score_low_frequency(self) -> list[int]:
         """Combine lowest score and frequency words, dropping duplicates.
 
         Returns:
@@ -265,7 +265,7 @@ class GameWords:
         lowest_frequency = list(self.lowest_frequency.id)
         return list(set(lowest_scores + lowest_frequency))
 
-    def _select_other_words(self, stats_words: list[int]) -> list[int]:
+    def __select_other_words(self, stats_words: list[int]) -> list[int]:
         """Select remaining words at random.
 
         Args:
@@ -282,7 +282,7 @@ class GameWords:
         remaining_words = list(remaining_words.id.sample(n=sample_size))
         return stats_words + remaining_words
 
-    def _get_word_pair(self, word_id: int) -> WordPair:
+    def __get_word_pair(self, word_id: int) -> WordPair:
         """Create WordPair object for a word.
 
         Args:
@@ -328,9 +328,9 @@ class GameWords:
         Returns:
             List of WordPair objects, one for each word in the game.
         """
-        self._fetch_words()
-        game_words = self._select_words()
-        round_words = [self._get_word_pair(word_id) for word_id in game_words]
+        self.__fetch_words()
+        game_words = self.__select_words()
+        round_words = [self.__get_word_pair(word_id) for word_id in game_words]
         game_words = []
         for _ in range(self.game.settings.n_rounds):
             random.shuffle(round_words)

@@ -8,7 +8,7 @@ import tkinter as tk
 
 import numpy as np
 
-import GUI
+import app
 
 
 class Summary:
@@ -21,7 +21,7 @@ class Summary:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: GUI.Game) -> None:
+    def __init__(self, game: app.Game) -> None:
         self.game = game
 
     def show_summary(self) -> None:
@@ -31,20 +31,20 @@ class Summary:
         mark_label = tk.Label(
             text=f"{round(mark, 1)}%", font="Helvetica 14 bold", width=5
         )
-        score_label.place(x=160, y=170, anchor="c")
-        mark_label.place(x=160, y=200, anchor="c")
-        self._show_incorrect_words()
+        score_label.place(relx=0.2, rely=0.34, anchor="c")
+        mark_label.place(relx=0.2, rely=0.4, anchor="c")
+        self.__show_incorrect_words()
 
-    def _show_incorrect_words(self) -> None:
+    def __show_incorrect_words(self) -> None:
         """Display incorrect answers in a table showing English and Swedish."""
         incorrect_title = tk.Label(
             text="Fel ord/fraser", font="Helvetica 14 bold", anchor="c", width=25
         )
-        incorrect_title.place(x=505, y=115, anchor="c")
+        incorrect_title.place(relx=0.625, rely=0.23, anchor="c")
 
         english = [word_pair.en for word_pair in self.game.status.incorrect_answers]
         swedish = [word_pair.sv for word_pair in self.game.status.incorrect_answers]
         en = tk.Label(text="\n".join(english), justify="right", anchor="e", width=25)
         sv = tk.Label(text="\n".join(swedish), justify="left", anchor="w", width=25)
-        en.place(x=500, y=125, anchor="ne")
-        sv.place(x=510, y=125, anchor="nw")
+        en.place(relx=0.6, rely=0.25, anchor="ne")
+        sv.place(relx=0.65, rely=0.25, anchor="nw")

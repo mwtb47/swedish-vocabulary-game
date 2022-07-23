@@ -6,7 +6,7 @@ Classes:
 
 import tkinter as tk
 
-import GUI
+import app
 
 
 class Buttons:
@@ -19,19 +19,28 @@ class Buttons:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: GUI.Game) -> None:
+    def __init__(self, game: app.Game) -> None:
         self.game = game
 
     def create_next_button(self) -> None:
         """Create button to move on to next question."""
-        next_button = tk.Button(text="Next question", command=self.game.questions.set_question)
-        next_button.place(x=400, y=400, anchor="n", width=150)
+        next_button = tk.Button(
+            text="Next question",
+            command=self.game.questions.set_question,
+            font=("Arial", 16),
+        )
+        next_button.place(relx=0.5, rely=0.85, anchor="n", width=150)
 
     def create_submit_button(self) -> None:
         """Create button to submit answer."""
         self.game.gui.bind("<Return>", self.game.answers.check_answer)
-        submit_button = tk.Button(text="Submit answer", command=self.game.answers.check_answer, name="submitButton")
-        submit_button.place(x=400, y=300, anchor="n", width=150)
+        submit_button = tk.Button(
+            text="Submit answer",
+            command=self.game.answers.check_answer,
+            name="submitButton",
+            font=("Arial", 16),
+        )
+        submit_button.place(relx=0.5, rely=0.85, anchor="n", width=150)
 
     def create_retest_button(self) -> None:
         """Create button to start retesting incorrect answers."""
@@ -40,7 +49,7 @@ class Buttons:
             command=self.game.questions.start_retest,
             name="createRetest",
         )
-        retest_button.place(x=410, y=330, anchor="w", width=250)
+        retest_button.place(relx=0.51, rely=0.8, anchor="w", width=250)
 
     def create_summary_button(self) -> None:
         """Create button to display summary."""
@@ -60,28 +69,28 @@ class Buttons:
             ],
             name="showSummary",
         )
-        summary_button.place(x=390, y=330, anchor="e", width=250)
+        summary_button.place(relx=0.49, rely=0.8, anchor="e", width=250)
 
-    def _create_start_new_game_button(self) -> None:
+    def __create_start_new_game_button(self) -> None:
         """Create button to restart the game."""
         start_new_game_button = tk.Button(
-            text="Start new game", command=self._start_new_game, name="startNewGame"
+            text="Start new game", command=self.__start_new_game, name="startNewGame"
         )
-        start_new_game_button.place(x=390, y=360, anchor="e", width=250)
+        start_new_game_button.place(relx=0.49, rely=0.85, anchor="e", width=250)
 
-    def _create_quit_button(self) -> None:
+    def __create_quit_button(self) -> None:
         """Create button to quit game."""
         quit_button = tk.Button(
             text="Quit game", command=self.game.gui.destroy, name="quitGame"
         )
-        quit_button.place(x=410, y=360, anchor="w", width=250)
+        quit_button.place(relx=0.51, rely=0.85, anchor="w", width=250)
 
     def create_final_buttons(self):
         """Create start new game and quit game buttons."""
-        self._create_start_new_game_button()
-        self._create_quit_button()
+        self.__create_start_new_game_button()
+        self.__create_quit_button()
 
-    def _start_new_game(self):
+    def __start_new_game(self):
         """Clear widgets for new game."""
         self.game.commit_marks()
         self.game.destroy_widgets_except(names=["titleText"])

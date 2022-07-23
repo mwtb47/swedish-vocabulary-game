@@ -7,7 +7,7 @@ Classes:
 import textwrap
 import tkinter as tk
 
-import GUI
+import app
 
 
 class Questions:
@@ -21,7 +21,7 @@ class Questions:
         answer_entry: Entry field for answer.
     """
 
-    def __init__(self, game: GUI.Game) -> None:
+    def __init__(self, game: app.Game) -> None:
         self.game = game
         self.answer_entry: tk.Entry = None
 
@@ -32,7 +32,7 @@ class Questions:
         self.game.window.translation_direction_graphic()
         self.set_question()
 
-    def _prepare_questions_frame(self) -> None:
+    def __prepare_questions_frame(self) -> None:
         """Create submit button, destroy unwanted widgets and update progress."""
         self.game.destroy_widgets_except(names=["titleText", "translationDirection"])
         self.game.buttons.create_submit_button()
@@ -40,14 +40,16 @@ class Questions:
 
     def set_question(self, *args) -> None:
         """Display the question, any hints it has and an answer box."""
-        self._prepare_questions_frame()
-        self._display_hints()
+        self.__prepare_questions_frame()
+        self.__display_hints()
         word_pair = self.game.settings.word_pairs[self.game.status.question_number]
-        question = tk.Label(text=word_pair.question)
-        question.place(x=266, y=150, anchor="n")
-        self.answer_entry = tk.Entry(width=30)
+        question = tk.Label(
+            text=textwrap.fill(text=word_pair.question, width=30), font=("Arial", 24)
+        )
+        question.place(relx=0.4, rely=0.35, anchor="e")
+        self.answer_entry = tk.Entry(width=30, font=("Arial", 24))
         self.answer_entry.focus_set()
-        self.answer_entry.place(x=533, y=150, anchor="n")
+        self.answer_entry.place(relx=0.5, rely=0.35, anchor="w")
 
     def move_to_next(self) -> None:
         """Move on to the next frame."""
@@ -65,25 +67,29 @@ class Questions:
             self.game.buttons.create_next_button()
             self.game.gui.bind("<Return>", self.set_question)
 
-    def _display_hints(self) -> None:
+    def __display_hints(self) -> None:
         """Display grammar and context hints if a word pair has them."""
         word_pair = self.game.settings.word_pairs[self.game.status.question_number]
         hint_count = 0
-        hint_locations = [200, 230]
+        hint_locations = [0.43, 0.5]
 
         if hint := word_pair.grammar_hint:
             text = f"Grammatik: {hint}"
-            grammar_hint = tk.Label(text=textwrap.fill(text=text, width=35))
-            grammar_hint.place(x=266, y=hint_locations[hint_count], anchor="n")
+            grammar_hint = tk.Label(
+                text=textwrap.fill(text=text, width=35), font=("Arial", 16)
+            )
+            grammar_hint.place(relx=0.5, rely=hint_locations[hint_count], anchor="n")
             hint_count += 1
 
         if hint := word_pair.context_hint:
             hints = "\n".join(hint.split("/"))
             text = f"Sammanhang: {hints}"
-            context_hint = tk.Label(text=textwrap.fill(text=text, width=35))
-            context_hint.place(x=266, y=hint_locations[hint_count], anchor="n")
+            context_hint = tk.Label(
+                text=textwrap.fill(text=text, width=35), font=("Arial", 16)
+            )
+            context_hint.place(relx=0.5, rely=hint_locations[hint_count], anchor="n")
 
-    def _create_retest(self) -> None:
+    def __create_retest(self) -> None:
         """Set up game for retesting incorrect answers."""
         self.game.status.set_up_retest()
         self.game.settings.set_up_retest(list(self.game.status.incorrect_answers) * 2)
@@ -94,5 +100,5 @@ class Questions:
             names=["incorrect_title", "mark_label", "score_label", "en", "sv"]
         )
         self.game.window.translation_direction_graphic()
-        self._create_retest()
+        self.__create_retest()
         self.set_question()

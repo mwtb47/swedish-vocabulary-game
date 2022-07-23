@@ -7,7 +7,7 @@ Classes:
 
 import tkinter as tk
 
-import GUI
+import app
 
 
 class Window:
@@ -20,25 +20,25 @@ class Window:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: GUI.Game) -> None:
+    def __init__(self, game: app.Game) -> None:
         self.game = game
 
     def create(self) -> None:
         """Create window and title."""
-        self._create_window()
-        self._create_title()
+        self.__create_window()
+        self.__create_title()
 
-    def _create_window(self) -> None:
+    def __create_window(self) -> None:
         """Set window title and geometry."""
         self.game.gui.title("Vocabulary Game")
-        self.game.gui.geometry("800x400")
+        self.game.gui.geometry("1000x600")
 
-    def _create_title(self) -> None:
+    def __create_title(self) -> None:
         """Create Vocabulary Game title text."""
         title = tk.Label(
-            self.game.gui, text="Vocabulary Game", font=("Arial", 30), name="titleText"
+            self.game.gui, text="Vocabulary Game", font=("Arial", 45), name="titleText"
         )
-        title.place(x=400, y=10, anchor="n")
+        title.place(relx=0.5, rely=0.025, anchor="n")
 
     def translation_direction_graphic(self) -> None:
         """Create the translation direction graphic."""
@@ -49,7 +49,7 @@ class Window:
         translation_direction_label = tk.Label(
             text=text, font=("Arial", 40), name="translationDirection"
         )
-        translation_direction_label.place(x=400, y=50, anchor="n")
+        translation_direction_label.place(relx=0.5, rely=0.125, anchor="n")
 
     def display_progress(self) -> None:
         """Display the question number and round number."""

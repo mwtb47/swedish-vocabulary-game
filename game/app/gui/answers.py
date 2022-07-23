@@ -8,7 +8,7 @@ import tkinter as tk
 from time import time
 import webbrowser
 
-import GUI
+import app
 
 
 class Answers:
@@ -21,19 +21,19 @@ class Answers:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: GUI.Game) -> None:
+    def __init__(self, game: app.Game) -> None:
         self.game = game
 
     def check_answer(self, *args) -> None:
         """Check the answers against the list of valid answers."""
         word_pair = self.game.settings.word_pairs[self.game.status.question_number]
-        formatted_answer = GUI.format_text(self.game.questions.answer_entry.get())
+        formatted_answer = app.format_text(self.game.questions.answer_entry.get())
         if formatted_answer in word_pair.valid_answers:
             mark = 1
             answer_description = "✅ Correct"
         else:
             mark = 0
-            answer_description = f"❌ Incorrect\nCorrect answer: {word_pair.answer}"
+            answer_description = f"❌ Incorrect\n\nCorrect answer: {word_pair.answer}"
             if not self.game.status.retest:
                 self.game.status.incorrect_answers.add(word_pair)
 
@@ -43,15 +43,15 @@ class Answers:
         self.game.status.question_number += 1
         self.game.questions.move_to_next()
 
-    def display_answer_check(self, word_pair: "GUI.WordPair", description: str) -> None:
+    def display_answer_check(self, word_pair: "app.WordPair", description: str) -> None:
         """Display if answer is correct or not plus a link to Wiktionary entry."""
-        answer_indicator = tk.Label(text=description)
-        answer_indicator.place(x=400, y=250, anchor="n")
+        answer_indicator = tk.Label(text=description, font=("Arial", 22))
+        answer_indicator.place(relx=0.5, rely=0.55, anchor="n")
         self.game.destroy_widgets(names=["submitButton"])
         if word_pair.wiktionary_link:
-            self._create_wiktionary_link(word_pair)
+            self.__create_wiktionary_link(word_pair)
 
-    def _create_wiktionary_link(self, word_pair: "GUI.WordPair") -> None:
+    def __create_wiktionary_link(self, word_pair: "app.WordPair") -> None:
         """Create a link to the Wiktionary entry for a word if it has one."""
 
         def callback(url: str):
@@ -60,9 +60,9 @@ class Answers:
         link = word_pair.wiktionary_link
         link_text = f"Wiktionary SV: {link.split('/')[-1]}"
         wiktionary_link = tk.Label(
-            text=link_text, font="Helvetica 12 underline", fg="DeepSkyBlue2"
+            text=link_text, font="Helvetica 18 underline", fg="DeepSkyBlue2"
         )
-        wiktionary_link.place(x=400, y=290, anchor="n")
+        wiktionary_link.place(relx=0.5, rely=0.7, anchor="n")
         wiktionary_link.bind("<Button-1>", lambda e: callback(link))
 
     def add_mark(self, word_id: int, mark: int) -> None:

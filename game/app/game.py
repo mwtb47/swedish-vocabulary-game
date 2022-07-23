@@ -6,15 +6,15 @@ Classes:
 
 import tkinter as tk
 
-import GUI
+import app
 
 
 class Game:
-    """The base class for the translation game GUI.
-    
+    """The base class for the translation game gui.
+
     Args:
         no_commit: Boolean denoting whether marks are committed to database.
-    
+
     Attributes:
         no_commit: Boolean denoting whether marks are committed to database.
         gui: tkinter top level widget.
@@ -31,8 +31,12 @@ class Game:
 
     def __init__(self, no_commit: bool) -> None:
         self.no_commit = no_commit
+        self.__initiate_game()
+
+    def __initiate_game(self):
+        """Create top level widget, game window and call method to start game."""
         self.gui = tk.Tk()
-        self.window = GUI.Window(self)
+        self.window = app.Window(self)
         self.window.create()
         self.start()
 
@@ -43,14 +47,14 @@ class Game:
         menu and wait for the user to select the options. Then set the
         first question.
         """
-        self.settings = GUI.Settings()
-        self.status = GUI.Status()
-        self.answers = GUI.Answers(self)
-        self.buttons = GUI.Buttons(self)
-        self.game_words = GUI.GameWords(self)
-        self.menu = GUI.Menu(self)
-        self.questions = GUI.Questions(self)
-        self.summary = GUI.Summary(self)
+        self.settings = app.Settings()
+        self.status = app.Status()
+        self.answers = app.Answers(self)
+        self.buttons = app.Buttons(self)
+        self.game_words = app.GameWords(self)
+        self.menu = app.Menu(self)
+        self.questions = app.Questions(self)
+        self.summary = app.Summary(self)
         self.menu.create()
         self.menu.submit_values_button.wait_variable(self.menu.values_set_indicator)
         self.questions.initialise()
@@ -68,7 +72,7 @@ class Game:
         """Destroy all widgets in the window which are in names list.
 
         Args:
-            names: list of widget names to destroy
+            names: List of widget names to destroy.
         """
         for widget in self.gui.winfo_children():
             if widget.winfo_name() in names:
@@ -78,7 +82,7 @@ class Game:
         """Destroy all widgets in the window except for those in names list.
 
         Args:
-            names: list of widget names to not destroy
+            names: List of widget names to not destroy.
         """
         for widget in self.gui.winfo_children():
             if widget.winfo_name() not in names:

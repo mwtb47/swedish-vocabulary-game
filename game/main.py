@@ -1,4 +1,4 @@
-"""Run the translation game.
+"""Script to run the translation game.
 
 This script runs the translation game with the option of not
 committing the marks to the database at the end of the game.
@@ -12,7 +12,7 @@ Functions:
 
 import argparse
 
-import GUI
+import app
 
 
 def main() -> None:
@@ -26,8 +26,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    game = GUI.Game(args.no_commit)
-    #game.start()
+    game = app.Game(args.no_commit)
     game.run()
     game.commit_marks()
 

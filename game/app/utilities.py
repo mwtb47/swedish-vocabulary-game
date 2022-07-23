@@ -10,8 +10,7 @@ import sqlite3
 
 import pandas as pd
 
-import GUI
-from game.GUI.components.words import WordPair
+import app
 
 
 @dataclass
@@ -46,7 +45,7 @@ class Settings:
     translation_direction: int = field(init=False)
     questions_per_round: int = field(init=False)
     total_questions: int = field(init=False)
-    word_pairs: "list[GUI.WordPair]" = field(init=False)
+    word_pairs: "list[app.WordPair]" = field(init=False)
 
     def set_question_stats(self) -> None:
         """Set the total number of question and questions per round."""
@@ -60,7 +59,7 @@ class Settings:
         self.response_language = self.translation_direction.split(" ")[2]
         self.translation_direction = 1 if self.response_language == "sv" else 2
 
-    def set_up_retest(self, incorrect_answers: "list[WordPair]") -> None:
+    def set_up_retest(self, incorrect_answers: "list[app.WordPair]") -> None:
         """Set up settings for retesting incorrect answers.
 
         Args:
@@ -82,7 +81,7 @@ class Status:
         retest: A boolean indicating if game is in normal or retest mode.
     """
 
-    incorrect_answers: "set[GUI.WordPair]" = field(default_factory=set)
+    incorrect_answers: "set[app.WordPair]" = field(default_factory=set)
     marks: list[int] = field(default_factory=list)
     question_number: int = 0
     retest: bool = False
