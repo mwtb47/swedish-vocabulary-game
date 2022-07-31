@@ -19,6 +19,7 @@ class WordPair:
     Attributes:
         en: Word or phrase in English.
         sv: Word of phrase in Swedish.
+        grammar_id: See table_summaries.txt for grammar ids.
     """
 
     en: str
@@ -88,12 +89,36 @@ class Adjective:
 
 
 @dataclass
+class Adverb:
+    """Dataclass to represent a generic word or phrase.
+
+    Attributes:
+        word: WordPair object containing word of phrase.
+        word_type: See table_summaries.txt for word types.
+        word_category: See table_summaries.txt for word categories.
+        context_hint: Hint to be displayed under the question.
+            Defaults to None.
+        wiktionary_link: Link to wiktionary page. Defaults to
+            None.
+    """
+
+    word: WordPair
+    word_type: int = 7
+    word_category: int = 1
+    context_hint: str | None = None
+    wiktionary_link: str | None = None
+
+    def __post_init__(self) -> None:
+        self.word.grammar_id = 0
+        self.word_list = [self.word]
+
+
+@dataclass
 class Generic:
     """Dataclass to represent a generic word or phrase.
 
     Attributes:
         word_phrase: WordPair object containing word of phrase.
-        grammar_id: See table_summaries.txt for grammar ids.
         word_type: See table_summaries.txt for word types.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.

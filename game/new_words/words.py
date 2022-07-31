@@ -10,7 +10,7 @@ I always came back to adding words here due to the multi-cursor and
 editing features of VS code making it much faster.
 """
 
-from objects import Adjective, Generic, Noun, Verb, WordPair
+from objects import *
 
 
 words_phrases = [
@@ -20,6 +20,10 @@ words_phrases = [
     #     plural=       WordPair(en="", sv=""),
     #     comparative=  WordPair(en="", sv=""),
     #     superlative=  WordPair(en="", sv="")
+    # ),
+    #
+    # Adverb(
+    #     word=WordPair(en="", sv=""),
     # ),
     #
     # Noun(

@@ -23,18 +23,19 @@ import sqlite3
 import pandas as pd
 import numpy as np
 
-from objects import Adjective, Generic, Noun, Verb, WordPair
+from objects import *
 from words import words_phrases
 
 
 @dataclass
 class Counter:
     adjectives: int = 0
+    adverbs: int = 0
     nouns: int = 0
     verbs: int = 0
     words: int = 0
 
-    def tick(self, word: Adjective | Generic | Noun | Verb):
+    def tick(self, word: Adjective | Adverb | Generic | Noun | Verb):
         """Increase count of word object type.
 
         Args:
@@ -43,6 +44,8 @@ class Counter:
         match word:
             case Adjective():
                 self.adjectives += 1
+            case Adverb():
+                self.adverbs += 1
             case Generic():
                 self.words += 1
             case Noun():
@@ -56,6 +59,7 @@ class Counter:
             (
                 "Number of entries added:\n"
                 f"Adjectives - {self.adjectives}\n"
+                f"Adverbs - {self.adverbs}\n"
                 f"Nouns - {self.nouns}\n"
                 f"Verbs - {self.verbs}\n"
                 f"Generic - {self.words}"
