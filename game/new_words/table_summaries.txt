@@ -25,6 +25,7 @@ id  kategori
  9  partikelverb
 10  kläder
 11  datorspråk
+12  vetenskap
 
 
 grammatik

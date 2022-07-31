@@ -70,7 +70,7 @@ def main() -> None:
         df = fetch_table(table_name)
         strings.append(table_to_string(df, table_name))
 
-    with open("game/add_words/table_summaries.txt", "w", encoding="utf-8") as file:
+    with open("game/new_words/table_summaries.txt", "w", encoding="utf-8") as file:
         file.write("\n\n\n".join(strings))
 
 

@@ -1,7 +1,7 @@
 """Module containing word type dataclasses.
 
 Classes:
-    Word: A dataclass to represent an English and Swedish version
+    WordPair: A dataclass to represent the English and Swedish version
         of a word or phrase.
     Adjective: A dataclass to represent adjectives.
     Generic: A dataclass to represent generic words or phrases.
@@ -13,12 +13,12 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Word:
-    """Dataclass to represent a word or phrase.
+class WordPair:
+    """Dataclass to represent a word or phrase pair.
 
     Attributes:
-        en: Word or phrase in English
-        sv: Word of phrase in Swedish
+        en: Word or phrase in English.
+        sv: Word of phrase in Swedish.
     """
 
     en: str
@@ -31,15 +31,15 @@ class Adjective:
     """Dataclass to represent an adjective.
 
     Attributes:
-        neuter: Word object containing neuter form of adjective.
+        neuter: WordPair object containing neuter form of adjective.
             Defaults to None.
-        common_gender: Word object containing common gender form
+        common_gender: WordPair object containing common gender form
             of adjective. Defaults to None.
-        comparative: Word object containing comparative form of
+        comparative: WordPair object containing comparative form of
             adjective. Defaults to None.
-        superlative: Word object containing superlative form of
+        superlative: WordPair object containing superlative form of
             adjective. Defaults to None.
-        plural: Word object containing plural form of
+        plural: WordPair object containing plural form of
             adjective. Defaults to None.
         word_type: See table_summaries.txt for word types.
         word_category: See table_summaries.txt for word categories.
@@ -49,13 +49,11 @@ class Adjective:
             None.
     """
 
-    # pylint: disable=too-many-instance-attributes
-
-    common_gender: Word | None = None
-    neuter: Word | None = None
-    plural: Word | None = None
-    comparative: Word | None = None
-    superlative: Word | None = None
+    common_gender: WordPair | None = None
+    neuter: WordPair | None = None
+    plural: WordPair | None = None
+    comparative: WordPair | None = None
+    superlative: WordPair | None = None
     word_type: int = 3
     word_category: int = 1
     context_hint: str | None = None
@@ -94,7 +92,7 @@ class Generic:
     """Dataclass to represent a generic word or phrase.
 
     Attributes:
-        word_phrase: Word object containing word of phrase.
+        word_phrase: WordPair object containing word of phrase.
         grammar_id: See table_summaries.txt for grammar ids.
         word_type: See table_summaries.txt for word types.
         word_category: See table_summaries.txt for word categories.
@@ -104,7 +102,7 @@ class Generic:
             None.
     """
 
-    word_phrase: Word
+    word_phrase: WordPair
     word_type: int
     word_category: int
     context_hint: str | None = None
@@ -119,13 +117,13 @@ class Noun:
     """Dataclass to represent a noun.
 
     Attributes:
-        indefinite_singular: Word object containing indefinite
+        indefinite_singular: WordPair object containing indefinite
             singular form of adjective. Defaults to None.
-        indefinite_plural: Word object containing indefinite
+        indefinite_plural: WordPair object containing indefinite
             plural form of adjective. Defaults to None.
-        definite_singular: Word object containing definite
+        definite_singular: WordPair object containing definite
             singular form of adjective. Defaults to None.
-        definite_plural: Word object containing definite
+        definite_plural: WordPair object containing definite
             plural form of adjective. Defaults to None.
         word_type: See table_summaries.txt for word types.
             Defaults to 1.
@@ -137,12 +135,10 @@ class Noun:
             None.
     """
 
-    # pylint: disable=too-many-instance-attributes
-
-    indefinite_singular: Word | None = None
-    indefinite_plural: Word | None = None
-    definite_singular: Word | None = None
-    definite_plural: Word | None = None
+    indefinite_singular: WordPair | None = None
+    indefinite_plural: WordPair | None = None
+    definite_singular: WordPair | None = None
+    definite_plural: WordPair | None = None
     word_type: int = 1
     word_category: int = 1
     context_hint: str | None = None
@@ -178,15 +174,15 @@ class Verb:
     """Dataclass to represent a verb.
 
     Attributes:
-        infinitive: Word object containing verb in infinitive form.
+        infinitive: WordPair object containing verb in infinitive form.
             Defaults to None.
-        present: Word object containing verb in present tense form.
+        present: WordPair object containing verb in present tense form.
             Defaults to None.
-        past_simple: Word object containing verb in past simple
+        past_simple: WordPair object containing verb in past simple
             tense form. Defaults to None.
-        past_participle: Word object containing verb in past
+        past_participle: WordPair object containing verb in past
             participle tense form. Defaults to None.
-        imperative: Word object containing verb in imperative form.
+        imperative: WordPair object containing verb in imperative form.
             Defaults to None.
         word_type: See table_summaries.txt for word types.
             Defaults to 2.
@@ -198,13 +194,11 @@ class Verb:
             None.
     """
 
-    # pylint: disable=too-many-instance-attributes
-
-    infinitive: Word | None = None
-    present: Word | None = None
-    past_simple: Word | None = None
-    past_participle: Word | None = None
-    imperative: Word | None = None
+    infinitive: WordPair | None = None
+    present: WordPair | None = None
+    past_simple: WordPair | None = None
+    past_participle: WordPair | None = None
+    imperative: WordPair | None = None
     word_type: int = 2
     word_category: int = 1
     context_hint: str | None = None
