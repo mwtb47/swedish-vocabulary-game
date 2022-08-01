@@ -95,13 +95,14 @@ class Adjective(Word):
 
     def create_word_list(self):
         """Create a list of words."""
-        self.word_list = [
+        word_pairs = [
             self.common_gender,
             self.neuter,
             self.plural,
             self.comparative,
             self.superlative,
         ]
+        self.word_list = [wp for wp in word_pairs if wp is not None]
 
 
 @dataclass(kw_only=True)
@@ -193,12 +194,13 @@ class Noun(Word):
 
     def create_word_list(self):
         """Create a list of words."""
-        self.word_list = [
+        word_pairs = [
             self.indefinite_singular,
             self.indefinite_plural,
             self.definite_singular,
             self.definite_plural,
         ]
+        self.word_list = [wp for wp in word_pairs if wp is not None]
 
 
 @dataclass
@@ -252,10 +254,11 @@ class Verb(Word):
 
     def create_word_list(self):
         """Create a list of words."""
-        self.word_list = [
+        word_pairs = [
             self.infinitive,
             self.present,
             self.past_simple,
             self.past_participle,
             self.imperative,
         ]
+        self.word_list = [wp for wp in word_pairs if wp is not None]

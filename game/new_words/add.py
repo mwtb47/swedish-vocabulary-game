@@ -216,7 +216,6 @@ def add_new_word(word_object: Adjective | Adverb | Generic | Noun | Verb) -> Non
         word_object: The word object to add.
     """
     found_duplicate = False
-    word_object.word_list = [w for w in word_object.word_list if w is not None]
     ordgrupp = get_next_attribute_id("ordgrupp")
     for word_pair in word_object.word_list:
         if check_not_duplicated(word_pair):
