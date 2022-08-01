@@ -3,6 +3,7 @@
 Classes:
     WordPair: A dataclass to represent the English and Swedish version
         of a word or phrase.
+    Word: Base class for all types of word objects.
     Adjective: A dataclass to represent adjectives.
     Adverb: A dataclass to represent adverbs.
     Generic: A dataclass to represent generic words or phrases.
@@ -25,11 +26,28 @@ class WordPair:
 
     en: str
     sv: str
-    grammar_id: str | None = None
+    grammar_id: int = 0
 
 
 @dataclass
-class Adjective:
+class Word:
+    """Base class for a word object.
+
+    Attributes:
+        word_category: See table_summaries.txt for word categories.
+        context_hint: Hint to be displayed under the question.
+            Defaults to None.
+        wiktionary_link: Link to wiktionary page. Defaults to
+            None.
+    """
+
+    word_category: int = 1
+    context_hint: str | None = None
+    wiktionary_link: str | None = None
+
+
+@dataclass
+class Adjective(Word):
     """Dataclass to represent an adjective.
 
     Attributes:
@@ -57,9 +75,6 @@ class Adjective:
     comparative: WordPair | None = None
     superlative: WordPair | None = None
     word_type: int = 3
-    word_category: int = 1
-    context_hint: str | None = None
-    wiktionary_link: str | None = None
 
     def __post_init__(self) -> None:
         self.assign_grammar_ids()
@@ -89,8 +104,8 @@ class Adjective:
         ]
 
 
-@dataclass
-class Adverb:
+@dataclass(kw_only=True)
+class Adverb(Word):
     """Dataclass to represent a generic word or phrase.
 
     Attributes:
@@ -105,17 +120,14 @@ class Adverb:
 
     word: WordPair
     word_type: int = 7
-    word_category: int = 1
-    context_hint: str | None = None
-    wiktionary_link: str | None = None
 
     def __post_init__(self) -> None:
         self.word.grammar_id = 0
         self.word_list = [self.word]
 
 
-@dataclass
-class Generic:
+@dataclass(kw_only=True)
+class Generic(Word):
     """Dataclass to represent a generic word or phrase.
 
     Attributes:
@@ -130,16 +142,13 @@ class Generic:
 
     word_phrase: WordPair
     word_type: int
-    word_category: int
-    context_hint: str | None = None
-    wiktionary_link: str | None = None
 
     def __post_init__(self) -> None:
         self.word_list = [self.word_phrase]
 
 
 @dataclass
-class Noun:
+class Noun(Word):
     """Dataclass to represent a noun.
 
     Attributes:
@@ -166,9 +175,6 @@ class Noun:
     definite_singular: WordPair | None = None
     definite_plural: WordPair | None = None
     word_type: int = 1
-    word_category: int = 1
-    context_hint: str | None = None
-    wiktionary_link: str | None = None
 
     def __post_init__(self) -> None:
         self.assign_grammar_ids()
@@ -196,7 +202,7 @@ class Noun:
 
 
 @dataclass
-class Verb:
+class Verb(Word):
     """Dataclass to represent a verb.
 
     Attributes:
@@ -226,9 +232,6 @@ class Verb:
     past_participle: WordPair | None = None
     imperative: WordPair | None = None
     word_type: int = 2
-    word_category: int = 1
-    context_hint: str | None = None
-    wiktionary_link: str | None = None
 
     def __post_init__(self) -> None:
         self.assign_grammar_ids()
