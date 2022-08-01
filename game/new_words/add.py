@@ -191,7 +191,7 @@ def add_wiktionary_link(ordgrupp: int, wiktionary_link: str) -> None:
 
 
 def add_hint_and_link(
-    word_object: Adjective | Generic | Noun | Verb, ordgrupp: int
+    word_object: Adjective | Adverb | Generic | Noun | Verb, ordgrupp: int
 ) -> None:
     """Add context hint and Wiktionary link to database.
 
@@ -204,7 +204,7 @@ def add_hint_and_link(
         add_wiktionary_link(ordgrupp, word_object.wiktionary_link)
 
 
-def add_new_word(word_object: Adjective | Generic | Noun | Verb) -> None:
+def add_new_word(word_object: Adjective | Adverb | Generic | Noun | Verb) -> None:
     """Add new word pairs to the database.
 
     For each word pair in the word group, check if the pair is already
@@ -236,7 +236,7 @@ def add_new_word(word_object: Adjective | Generic | Noun | Verb) -> None:
         add_hint_and_link(word_object, ordgrupp)
 
 
-def add_words(words_phrases: list[Adjective | Generic | Noun | Verb]) -> None:
+def add_words(words_phrases: list[Adjective | Adverb | Generic | Noun | Verb]) -> None:
     """Add words.
 
     Args:

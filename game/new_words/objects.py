@@ -4,6 +4,7 @@ Classes:
     WordPair: A dataclass to represent the English and Swedish version
         of a word or phrase.
     Adjective: A dataclass to represent adjectives.
+    Adverb: A dataclass to represent adverbs.
     Generic: A dataclass to represent generic words or phrases.
     Noun: A dataclass to represent nouns.
     Verb: A dataclass to represent verbs.
