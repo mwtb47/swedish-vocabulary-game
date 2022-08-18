@@ -6,7 +6,7 @@ Classes:
 
 import tkinter as tk
 
-import app
+from app import Game
 
 
 class Buttons:
@@ -19,7 +19,7 @@ class Buttons:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: app.Game) -> None:
+    def __init__(self, game: Game) -> None:
         self.game = game
 
     def create_next_button(self) -> None:

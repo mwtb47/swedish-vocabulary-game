@@ -26,38 +26,40 @@ class Answers:
 
     def check_answer(self, *args) -> None:
         """Check the answers against the list of valid answers."""
-        word_pair = self.game.settings.word_pairs[self.game.status.question_number]
+        # word_pair = self.game.settings.word_pairs[self.game.status.question_number]
         formatted_answer = app.format_text(self.game.questions.answer_entry.get())
-        if formatted_answer in word_pair.valid_answers:
+        if formatted_answer in self.game.settings.current_word_pair.valid_answers:
             mark = 1
             answer_description = "✅ Correct"
         else:
             mark = 0
-            answer_description = f"❌ Incorrect\n\nCorrect answer: {word_pair.answer}"
+            answer_description = f"❌ Incorrect\n\nCorrect answer: {self.game.settings.current_word_pair.answer}"
             if not self.game.status.retest:
-                self.game.status.incorrect_answers.add(word_pair)
+                self.game.status.incorrect_answers.add(
+                    self.game.settings.current_word_pair
+                )
 
-        self.display_answer_check(word_pair, answer_description)
-        self.add_mark(word_pair.id, mark)
+        self.display_answer_check(answer_description)
+        self.add_mark(mark)
 
         self.game.status.question_number += 1
         self.game.questions.move_to_next()
 
-    def display_answer_check(self, word_pair: "app.WordPair", description: str) -> None:
+    def display_answer_check(self, description: str) -> None:
         """Display if answer is correct or not plus a link to Wiktionary entry."""
         answer_indicator = tk.Label(text=description, font=("Arial", 22))
         answer_indicator.place(relx=0.5, rely=0.55, anchor="n")
         self.game.destroy_widgets(names=["submitButton"])
-        if word_pair.wiktionary_link:
-            self.__create_wiktionary_link(word_pair)
+        if self.game.settings.current_word_pair.wiktionary_link:
+            self.__create_wiktionary_link()
 
-    def __create_wiktionary_link(self, word_pair: "app.WordPair") -> None:
+    def __create_wiktionary_link(self) -> None:
         """Create a link to the Wiktionary entry for a word if it has one."""
 
         def callback(url: str):
             webbrowser.open_new(url)
 
-        link = word_pair.wiktionary_link
+        link = self.game.settings.current_word_pair.wiktionary_link
         link_text = f"Wiktionary SV: {link.split('/')[-1]}"
         wiktionary_link = tk.Label(
             text=link_text, font="Helvetica 18 underline", fg="DeepSkyBlue2"
@@ -65,17 +67,16 @@ class Answers:
         wiktionary_link.place(relx=0.5, rely=0.7, anchor="n")
         wiktionary_link.bind("<Button-1>", lambda e: callback(link))
 
-    def add_mark(self, word_id: int, mark: int) -> None:
+    def add_mark(self, mark: int) -> None:
         """Add mark to marklist if not during retest.
 
         Args:
-            word_id: The word_id of the word to add.
             mark: 1 if correct, 0 if incorrect.
         """
         if not self.game.status.retest:
             self.game.status.marks.append(
                 {
-                    "ord_id": word_id,
+                    "ord_id": self.game.settings.current_word_pair.id,
                     "betyg": mark,
                     "översättningsriktning": self.game.settings.translation_direction,
                     "tidsstämpel": time(),

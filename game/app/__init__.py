@@ -1,3 +1,4 @@
+from app.exceptions import NoWordsError
 from app.game import Game
 from app.utilities import Settings, Status
 from app.gui.answers import Answers

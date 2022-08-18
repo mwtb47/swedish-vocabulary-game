@@ -7,7 +7,7 @@ Classes:
 import textwrap
 import tkinter as tk
 
-import app
+from app import Game
 
 
 class Questions:
@@ -21,13 +21,12 @@ class Questions:
         answer_entry: Entry field for answer.
     """
 
-    def __init__(self, game: app.Game) -> None:
+    def __init__(self, game: Game) -> None:
         self.game = game
         self.answer_entry: tk.Entry = None
 
     def initialise(self) -> None:
         """Prepare game for qustions and then set the first question."""
-        self.game.settings.word_pairs = self.game.game_words.return_word_pairs()
         self.game.settings.set_question_stats()
         self.game.window.translation_direction_graphic()
         self.set_question()
@@ -41,10 +40,13 @@ class Questions:
     def set_question(self, *args) -> None:
         """Display the question, any hints it has and an answer box."""
         self.__prepare_questions_frame()
+        self.game.settings.set_current_word_pair(self.game.status.question_number)
         self.__display_hints()
-        word_pair = self.game.settings.word_pairs[self.game.status.question_number]
         question = tk.Label(
-            text=textwrap.fill(text=word_pair.question, width=30), font=("Arial", 24)
+            text=textwrap.fill(
+                text=self.game.settings.current_word_pair.question, width=30
+            ),
+            font=("Arial", 24),
         )
         question.place(relx=0.4, rely=0.35, anchor="e")
         self.answer_entry = tk.Entry(width=30, font=("Arial", 24))
@@ -55,13 +57,10 @@ class Questions:
         """Move on to the next frame."""
         if self.game.status.question_number == self.game.settings.total_questions:
             self.game.gui.unbind("<Return>")
-            if self.game.status.retest:
-                pass
-            elif len(self.game.status.incorrect_answers) == 0:
+            if not self.game.status.retest:
                 self.game.buttons.create_summary_button()
-            else:
-                self.game.buttons.create_summary_button()
-                self.game.buttons.create_retest_button()
+                if self.game.status.incorrect_answers:
+                    self.game.buttons.create_retest_button()
             self.game.buttons.create_final_buttons()
         else:
             self.game.buttons.create_next_button()
@@ -69,11 +68,10 @@ class Questions:
 
     def __display_hints(self) -> None:
         """Display grammar and context hints if a word pair has them."""
-        word_pair = self.game.settings.word_pairs[self.game.status.question_number]
         hint_count = 0
         hint_locations = [0.43, 0.5]
 
-        if hint := word_pair.grammar_hint:
+        if hint := self.game.settings.current_word_pair.grammar_hint:
             text = f"Grammatik: {hint}"
             grammar_hint = tk.Label(
                 text=textwrap.fill(text=text, width=35), font=("Arial", 16)
@@ -81,7 +79,7 @@ class Questions:
             grammar_hint.place(relx=0.5, rely=hint_locations[hint_count], anchor="n")
             hint_count += 1
 
-        if hint := word_pair.context_hint:
+        if hint := self.game.settings.current_word_pair.context_hint:
             hints = "\n".join(hint.split("/"))
             text = f"Sammanhang: {hints}"
             context_hint = tk.Label(

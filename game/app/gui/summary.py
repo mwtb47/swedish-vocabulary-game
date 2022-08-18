@@ -8,7 +8,7 @@ import tkinter as tk
 
 import numpy as np
 
-import app
+from app import Game
 
 
 class Summary:
@@ -21,7 +21,7 @@ class Summary:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: app.Game) -> None:
+    def __init__(self, game: Game) -> None:
         self.game = game
 
     def show_summary(self) -> None:

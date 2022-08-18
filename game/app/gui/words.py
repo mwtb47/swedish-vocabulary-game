@@ -17,7 +17,7 @@ import sqlite3
 
 import pandas as pd
 
-import app
+from app import Game, NoWordsError
 
 
 def format_text(text: str) -> str:
@@ -114,7 +114,7 @@ class GameWords:
         unselected_word_groups: DataFrame with randomly selected words.
     """
 
-    def __init__(self, game: app.Game) -> None:
+    def __init__(self, game: Game) -> None:
         self.game = game
         self.words: pd.DataFrame = None
         self.words_per_group: int = None
@@ -144,9 +144,13 @@ class GameWords:
         """Fetch words from the database.
 
         Raises:
-            ValueError: If no words are available for the selected
-                word_type and word_category combination.
+            NoWordsError: No words are available for the selected
+                word_types and word_categories combination.
         """
+        word_types = ", ".join(f"'{s}'" for s in self.game.settings.word_types)
+        word_categories = ", ".join(
+            f"'{s}'" for s in self.game.settings.word_categories
+        )
         query = f"""
             SELECT 
                 O.id,
@@ -173,19 +177,14 @@ class GameWords:
             LEFT JOIN wiktionary W 
                 ON O.ordgrupp = W.ordgrupp
             WHERE 
-                OT.typ = '{self.game.settings.word_type}'
-                AND OK.kategori = '{self.game.settings.word_category}'
+                OT.typ IN ({word_types})
+                AND OK.kategori IN ({word_categories})
         """
         connection = self.__open_connection()
         self.words = pd.read_sql_query(query, connection)
         self.__close_connection(connection)
         if len(self.words.index) == 0:
-            raise ValueError(
-                (
-                    f"There are no words for word type {self.game.settings.word_type}, "
-                    f"and word category {self.game.settings.word_category}"
-                )
-            )
+            raise NoWordsError
 
     def __select_words(self) -> list[int]:
         """Select the words for the game."""
@@ -203,10 +202,10 @@ class GameWords:
 
             Returns:
                 Pandas series with:
-                    - the selected word.
-                    - the number of times the word has been answered.
-                    - the mean score.
-                    - the mean score for the previous 3 answers.
+                    : the selected word.
+                    : the number of times the word has been answered.
+                    : the mean score.
+                    : the mean score for the previous 3 answers.
             """
             selected_word = group.id.sample(n=1).values[0]
             group = group[group.id == selected_word]

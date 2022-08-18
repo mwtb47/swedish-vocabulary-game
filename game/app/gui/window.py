@@ -7,7 +7,7 @@ Classes:
 
 import tkinter as tk
 
-import app
+from app import Game
 
 
 class Window:
@@ -20,7 +20,7 @@ class Window:
         game: Game class containing all game components.
     """
 
-    def __init__(self, game: app.Game) -> None:
+    def __init__(self, game: Game) -> None:
         self.game = game
 
     def create(self) -> None:

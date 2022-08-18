@@ -25,20 +25,21 @@ class Settings:
     Attributes:
         n_words: The number of words per round.
         n_rounds: The number of rounds.
-        word_type: The word type chosen for the game.
-        word_category: The word category chosen for the game.
+        word_types: The word types chosen for the game.
+        word_categories: The word categories chosen for the game.
         translation_direction: 'en to sv' or 'sv to en'.
         call_language: The language of the question.
         response_language: The language of the response.
         translation_direction: Integer representation for database.
         total_questions: The number of questions.
         word_pairs: A list of WordPair objects.
+        current_word_pair: The current WordPair object.
     """
 
     n_words: int = field(init=False)
     n_rounds: int = field(init=False)
-    word_type: str = field(init=False)
-    word_category: str = field(init=False)
+    word_types: list[str] = field(init=False)
+    word_categories: list[str] = field(init=False)
     translation_direction: str = field(init=False)
     call_language: str = field(init=False)
     response_language: str = field(init=False)
@@ -46,6 +47,7 @@ class Settings:
     questions_per_round: int = field(init=False)
     total_questions: int = field(init=False)
     word_pairs: "list[app.WordPair]" = field(init=False)
+    current_word_pair: "app.WordPair" = field(init=False)
 
     def set_question_stats(self) -> None:
         """Set the total number of question and questions per round."""
@@ -68,6 +70,14 @@ class Settings:
         self.word_pairs = incorrect_answers
         self.n_rounds = 2
         self.set_question_stats()
+
+    def set_current_word_pair(self, question_number: int) -> None:
+        """Set the current word pair.
+
+        Args:
+            question_number: Current question number.
+        """
+        self.current_word_pair = self.word_pairs[question_number]
 
 
 @dataclass
