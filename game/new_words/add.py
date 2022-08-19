@@ -22,8 +22,9 @@ import sqlite3
 
 import pandas as pd
 import numpy as np
+from game.new_words.enums import WordCategory, WordType
 
-from objects import *
+from objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 from words import words_phrases
 
 
@@ -119,7 +120,11 @@ def check_not_duplicated(word_pair: WordPair) -> bool:
 
 
 def add_word_info(
-    id_: int, word_type: int, word_category: int, ordgrupp: int, word_pair: WordPair
+    id_: int,
+    word_type: WordType,
+    word_category: WordCategory,
+    ordgrupp: int,
+    word_pair: WordPair,
 ) -> None:
     """Add word information to the word table.
 
@@ -146,10 +151,10 @@ def add_word_info(
         id_,
         word_pair.en,
         word_pair.sv,
-        word_type,
-        word_category,
+        word_type.value,
+        word_category.value,
         ordgrupp,
-        word_pair.grammar_id,
+        word_pair.grammar_id.value,
     )
     cursor.execute(query, values)
 

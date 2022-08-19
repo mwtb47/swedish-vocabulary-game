@@ -10,7 +10,8 @@ I always came back to adding words here due to the multi-cursor and
 editing features of VS code making it much faster.
 """
 
-from objects import *
+from enums import GrammarType, WordCategory, WordType
+from objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 
 
 words_phrases = [
@@ -31,7 +32,6 @@ words_phrases = [
     #     indefinite_plural=  WordPair(en="", sv=""),
     #     definite_singular=  WordPair(en="the ", sv=""),
     #     definite_plural=    WordPair(en="the ", sv=""),
-    #     word_category=      1
     # ),
     #
     # Verb(
@@ -46,10 +46,9 @@ words_phrases = [
     #     word_phrase=WordPair(
     #         en="",
     #         sv="",
-    #         grammar_id=0
+    #         grammar_id=GrammarType.NA
     #     ),
-    #     grammar_id=None,
-    #     word_type=None,
-    #     word_category=None,
+    #     word_type=WordType.,
+    #     word_category=WordCategory.,
     # ),
 ]
