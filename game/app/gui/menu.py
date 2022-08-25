@@ -129,15 +129,7 @@ class Menu:
     def __create_submit_button(self) -> None:
         """Create button to submit selections."""
         self.values_set_indicator = tk.IntVar()
-        self.submit_values_button = tk.Button(
-            self.game.gui,
-            text="Submit values",
-            command=lambda: [
-                self._get_values(),
-                # self.values_set_indicator.set(1)
-            ],
-        )
-        self.submit_values_button.place(relx=0.5, rely=0.875, anchor="c", width=150)
+        self.game.buttons.create_submit_options_button(self._get_values)
 
     def _get_values(self) -> None:
         """Get the values from the option selections and destroy menu."""

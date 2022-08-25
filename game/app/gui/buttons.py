@@ -5,6 +5,7 @@ Classes:
 """
 
 import tkinter as tk
+from typing import Callable
 
 from app import Game
 
@@ -22,34 +23,78 @@ class Buttons:
     def __init__(self, game: Game) -> None:
         self.game = game
 
+    def __create(self, button_kwargs, place_kwargs) -> None:
+        """_summary_
+
+        Args:
+            button_kwargs: Dictionary of arguments for Button object.
+            place_kwargs: Dictionary of arguments for Button place method.
+        """
+        button = tk.Button(master=self.game.gui, **button_kwargs)
+        button.place(place_kwargs)
+        return button
+
     def create_next_button(self) -> None:
         """Create button to move on to next question."""
-        next_button = tk.Button(
-            text="Next question",
-            command=self.game.questions.set_question,
-            font=("Arial", 16),
-        )
-        next_button.place(relx=0.5, rely=0.85, anchor="n", width=150)
+        button_kwargs = {
+            "text": "Next question",
+            "command": self.game.questions.set_question,
+            "font": ("Arial", 16),
+        }
+        place_kwargs = {"relx": 0.5, "rely": 0.85, "anchor": "n", "width": 150}
+        self.__create(button_kwargs, place_kwargs)
 
-    def create_submit_button(self) -> None:
-        """Create button to submit answer."""
-        self.game.gui.bind("<Return>", self.game.answers.check_answer)
-        submit_button = tk.Button(
-            text="Submit answer",
-            command=self.game.answers.check_answer,
-            name="submitButton",
-            font=("Arial", 16),
-        )
-        submit_button.place(relx=0.5, rely=0.85, anchor="n", width=150)
+    def __create_quit_button(self) -> None:
+        """Create button to quit game."""
+        button_kwargs = {
+            "text": "Quit game",
+            "command": self.game.gui.destroy,
+            "name": "quitGame",
+        }
+        place_kwargs = {"relx": 0.51, "rely": 0.85, "anchor": "w", "width": 250}
+        self.__create(button_kwargs, place_kwargs)
 
     def create_retest_button(self) -> None:
         """Create button to start retesting incorrect answers."""
-        retest_button = tk.Button(
-            text="Retest incorrect answers",
-            command=self.game.questions.start_retest,
-            name="createRetest",
-        )
-        retest_button.place(relx=0.51, rely=0.8, anchor="w", width=250)
+        button_kwargs = {
+            "text": "Retest incorrect answers",
+            "command": self.game.questions.start_retest,
+            "name": "createRetest",
+        }
+        place_kwargs = {"relx": 0.51, "rely": 0.8, "anchor": "w", "width": 250}
+        self.__create(button_kwargs, place_kwargs)
+
+    def __create_start_new_game_button(self) -> None:
+        """Create button to restart the game."""
+        button_kwargs = {
+            "text": "Start new game",
+            "command": self.__start_new_game,
+            "name": "startNewGame",
+        }
+        place_kwargs = {"relx": 0.49, "rely": 0.85, "anchor": "e", "width": 250}
+        self.__create(button_kwargs, place_kwargs)
+
+    def create_submit_answer_button(self) -> None:
+        """Create button to submit answer."""
+        self.game.gui.bind("<Return>", self.game.answers.check_answer)
+        button_kwargs = {
+            "text": "Submit answer",
+            "command": self.game.answers.check_answer,
+            "name": "submitButton",
+            "font": ("Arial", 16),
+        }
+        place_kwargs = {"relx": 0.5, "rely": 0.85, "anchor": "n", "width": 150}
+        self.__create(button_kwargs, place_kwargs)
+
+    def create_submit_options_button(self, command: Callable) -> None:
+        """_summary_
+
+        Args:
+            command: _description_
+        """
+        button_kwargs = {"text": "Submit values", "command": command}
+        place_kwargs = {"relx": 0.5, "rely": 0.875, "anchor": "c", "width": 150}
+        self.game.menu.submit_values_button = self.__create(button_kwargs, place_kwargs)
 
     def create_summary_button(self) -> None:
         """Create button to display summary."""
@@ -61,36 +106,23 @@ class Buttons:
             "startNewGame",
             "createRetest",
         ]
-        summary_button = tk.Button(
-            text="Show summary",
-            command=lambda: [
+        button_kwargs = {
+            "text": "Show summary",
+            "command": lambda: [
                 self.game.destroy_widgets_except(names=widgets_to_keep),
                 self.game.summary.show_summary(),
             ],
-            name="showSummary",
-        )
-        summary_button.place(relx=0.49, rely=0.8, anchor="e", width=250)
+            "name": "showSummary",
+        }
+        place_kwargs = {"relx": 0.49, "rely": 0.8, "anchor": "e", "width": 250}
+        self.__create(button_kwargs, place_kwargs)
 
-    def __create_start_new_game_button(self) -> None:
-        """Create button to restart the game."""
-        start_new_game_button = tk.Button(
-            text="Start new game", command=self.__start_new_game, name="startNewGame"
-        )
-        start_new_game_button.place(relx=0.49, rely=0.85, anchor="e", width=250)
-
-    def __create_quit_button(self) -> None:
-        """Create button to quit game."""
-        quit_button = tk.Button(
-            text="Quit game", command=self.game.gui.destroy, name="quitGame"
-        )
-        quit_button.place(relx=0.51, rely=0.85, anchor="w", width=250)
-
-    def create_final_buttons(self):
+    def create_final_buttons(self) -> None:
         """Create start new game and quit game buttons."""
         self.__create_start_new_game_button()
         self.__create_quit_button()
 
-    def __start_new_game(self):
+    def __start_new_game(self) -> None:
         """Clear widgets for new game."""
         self.game.commit_marks()
         self.game.destroy_widgets_except(names=["titleText"])

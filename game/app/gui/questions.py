@@ -33,7 +33,7 @@ class Questions:
     def __prepare_questions_frame(self) -> None:
         """Create submit button, destroy unwanted widgets and update progress."""
         self.game.destroy_widgets_except(names=["titleText", "translationDirection"])
-        self.game.buttons.create_submit_button()
+        self.game.buttons.create_submit_answer_button()
         self.game.window.display_progress()
 
     def set_question(self, *args) -> None:
