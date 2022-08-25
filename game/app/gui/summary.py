@@ -4,8 +4,6 @@ Classes:
     Summary: Class containing methods to show a summary of a game session.
 """
 
-import tkinter as tk
-
 import numpy as np
 
 from app import Game
@@ -27,12 +25,8 @@ class Summary:
     def show_summary(self) -> None:
         """Display % correct answers."""
         mark = np.mean([m["betyg"] for m in self.game.status.marks]) * 100
-        score_label = tk.Label(text="Score", font="Helvetica 16 bold", width=5)
-        mark_label = tk.Label(
-            text=f"{round(mark, 1)}%", font="Helvetica 14 bold", width=5
-        )
-        score_label.place(relx=0.2, rely=0.34, anchor="c")
-        mark_label.place(relx=0.2, rely=0.4, anchor="c")
+        self.game.labels.create_score_title()
+        self.game.labels.create_score(mark)
         self.__show_incorrect_words()
 
     def __show_incorrect_words(self) -> None:

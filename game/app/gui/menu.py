@@ -85,7 +85,6 @@ class Menu:
             label_text="translation direction",
             relx=0.1,
             rely=0.25,
-            font_size=20,
             options=["en till sv", "sv till en"],
         )
         self.n_words = TextEntry(
@@ -93,14 +92,12 @@ class Menu:
             label_text="number of words per round",
             relx=0.1,
             rely=0.4,
-            font_size=20,
         )
         self.n_rounds = DropdownEntry(
             game=self.game,
             label_text="number of rounds",
             relx=0.1,
             rely=0.55,
-            font_size=20,
             options=[1, 2, 3, 4, 5],
         )
         self.word_types = CheckboxEntry(
@@ -108,7 +105,6 @@ class Menu:
             label_text="word type",
             relx=0.6,
             rely=0.25,
-            font_size=20,
             table="ordtyp",
             column="typ",
         )
@@ -117,7 +113,6 @@ class Menu:
             label_text="word category",
             relx=0.6,
             rely=0.45,
-            font_size=20,
             table="ordkategori",
             column="kategori",
         )
@@ -162,14 +157,10 @@ class Menu:
             self.game.destroy_widgets_except(names=["titleText"])
             self.game.destroy_widgets(names=["no_word_error"])
         except NoWordsError:
-            error_label = tk.Label(
-                master=self.game.gui,
-                text="No word available with selected configuration.",
-                name="no_words_error",
-                bg="white",
-                fg="red",
+            self.game.labels.create_no_words_error(
+                "No words available with selected word types and word categories.",
             )
-            error_label.place(relx=0.5, rely=0.92, anchor="n")
+            )
 
 
 class CharacteristicEntry:
@@ -180,35 +171,23 @@ class CharacteristicEntry:
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        font_size: Font size of the label.
 
     Attributes:
         game: Game class containing all game components.
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        font_size: Font size of the label.
         label: The label widget.
         entry: The entry field for the characteristic.
     """
 
-    def __init__(
-        self, game: Game, label_text: str, relx: int, rely: int, font_size: int
-    ):
+    def __init__(self, game: Game, label_text: str, relx: int, rely: int) -> None:
         self.game = game
         self.label_text = label_text
         self.relx = relx
         self.rely = rely
-        self.font_size = font_size
         self.label: tk.Label = None
         self.entry: tk.Checkbutton | tk.Entry | tk.OptionMenu = None
-
-    def create_label(self) -> None:
-        """Create characterstic input label."""
-        self.label = tk.Label(
-            text=f"Choose {self.label_text}", font=("Arial", self.font_size)
-        )
-        self.label.place(relx=self.relx, rely=self.rely, anchor="w")
 
     @abstractmethod
     def create_entry(self):
@@ -216,7 +195,9 @@ class CharacteristicEntry:
 
     def create_menu_items(self) -> None:
         """Create label and button."""
-        self.create_label()
+        self.label = self.game.labels.create_menu_characteristic(
+            self.label_text, self.relx, self.rely
+        )
         self.create_entry()
 
 
@@ -228,7 +209,6 @@ class CheckboxEntry(CharacteristicEntry):
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        font_size: Font size of the label.
         table: Name of the database table containing column with options.
         column: Name of the column containing the options.
 
@@ -249,11 +229,10 @@ class CheckboxEntry(CharacteristicEntry):
         label_text: str,
         relx: int,
         rely: int,
-        font_size: int,
         table: str,
         column: str,
-    ):
-        super().__init__(game, label_text, relx, rely, font_size)
+    ) -> None:
+        super().__init__(game, label_text, relx, rely)
         self.table = table
         self.column = column
         self.option_vars = None
@@ -287,7 +266,6 @@ class DropdownEntry(CharacteristicEntry):
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        font_size: Font size of the label.
         options: List of options to display in the dropdown.
 
     Attributes:
@@ -306,10 +284,9 @@ class DropdownEntry(CharacteristicEntry):
         label_text: str,
         relx: int,
         rely: int,
-        font_size: int,
         options: list[str | int],
-    ):
-        super().__init__(game, label_text, relx, rely, font_size)
+    ) -> None:
+        super().__init__(game, label_text, relx, rely)
         self.options = options
         self.selection = tk.StringVar()
 
@@ -333,7 +310,6 @@ class TextEntry(CharacteristicEntry):
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        font_size: Font size of the label.
 
     Attributes:
         game: Game class containing all game components.
@@ -344,10 +320,8 @@ class TextEntry(CharacteristicEntry):
         entry: The entry field for the characteristic.
     """
 
-    def __init__(
-        self, game: Game, label_text: str, relx: int, rely: int, font_size: int
-    ):
-        super().__init__(game, label_text, relx, rely, font_size)
+    def __init__(self, game: Game, label_text: str, relx: int, rely: int) -> None:
+        super().__init__(game, label_text, relx, rely)
 
     def create_entry(self) -> None:
         """Create number of words button."""

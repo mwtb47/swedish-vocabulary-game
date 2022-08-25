@@ -36,6 +36,7 @@ class Game:
     def __initiate_game(self):
         """Create top level widget, game window and call method to start game."""
         self.gui = tk.Tk()
+        self.labels = app.Labels(self.gui)
         self.window = app.Window(self)
         self.window.create()
         self.start()

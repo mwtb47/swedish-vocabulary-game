@@ -61,11 +61,7 @@ class Answers:
 
         link = self.game.settings.current_word_pair.wiktionary_link
         link_text = f"Wiktionary SV: {link.split('/')[-1]}"
-        wiktionary_link = tk.Label(
-            text=link_text, font="Helvetica 18 underline", fg="DeepSkyBlue2"
-        )
-        wiktionary_link.place(relx=0.5, rely=0.7, anchor="n")
-        wiktionary_link.bind("<Button-1>", lambda e: callback(link))
+        self.game.labels.create_wiktionary_link(link_text, link)
 
     def add_mark(self, mark: int) -> None:
         """Add mark to marklist if not during retest.

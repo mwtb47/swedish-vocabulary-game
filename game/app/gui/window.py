@@ -5,8 +5,6 @@ Classes:
         the GUI window.
 """
 
-import tkinter as tk
-
 from app import Game
 
 
@@ -26,19 +24,12 @@ class Window:
     def create(self) -> None:
         """Create window and title."""
         self.__create_window()
-        self.__create_title()
+        self.game.labels.create_title_text()
 
     def __create_window(self) -> None:
         """Set window title and geometry."""
         self.game.gui.title("Vocabulary Game")
         self.game.gui.geometry("1000x600")
-
-    def __create_title(self) -> None:
-        """Create Vocabulary Game title text."""
-        title = tk.Label(
-            self.game.gui, text="Vocabulary Game", font=("Arial", 45), name="titleText"
-        )
-        title.place(relx=0.5, rely=0.025, anchor="n")
 
     def translation_direction_graphic(self) -> None:
         """Create the translation direction graphic."""
@@ -46,10 +37,7 @@ class Window:
             text = "🇬🇧 ⇒ 🇸🇪"
         else:
             text = "🇸🇪 ⇒ 🇬🇧"
-        translation_direction_label = tk.Label(
-            text=text, font=("Arial", 40), name="translationDirection"
-        )
-        translation_direction_label.place(relx=0.5, rely=0.125, anchor="n")
+        self.game.labels.create_translation_direction(text)
 
     def display_progress(self) -> None:
         """Display the question number and round number."""
@@ -65,5 +53,4 @@ class Window:
             f"Question {current_question} of {self.game.settings.questions_per_round:.0f}\n"
             f"{retest_status} {current_round} of {n_rounds}"
         )
-        progress_label = tk.Label(text=text, justify="right")
-        progress_label.place(relx=0.98, rely=0.02, anchor="ne")
+        self.game.labels.create_progress_info(text)

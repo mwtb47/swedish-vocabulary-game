@@ -4,7 +4,6 @@ Classes:
     Questions: Class containing methods to set questions in the GUI game.
 """
 
-import textwrap
 import tkinter as tk
 
 from app import Game
@@ -42,13 +41,7 @@ class Questions:
         self.__prepare_questions_frame()
         self.game.settings.set_current_word_pair(self.game.status.question_number)
         self.__display_hints()
-        question = tk.Label(
-            text=textwrap.fill(
-                text=self.game.settings.current_word_pair.question, width=30
-            ),
-            font=("Arial", 24),
-        )
-        question.place(relx=0.4, rely=0.35, anchor="e")
+        self.game.labels.create_question(self.game.settings.current_word_pair.question)
         self.answer_entry = tk.Entry(width=30, font=("Arial", 24))
         self.answer_entry.focus_set()
         self.answer_entry.place(relx=0.5, rely=0.35, anchor="w")
@@ -73,19 +66,13 @@ class Questions:
 
         if hint := self.game.settings.current_word_pair.grammar_hint:
             text = f"Grammatik: {hint}"
-            grammar_hint = tk.Label(
-                text=textwrap.fill(text=text, width=35), font=("Arial", 16)
-            )
-            grammar_hint.place(relx=0.5, rely=hint_locations[hint_count], anchor="n")
+            self.game.labels.create_grammar_hint(text, hint_locations[0])
             hint_count += 1
 
         if hint := self.game.settings.current_word_pair.context_hint:
             hints = "\n".join(hint.split("/"))
             text = f"Sammanhang: {hints}"
-            context_hint = tk.Label(
-                text=textwrap.fill(text=text, width=35), font=("Arial", 16)
-            )
-            context_hint.place(relx=0.5, rely=hint_locations[hint_count], anchor="n")
+            self.game.labels.create_context_hint(text, hint_locations[hint_count])
 
     def __create_retest(self) -> None:
         """Set up game for retesting incorrect answers."""
