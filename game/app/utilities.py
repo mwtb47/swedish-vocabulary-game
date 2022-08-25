@@ -6,11 +6,11 @@ Classes:
 """
 
 from dataclasses import dataclass, field
-import sqlite3
 
 import pandas as pd
 
 import app
+from game import database
 
 
 @dataclass
@@ -104,10 +104,9 @@ class Status:
         game.
         """
         marks = pd.DataFrame(self.marks)
-        connection = sqlite3.connect("game/database/vocabulary.db")
+        connection = database.connect()
         marks.to_sql("betyg", connection, if_exists="append", index=False)
-        connection.commit()
-        connection.close()
+        database.disconnect(connection, commit=True)
 
     def question_number_in_round(self, questions_per_round: int) -> int:
         """Return the question number within the round.

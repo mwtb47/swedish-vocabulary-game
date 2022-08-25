@@ -17,12 +17,12 @@ Classes:
 """
 
 from abc import abstractmethod
-import sqlite3
 import tkinter as tk
 
 import pandas as pd
 
 from app import Game, NoWordsError
+from game import database
 
 
 def fetch_options(table: str, column: str) -> list[str]:
@@ -35,9 +35,9 @@ def fetch_options(table: str, column: str) -> list[str]:
     Returns:
         A list of the options.
     """
-    connection = sqlite3.connect("game/database/vocabulary.db")
+    connection = database.connect()
     options = pd.read_sql_query(f"SELECT {column} FROM {table}", connection)
-    connection.close()
+    database.disconnect(connection)
     return list(options[column])
 
 

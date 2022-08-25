@@ -24,6 +24,7 @@ import pandas as pd
 import numpy as np
 from game.new_words.enums import WordCategory, WordType
 
+from game import database
 from objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 from words import words_phrases
 
@@ -68,8 +69,7 @@ class Counter:
         )
 
 
-connection = sqlite3.connect("game/database/vocabulary.db")
-cursor = connection.cursor()
+connection, cursor = database.connect_with_cursor()
 
 # sqlite does not accept integers of more than 8 bytes therefore
 # the np.int64 returned by get_next_attribute_id has to be cast
@@ -250,20 +250,11 @@ def add_words(words_phrases: list[Adjective | Adverb | Generic | Noun | Verb]) -
         add_new_word(word_phrase)
 
 
-def close_connection(connection: sqlite3.Connection) -> None:
-    """Commit and close connection to Vocabulary database.
-
-    Args:
-        connection: The sqlite3 Connection to close.
-    """
-    connection.commit()
-    connection.close()
-
-
 def main() -> None:
     """Main function to run script."""
     add_words(words_phrases)
-    close_connection(connection)
+    # close_connection(connection)
+    database.disconnect(connection, commit=True)
     counter.print_summary()
 
 

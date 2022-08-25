@@ -9,12 +9,12 @@ Functions:
     main: Function to run the script.
 """
 
-import sqlite3
-
 import pandas as pd
 
+from game import connect, disconnect
 
-connection = sqlite3.connect("game/database/vocabulary.db")
+
+connection = connect()
 
 
 def fetch_table(table_name: str) -> pd.DataFrame:
@@ -85,8 +85,7 @@ def commit(new_marks: pd.DataFrame) -> None:
         new_marks: Dataframe to replace the marks table.
     """
     new_marks.to_sql("betyg", connection, if_exists="replace", index=False)
-    connection.commit()
-    connection.close()
+    disconnect(connection, commit=True)
 
 
 def main() -> None:

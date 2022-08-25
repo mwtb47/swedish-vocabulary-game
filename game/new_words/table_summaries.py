@@ -1,7 +1,8 @@
 """Docstring. This is a horrible bit of code, but it does the job."""
 
 import pandas as pd
-import sqlite3
+
+from game import database
 
 
 def fetch_table(table: str) -> pd.DataFrame:
@@ -13,10 +14,9 @@ def fetch_table(table: str) -> pd.DataFrame:
     Returns:
         A dataframe version of the sql table.
     """
-    connection = sqlite3.connect("game/database/vocabulary.db")
+    connection = database.connect()
     df = pd.read_sql_query(f"SELECT * FROM {table}", connection)
-    connection.commit()
-    connection.close()
+    database.disconnect(connection, commit=True)
     return df
 
 

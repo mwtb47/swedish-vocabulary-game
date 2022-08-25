@@ -13,11 +13,11 @@ Classes:
 from dataclasses import dataclass, field
 import random
 import re
-import sqlite3
 
 import pandas as pd
 
 from app import Game, NoWordsError
+from game import database
 
 
 def format_text(text: str) -> str:
@@ -123,23 +123,6 @@ class GameWords:
         self.lowest_frequency: pd.DataFrame = None
         self.unselected_word_groups: pd.DataFrame = None
 
-    def __open_connection(self) -> sqlite3.Connection:
-        """Open connection to vocabulary database.
-
-        Returns:
-            A connection to the vocabulary database.
-        """
-        return sqlite3.connect("game/database/vocabulary.db")
-
-    def __close_connection(self, connection: sqlite3.Connection) -> None:
-        """Commit and close connection to vocabulary database.
-
-        Args:
-            connection: The connection to close.
-        """
-        connection.commit()
-        connection.close()
-
     def __fetch_words(self) -> None:
         """Fetch words from the database.
 
@@ -180,9 +163,9 @@ class GameWords:
                 OT.typ IN ({word_types})
                 AND OK.kategori IN ({word_categories})
         """
-        connection = self.__open_connection()
+        connection = database.connect()
         self.words = pd.read_sql_query(query, connection)
-        self.__close_connection(connection)
+        database.disconnect(connection)
         if len(self.words.index) == 0:
             raise NoWordsError
 

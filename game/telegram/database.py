@@ -8,9 +8,10 @@ Functions:
 """
 
 from datetime import datetime
-import sqlite3
 
 import pandas as pd
+
+from game import database
 
 
 def fetch() -> pd.DataFrame:
@@ -19,9 +20,9 @@ def fetch() -> pd.DataFrame:
     Returns:
         DataFrame with marks.
     """
-    connection = sqlite3.connect("game/database/vocabulary.db")
+    connection = database.connect()
     df = pd.read_sql_query("SELECT * FROM betyg", connection)
-    connection.close()
+    database.disconnect(connection)
     return df
 
 
