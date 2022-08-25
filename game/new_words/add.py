@@ -22,9 +22,9 @@ import sqlite3
 
 import pandas as pd
 import numpy as np
-from game.new_words.enums import WordCategory, WordType
 
 from game import database
+from game.new_words.enums import WordCategory, WordType
 from objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 from words import words_phrases
 
@@ -55,7 +55,7 @@ class Counter:
             case Verb():
                 self.verbs += 1
 
-    def print_summary(self):
+    def print_summary(self) -> None:
         """Print summary of word types added."""
         print(
             (

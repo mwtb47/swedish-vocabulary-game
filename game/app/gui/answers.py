@@ -26,7 +26,6 @@ class Answers:
 
     def check_answer(self, *args) -> None:
         """Check the answers against the list of valid answers."""
-        # word_pair = self.game.settings.word_pairs[self.game.status.question_number]
         formatted_answer = app.format_text(self.game.questions.answer_entry.get())
         if formatted_answer in self.game.settings.current_word_pair.valid_answers:
             mark = 1
@@ -54,9 +53,9 @@ class Answers:
             self.__create_wiktionary_link()
 
     def __create_wiktionary_link(self) -> None:
-        """Create a link to the Wiktionary entry for a word if it has one."""
+        """Create a Wiktionary link for the Swedish word in the word pair."""
 
-        def callback(url: str):
+        def callback(url: str) -> None:
             webbrowser.open_new(url)
 
         link = self.game.settings.current_word_pair.wiktionary_link

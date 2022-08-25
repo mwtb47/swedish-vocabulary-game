@@ -95,7 +95,7 @@ class Adjective(Word):
         if self.superlative:
             self.superlative.grammar_id = GrammarType.ADJEKTIV_SUPERLATIV
 
-    def __create_word_list(self):
+    def __create_word_list(self) -> None:
         """Create a list of words."""
         word_pairs = [
             self.common_gender,
@@ -196,7 +196,7 @@ class Noun(Word):
         if self.definite_plural:
             self.definite_plural.grammar_id = GrammarType.BESTÄMT_PLURAL_SUBSTANTIV
 
-    def __create_word_list(self):
+    def __create_word_list(self) -> None:
         """Create a list of words."""
         word_pairs = [
             self.indefinite_singular,
@@ -256,7 +256,7 @@ class Verb(Word):
         if self.imperative:
             self.imperative.grammar_id = GrammarType.IMPERATIV_VERB
 
-    def __create_word_list(self):
+    def __create_word_list(self) -> None:
         """Create a list of words."""
         word_pairs = [
             self.infinitive,

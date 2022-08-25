@@ -69,11 +69,16 @@ class Menu:
         values_set_indicator: Indicator which is set to 1 when the
             submit values button is pressed.
         submit_values_button: Button used to submit values.
-        translation_direction: Instance of TranslationDirection.
-        n_words: Instance of NumberofWords.
-        n_rounds: Instance of Rounds.
-        word_types: Instance of WordType.
-        word_cvategories: Instance of WordCategory.
+        translation_direction: Instance of DropDownEntry for
+            translation direction selection.
+        n_words: Instance of TextEntry for selection of number of
+            words per game.
+        n_rounds: Instance of DropDownEntry for selection of number
+            of rounds in game.
+        word_types: Instance of CheckboxEntry for selection of
+            word types.
+        word_categories: Instance of CheckboxEntry for selection
+            of word categories.
     """
 
     def __init__(self, game: Game) -> None:
@@ -127,7 +132,12 @@ class Menu:
         self.__create_submit_button()
 
     def __create_submit_button(self) -> None:
-        """Create button to submit selections."""
+        """Create button to submit selections.
+
+        When the commit button is pressed, this triggers the
+        function populations the game settings and attempts
+        to get words from the database.
+        """
         self.values_set_indicator = tk.IntVar()
         self.game.buttons.create_submit_options_button(self._get_values)
 
@@ -142,7 +152,13 @@ class Menu:
         self.__try_get_words()
 
     def __try_get_words(self) -> None:
-        """Get the words."""
+        """Try to get words with specified settings.
+
+        Try to get words from the database which match the
+        specified word types and word categories selected.
+        If there are no words available, prompt the user
+        to select a different combination.
+        """
         try:
             self.game.settings.word_pairs = self.game.game_words.return_word_pairs()
             self.game.menu.values_set_indicator.set(1)
@@ -182,7 +198,7 @@ class CharacteristicEntry:
         self.entry: tk.Checkbutton | tk.Entry | tk.OptionMenu = None
 
     @abstractmethod
-    def create_entry(self):
+    def create_entry(self) -> None:
         """Create input functionality for characterstic."""
 
     def create_menu_items(self) -> None:
@@ -241,7 +257,7 @@ class CheckboxEntry(CharacteristicEntry):
             button.place(relx=relx, rely=rely + 0.05, anchor="w")
 
     @property
-    def values(self):
+    def values(self) -> list[str]:
         """Return the selected value(s)."""
         return [
             option
@@ -289,7 +305,7 @@ class DropdownEntry(CharacteristicEntry):
         entry.place(relx=self.relx, rely=self.rely + 0.05, anchor="w")
 
     @property
-    def value(self):
+    def value(self) -> str:
         """Return the selected value."""
         return self.selection.get()
 
@@ -308,8 +324,8 @@ class TextEntry(CharacteristicEntry):
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        label: The label widget.
-        entry: The entry field for the characteristic.
+        label: The label widget for the characteristic.
+        entry: The entry widget for the characteristic.
     """
 
     def __init__(self, game: Game, label_text: str, relx: int, rely: int) -> None:
@@ -321,6 +337,6 @@ class TextEntry(CharacteristicEntry):
         self.entry.place(relx=self.relx, rely=self.rely + 0.05, anchor="w")
 
     @property
-    def value(self):
-        """Return the selected value."""
+    def value(self) -> str:
+        """Return the inputed value."""
         return self.entry.get()

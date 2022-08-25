@@ -37,9 +37,9 @@ class Questions:
         self.game.window.display_progress()
 
     def set_question(self, *args) -> None:
-        """Display the question, any hints it has and an answer box."""
-        self.__prepare_questions_frame()
+        """Display the question, any hints it has, and an answer box."""
         self.game.settings.set_current_word_pair(self.game.status.question_number)
+        self.__prepare_questions_frame()
         self.__display_hints()
         self.game.labels.create_question(self.game.settings.current_word_pair.question)
         self.answer_entry = tk.Entry(width=30, font=("Arial", 24))
@@ -47,7 +47,21 @@ class Questions:
         self.answer_entry.place(relx=0.5, rely=0.35, anchor="w")
 
     def move_to_next(self) -> None:
-        """Move on to the next frame."""
+        """Move on to the next frame.
+
+        This function checks what the next frame of the game
+        should be and performs that move.
+
+        If all the questions have been answered:
+            : Offer a summary if not in retest mode.
+            : Offer a retest if not already in retest mode
+              and there are incorrect answers.
+            : Create start new game and quit game buttons.
+
+        If all questions have not been answered, create the
+        button to move to the next question.
+        """
+        self.game.status.question_number += 1
         if self.game.status.question_number == self.game.settings.total_questions:
             self.game.gui.unbind("<Return>")
             if not self.game.status.retest:

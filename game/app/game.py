@@ -33,7 +33,7 @@ class Game:
         self.no_commit = no_commit
         self.__initiate_game()
 
-    def __initiate_game(self):
+    def __initiate_game(self) -> None:
         """Create top level widget, game window and call method to start game."""
         self.gui = tk.Tk()
         self.labels = app.Labels(self.gui)
@@ -64,7 +64,7 @@ class Game:
         """Call mainloop."""
         self.gui.mainloop()
 
-    def commit_marks(self):
+    def commit_marks(self) -> None:
         """Commit marks to database."""
         if not self.no_commit:
             self.status.commit_marks_to_database()

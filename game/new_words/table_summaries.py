@@ -38,9 +38,7 @@ def add_spacing(row_id: int, length: int) -> str:
     row_id = str(row_id)
     if (row_id_len := len(row_id)) > length:
         raise ValueError("Length longer than max value.")
-    if row_id_len == length:
-        return row_id
-    return " " * (length - row_id_len) + row_id
+    return row_id if row_id_len == length else " " * (length - row_id_len) + row_id
 
 
 def table_to_string(df: pd.DataFrame, table_name: str) -> str:
