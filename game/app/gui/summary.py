@@ -31,14 +31,35 @@ class Summary:
 
     def __show_incorrect_words(self) -> None:
         """Display incorrect answers in a table showing English and Swedish."""
-        incorrect_title = tk.Label(
-            text="Fel ord/fraser", font="Helvetica 14 bold", anchor="c", width=25
+        self.game.labels.create_incorrect_words_title()
+        self.game.labels.create_incorrect_words_column(
+            words=self.__incorrect_words("sv"),
+            justify="left",
+            relx=0.65,
+            text_anchor="w",
+            label_anchor="nw",
         )
-        incorrect_title.place(relx=0.625, rely=0.23, anchor="c")
+        self.game.labels.create_incorrect_words_column(
+            words=self.__incorrect_words("en"),
+            justify="right",
+            relx=0.6,
+            text_anchor="e",
+            label_anchor="ne",
+        )
 
-        english = [word_pair.en for word_pair in self.game.status.incorrect_answers]
-        swedish = [word_pair.sv for word_pair in self.game.status.incorrect_answers]
-        en = tk.Label(text="\n".join(english), justify="right", anchor="e", width=25)
-        sv = tk.Label(text="\n".join(swedish), justify="left", anchor="w", width=25)
-        en.place(relx=0.6, rely=0.25, anchor="ne")
-        sv.place(relx=0.65, rely=0.25, anchor="nw")
+    def __incorrect_words(self, language: str) -> str:
+        """Return a list of incorrectly answered words.
+
+        The list contains the specified language version of
+        each incorrectly answered word pair.
+
+        Args:
+            language: Which language version of the word pair to return.
+
+        Returns:
+            A list of words.
+        """
+        return [
+            getattr(word_pair, language)
+            for word_pair in self.game.status.incorrect_answers
+        ]

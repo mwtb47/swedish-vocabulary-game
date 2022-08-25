@@ -4,7 +4,6 @@ Classes:
     Answers: A class with methods to check answers and add marks.
 """
 
-import tkinter as tk
 from time import time
 import webbrowser
 
@@ -28,29 +27,32 @@ class Answers:
         """Check the answers against the list of valid answers."""
         formatted_answer = app.format_text(self.game.questions.answer_entry.get())
         if formatted_answer in self.game.settings.current_word_pair.valid_answers:
-            mark = 1
+            self.__add_mark(1)
             answer_description = "✅ Correct"
         else:
-            mark = 0
+            self.__add_mark(0)
+            self.__record_incorrect_answer()
             answer_description = f"❌ Incorrect\n\nCorrect answer: {self.game.settings.current_word_pair.answer}"
-            if not self.game.status.retest:
-                self.game.status.incorrect_answers.add(
-                    self.game.settings.current_word_pair
-                )
 
-        self.display_answer_check(answer_description)
-        self.add_mark(mark)
-
-        self.game.status.question_number += 1
+        self.__display_answer_check(answer_description)
         self.game.questions.move_to_next()
 
-    def display_answer_check(self, description: str) -> None:
-        """Display if answer is correct or not plus a link to Wiktionary entry."""
-        answer_indicator = tk.Label(text=description, font=("Arial", 22))
-        answer_indicator.place(relx=0.5, rely=0.55, anchor="n")
+    def __record_incorrect_answer(self) -> None:
+        """Add incorrectly answered WordPair to set of incorrect answers."""
+        if not self.game.status.retest:
+            self.game.status.incorrect_answers.add(self.game.settings.current_word_pair)
+
+    def __display_answer_check(self, description: str) -> None:
+        """Display if answer is correct or not plus a link to Wiktionary entry.
+
+        Args:
+            description: String either indicating the answer is correct or that
+                it is incorrect. If it is incorrect, the correct answer is
+                included.
+        """
+        self.game.labels.create_answer_indicator(description)
         self.game.destroy_widgets(names=["submitButton"])
-        if self.game.settings.current_word_pair.wiktionary_link:
-            self.__create_wiktionary_link()
+        self.__display_wiktionary_link()
 
     def __create_wiktionary_link(self) -> None:
         """Create a Wiktionary link for the Swedish word in the word pair."""
@@ -62,7 +64,12 @@ class Answers:
         link_text = f"Wiktionary SV: {link.split('/')[-1]}"
         self.game.labels.create_wiktionary_link(link_text, link)
 
-    def add_mark(self, mark: int) -> None:
+    def __display_wiktionary_link(self) -> None:
+        """Display wiktionary link if the current word pair has one."""
+        if self.game.settings.current_word_pair.wiktionary_link:
+            self.__create_wiktionary_link()
+
+    def __add_mark(self, mark: int) -> None:
         """Add mark to marklist if not during retest.
 
         Args:

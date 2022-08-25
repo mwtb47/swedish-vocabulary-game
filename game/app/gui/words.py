@@ -106,8 +106,6 @@ class GameWords:
     Attributes:
         game: Game class containing all game components.
         words: DataFrame containing filtered words table from database.
-        words_per_group: The number of words to go in the worst score,
-            lowest frequency, and random groups of words.
         word_stats: DataFrame with statistics on words.
         lowest_scores: DataFrame with lowest scoring words.
         lowest_frequency: DataFrame with lowest frequency words.
@@ -117,8 +115,6 @@ class GameWords:
     def __init__(self, game: Game) -> None:
         self.game = game
         self.words: pd.DataFrame = None
-        self.words_per_group: int = None
-        self.word_stats: pd.DataFrame = None
         self.lowest_scores: pd.DataFrame = None
         self.lowest_frequency: pd.DataFrame = None
         self.unselected_word_groups: pd.DataFrame = None
@@ -142,6 +138,7 @@ class GameWords:
                 O.svenska,
                 O.ordgrupp,
                 B.betyg,
+                B.tidsstämpel,
                 G.beskrivning,
                 T.sammanhang_tips,
                 W.länk
@@ -172,63 +169,102 @@ class GameWords:
     def __select_words(self) -> list[int]:
         """Select the words for the game."""
 
-        def select_group_word(group: pd.DataFrame) -> pd.Series:
-            """Select single word from a group.
+        def select_inflection(group: pd.DataFrame) -> pd.Series:
+            """Select single word inflection from a word group.
 
-            For a word group, pick one of the versions of the
+            For a word group, pick one of the inflections of the
             word (e.g. indefinite plural), count how many times it
             has been answered previously, and calculate the mean
             score for those previous answers.
 
             Args:
-                group: A DataFrame to select a word from.
+                group: A DataFrame containing multiple inflections
+                    of a single word.
 
             Returns:
                 Pandas series with:
-                    : the selected word.
-                    : the number of times the word has been answered.
-                    : the mean score.
-                    : the mean score for the previous 3 answers.
+                    : the selected word inflection.
+                    : the number of times the word inflection has
+                        been answered.
+                    : the mean score of the word inflection.
+                    : the mean score for the previous 3 answers of
+                        the word inflection.
             """
-            selected_word = group.id.sample(n=1).values[0]
-            group = group[group.id == selected_word]
+            selected_inflection = group.id.sample(n=1).values[0]
+            group = group[group.id == selected_inflection]
             frequency = sum(i for i in group.betyg if i in (0, 1))
             mean_score = group.betyg.mean()
-            mean_score_last_3 = group.betyg.iloc[-3:].mean()
+            mean_score_last_3 = group.sort_values("tidsstämpel").betyg[-3:].mean()
             return pd.Series(
-                data=[selected_word, frequency, mean_score, mean_score_last_3],
+                data=[selected_inflection, frequency, mean_score, mean_score_last_3],
                 index=["id", "frequency", "mean_score", "mean_score_last_3"],
             )
 
-        self.words_per_group = self.game.settings.n_words // 3
-        self.word_stats = (
-            self.words.groupby("ordgrupp").apply(select_group_word).reset_index()
+        words_per_group = self.game.settings.n_words // 3
+        inflections = (
+            self.words.groupby("ordgrupp").apply(select_inflection).reset_index()
         )
-        self.word_stats.id = self.word_stats.id.astype(int)
+        inflections.id = inflections.id.astype(int)
 
-        self.__select_lowest_scoring_words()
-        self.__select_lowest_frequency_words()
-        stats_words = self.__combine_low_score_low_frequency()
-        game_words = self.__select_other_words(stats_words)
-        return game_words
+        return self.__select_game_words(inflections, words_per_group)
 
-    def __select_lowest_scoring_words(self) -> None:
-        """Select the lowest scoring words"""
+    def __select_game_words(
+        self, inflections: pd.DataFrame, words_per_group: int
+    ) -> list[int]:
+        """Return list of word ids to be used in the game.
+
+        Args:
+            inflections:
+            words_per_group: The number of words to select
+                using the lowest scoring and lowest frequency
+                methods.
+
+        Returns:
+            List of word ids.
+        """
+        self.__select_lowest_scoring(inflections, words_per_group)
+        self.__select_lowest_frequency(inflections, words_per_group)
+        selected_words = list(
+            set(self.lowest_scores.id) | set(self.lowest_frequency.id)
+        )
+        return self.__add_random_words(selected_words)
+
+    def __select_lowest_scoring(
+        self, inflections: pd.DataFrame, words_per_group: int
+    ) -> None:
+        """Select the words with the lowest score.
+
+        The lowest score is calculated using the mean of the previous
+        three answer attempts. This aims to focus on the words less
+        likely to be known at present as opposed to words answered
+        incorrectly in the past but with many correct answers since.
+
+        Args:
+            inflections: DataFrame with selected inflections.
+            words_per_group: The number of lowest scoring words to select.
+        """
         self.lowest_scores = (
-            self.word_stats[self.word_stats.mean_score_last_3 < 1]
+            inflections[inflections.mean_score_last_3 < 1]
             .sort_values("mean_score")
-            .head(self.words_per_group)
+            .head(words_per_group)
         )
         self.unselected_word_groups = [
             w for w in self.words.ordgrupp if w not in list(self.lowest_scores.ordgrupp)
         ]
 
-    def __select_lowest_frequency_words(self) -> None:
-        """Select the words answered least often."""
+    def __select_lowest_frequency(
+        self, inflections: pd.DataFrame, words_per_group: int
+    ) -> None:
+        """Select the words with the fewest number of answers.
+
+        Args:
+            inflections: DataFrame with selected inflections.
+            words_per_group: The number of lowest frequency words to select.
+        """
         self.lowest_frequency = (
-            self.word_stats[self.word_stats.ordgrupp.isin(self.unselected_word_groups)]
+            inflections[inflections.ordgrupp.isin(self.unselected_word_groups)]
             .sort_values("frequency")
-            .head(self.words_per_group)
+            .head(words_per_group)
         )
         self.unselected_word_groups = [
             w
@@ -237,32 +273,24 @@ class GameWords:
             and w not in list(self.lowest_frequency.ordgrupp)
         ]
 
-    def __combine_low_score_low_frequency(self) -> list[int]:
-        """Combine lowest score and frequency words, dropping duplicates.
-
-        Returns:
-            A list of word ids.
-        """
-        lowest_scores = list(self.lowest_scores.id)
-        lowest_frequency = list(self.lowest_frequency.id)
-        return list(set(lowest_scores + lowest_frequency))
-
-    def __select_other_words(self, stats_words: list[int]) -> list[int]:
+    def __add_random_words(self, selected_words: list[int]) -> list[int]:
         """Select remaining words at random.
 
         Args:
-            stats_words: A list of already selected word ids.
+            selected_words: A list of already selected word ids.
         """
         remaining_words = self.words[
             self.words.ordgrupp.isin(self.unselected_word_groups)
         ]
-        remaining_words = remaining_words.sample(frac=1).drop_duplicates(
-            subset=["ordgrupp"]
+        n_missing_words = self.game.settings.n_words - len(selected_words)
+        sample_size = min(n_missing_words, len(remaining_words.id))
+        random_words = list(
+            self.words[self.words.ordgrupp.isin(self.unselected_word_groups)]
+            .sample(frac=1)
+            .drop_duplicates(subset=["ordgrupp"])
+            .id.sample(n=sample_size)
         )
-        n_remaining_words = self.game.settings.n_words - len(stats_words)
-        sample_size = min(n_remaining_words, len(remaining_words.id))
-        remaining_words = list(remaining_words.id.sample(n=sample_size))
-        return stats_words + remaining_words
+        return selected_words + random_words
 
     def __get_word_pair(self, word_id: int) -> WordPair:
         """Create WordPair object for a word.
