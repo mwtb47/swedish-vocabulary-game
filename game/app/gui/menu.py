@@ -3,6 +3,7 @@
 Functions:
     fetch_options: Get a list of options for a menu item from
         the database.
+    fetch_checkbox_options: Get a DataFrame of checkbox options.
     checkbox_position: Return the position for the nth checkbox.
 
 Classes:
@@ -39,6 +40,31 @@ def fetch_options(table: str, column: str) -> list[str]:
     options = pd.read_sql_query(f"SELECT {column} FROM {table}", connection)
     database.disconnect(connection)
     return list(options[column])
+
+
+def fetch_checkbox_options() -> pd.DataFrame:
+    """Fetch table from database to check checkbox options.
+
+    Returns:
+        DataFrame with word ids, word type labels and
+        word category labels.
+    """
+    connection = database.connect()
+    df = pd.read_sql_query(
+        """
+        SELECT
+            O.id, OT.typ, OK.kategori 
+        FROM
+            ord AS O
+        JOIN ordtyp OT
+            ON O.ordtyp_id = OT.id
+        JOIN ordkategori OK 
+            ON O.ordkategori_id = OK.id
+        """,
+        connection,
+    )
+    database.disconnect(connection)
+    return df
 
 
 def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, int]:
@@ -83,8 +109,13 @@ class Menu:
 
     def __init__(self, game: Game) -> None:
         self.game = game
+        self.checkbox_options = fetch_checkbox_options()
         self.values_set_indicator = None
         self.submit_values_button = None
+        self.__initialise_options()
+
+    def __initialise_options(self) -> None:
+        """Initialise CharacteristicEntry objects."""
         self.translation_direction = DropdownEntry(
             game=self.game,
             label_text="translation direction",
@@ -168,7 +199,69 @@ class Menu:
             self.game.labels.create_no_words_error(
                 "No words available with selected word types and word categories.",
             )
-            )
+
+    def update_checkbox_fonts(self, updated_option: str) -> None:
+        """Update checkbox font colours to show available combinations.
+
+        Args:
+            updated_option: The characteristic which has just been
+                updated, either word type of word category.
+        """
+        if updated_option == "typ":
+            values = self.word_types.values
+            buttons = self.word_categories.buttons
+        else:
+            values = self.word_categories.values
+            buttons = self.word_types.buttons
+
+        if not values:
+            self.__reset_font_colour(buttons)
+        else:
+            self.__update_characteristic(updated_option, values, buttons)
+
+    def __reset_font_colour(self, buttons: dict[str, tk.Checkbutton]) -> None:
+        """Reset label font colour to white for all buttons.
+
+        Args:
+            buttons: Dictionary containing buttons to reset
+                font colour of.
+        """
+        for button in buttons.values():
+            button.config(fg="white")
+
+    def __update_characteristic(
+        self,
+        updated_option: str,
+        values: list[str],
+        buttons: dict[str, tk.Checkbutton],
+    ) -> None:
+        """Update font colour to reflect available combinations.
+
+        When a checkbox has been selected in either the word type
+        of word category section, get the available options in the
+        other section and update the font colour to indicate which
+        options are now available.
+
+        Args:
+            updated_option: The updated characteristic, either word
+                type of word category.
+            values: List of selected values for the updated
+                characteristic.
+            buttons: Dictionary containing buttons to update font
+                colours of.
+        """
+        unchanged_option = "kategori" if updated_option == "typ" else "typ"
+
+        options = self.checkbox_options.loc[
+            self.checkbox_options[updated_option].isin(values),
+            unchanged_option,
+        ].unique()
+
+        for option, button in buttons.items():
+            if option not in options:
+                button.config(fg="grey")
+            else:
+                button.config(fg="white")
 
 
 class CharacteristicEntry:
@@ -185,8 +278,8 @@ class CharacteristicEntry:
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        label: The label widget.
-        entry: The entry field for the characteristic.
+        label: The label widget for the characteristic.
+        entry: The entry widget for the characteristic.
     """
 
     def __init__(self, game: Game, label_text: str, relx: int, rely: int) -> None:
@@ -244,17 +337,23 @@ class CheckboxEntry(CharacteristicEntry):
         self.table = table
         self.column = column
         self.option_vars = None
+        self.buttons: dict[str, tk.Checkbutton] = None
 
     def create_entry(self) -> None:
         """Create word category button."""
         options = fetch_options(self.table, self.column)
         self.option_vars = {option: tk.IntVar() for option in options}
+        self.buttons = {}
         for i, (option, variable) in enumerate(self.option_vars.items()):
             button = tk.Checkbutton(
-                text=option, variable=variable, onvalue=1, offvalue=0
+                text=option,
+                variable=variable,
+                onvalue=1,
+                command=lambda: self.game.menu.update_checkbox_fonts(self.column),
             )
             relx, rely = checkbox_position(i, self.relx, self.rely)
             button.place(relx=relx, rely=rely + 0.05, anchor="w")
+            self.buttons[option] = button
 
     @property
     def values(self) -> list[str]:
@@ -324,8 +423,8 @@ class TextEntry(CharacteristicEntry):
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        label: The label widget for the characteristic.
-        entry: The entry widget for the characteristic.
+        label: The label widget.
+        entry: The entry field for the characteristic.
     """
 
     def __init__(self, game: Game, label_text: str, relx: int, rely: int) -> None:
