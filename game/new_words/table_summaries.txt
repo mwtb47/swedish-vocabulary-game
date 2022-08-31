@@ -26,6 +26,7 @@ id  kategori
 10  kläder
 11  datorspråk
 12  vetenskap
+13  djur
 
 
 grammatik
