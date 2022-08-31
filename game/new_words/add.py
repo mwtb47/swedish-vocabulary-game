@@ -25,8 +25,7 @@ import numpy as np
 
 from game import database
 from game.new_words.enums import WordCategory, WordType
-from objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
-from words import words_phrases
+from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 
 
 @dataclass
@@ -69,194 +68,209 @@ class Counter:
         )
 
 
-connection, cursor = database.connect_with_cursor()
-
-# sqlite does not accept integers of more than 8 bytes therefore
-# the np.int64 returned by get_next_attribute_id has to be cast
-# to an int.
-sqlite3.register_adapter(np.int64, int)
-
-counter = Counter()
-
-
-def read_current_words() -> pd.DataFrame:
-    """Fetch all columns from the ord table.
-
-    Returns:
-        DataFrame containing words table from database.
-    """
-    return pd.read_sql_query("""SELECT * FROM ord""", connection)
-
-
-def get_next_attribute_id(attribute: str) -> int:
-    """Get an unused attribute id. This is the max current id + 1.
+class NewWords:
+    """Class with methods to add new words and phrases to database.
 
     Args:
-        attribute: The name of the column to find the next id for.
+        words_phrases: List of words and phrases to add.
 
-    Returns:
-        Integer to be used as next id.
+    Attributes:
+        words_phrases: List of words and phrases to add.
+        counter: Instance of Counter to track added words and phrases.
+        connection: sqlite3 database connection.
+        cursor: Cursor for the database connection.
     """
-    df = pd.read_sql_query(f"""SELECT {attribute} FROM ord""", connection)
-    return df[attribute].max() + 1
 
+    def __init__(
+        self, words_phrases: list[Adjective | Adverb | Generic | Noun | Verb]
+    ) -> None:
+        self.words_phrases = words_phrases
+        self.counter = Counter()
+        self.__create_connection_and_cursor()
+        self.__set_sqlite3_cast_rule()
 
-def check_not_duplicated(word_pair: WordPair) -> bool:
-    """Check for duplicate entry of the English - Swedish pair.
+    def __create_connection_and_cursor(self) -> None:
+        """Create sqlite3 database connection and cursor."""
+        self.connection, self.cursor = database.connect_with_cursor()
 
-    Args:
-        word_pair: WordPair object to be added to the database.
+    def __set_sqlite3_cast_rule(self) -> None:
+        """sqlite does not accept integers of more than 8 bytes therefore
+        the np.int64 returned by get_next_attribute_id has to be cast to
+        an int.
+        """
+        sqlite3.register_adapter(np.int64, int)
 
-    Returns:
-        True if the word or phrase pair is not already in the
-        database, False if it is.
-    """
-    current_words = read_current_words()
-    current_pairs = [(row.engelska, row.svenska) for row in current_words.itertuples()]
-    if (word_pair.en, word_pair.sv) not in current_pairs:
-        return True
-    print(f"Word pair already in database. {word_pair.en} - {word_pair.sv}")
-    return False
+    def __read_current_words(self) -> pd.DataFrame:
+        """Fetch all columns from the ord table.
 
+        Returns:
+            DataFrame containing words table from database.
+        """
+        return pd.read_sql_query("""SELECT * FROM ord""", self.connection)
 
-def add_word_info(
-    id_: int,
-    word_type: WordType,
-    word_category: WordCategory,
-    ordgrupp: int,
-    word_pair: WordPair,
-) -> None:
-    """Add word information to the word table.
+    def __get_next_attribute_id(self, attribute: str) -> int:
+        """Get an unused attribute id. This is the max current id + 1.
 
-    Args:
-        id_: The word id for the word pair.
-        word_type: The word type of the word pair.
-        word_category: The word category of the word pair.
-        ordgrupp: The word group id of the word pair.
-        word_pair: The WordPair object.
-    """
-    query = """
-        INSERT INTO ord (
-            id,
-            engelska,
-            svenska,
-            ordtyp_id,
-            ordkategori_id,
-            ordgrupp,
-            grammar_id
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """
-    values = (
-        id_,
-        word_pair.en,
-        word_pair.sv,
-        word_type.value,
-        word_category.value,
-        ordgrupp,
-        word_pair.grammar_id.value,
-    )
-    cursor.execute(query, values)
+        Args:
+            attribute: The name of the column to find the next id for.
 
+        Returns:
+            Integer to be used as next id.
+        """
+        df = pd.read_sql_query(f"""SELECT {attribute} FROM ord""", self.connection)
+        return df[attribute].max() + 1
 
-def add_context_hint(ordgrupp: int, context_hint: str) -> None:
-    """Add hints to tips table.
+    def __check_not_duplicated(self, word_pair: WordPair) -> bool:
+        """Check for duplicate entry of the English - Swedish pair.
 
-    Args:
-        ordgrupp: The word group id of the word pair.
-        context_hint: The context hint of the word pair.
-    """
-    query = """
-        INSERT INTO tips (
-            ordgrupp,
-            sammanhang_tips
-        )
-        VALUES (?, ?)
-    """
-    values = (ordgrupp, context_hint)
-    cursor.execute(query, values)
+        Args:
+            word_pair: WordPair object to be added to the database.
 
+        Returns:
+            True if the word or phrase pair is not already in the
+            database, False if it is.
+        """
+        current_words = self.__read_current_words()
+        current_pairs = [
+            (row.engelska, row.svenska) for row in current_words.itertuples()
+        ]
+        if (word_pair.en, word_pair.sv) not in current_pairs:
+            return True
+        print(f"Word pair already in database. {word_pair.en} - {word_pair.sv}")
+        return False
 
-def add_wiktionary_link(ordgrupp: int, wiktionary_link: str) -> None:
-    """Add Wiktionary link to wiktionary table.
+    def __add_word_info(
+        self,
+        id_: int,
+        word_type: WordType,
+        word_category: WordCategory,
+        ordgrupp: int,
+        word_pair: WordPair,
+    ) -> None:
+        """Add word information to the word table.
 
-    Args:
-        ordgrupp: The word group id of the word pair.
-        wiktionary_link: Wiktionary link for word pair.
-    """
-    query = """
-        INSERT INTO wiktionary (
-            ordgrupp,
-            länk
-        )
-        VALUES (?, ?)
-    """
-    values = (ordgrupp, wiktionary_link)
-    cursor.execute(query, values)
-
-
-def add_hint_and_link(
-    word_object: Adjective | Adverb | Generic | Noun | Verb, ordgrupp: int
-) -> None:
-    """Add context hint and Wiktionary link to database.
-
-    Args:
-        ordgrupp: Word group id.
-    """
-    if word_object.context_hint:
-        add_context_hint(ordgrupp, word_object.context_hint)
-    if word_object.wiktionary_link:
-        add_wiktionary_link(ordgrupp, word_object.wiktionary_link)
-
-
-def add_new_word(word_object: Adjective | Adverb | Generic | Noun | Verb) -> None:
-    """Add new word pairs to the database.
-
-    For each word pair in the word group, check if the pair is already
-    in the database. If is not, add the word pair. If any of the word
-    pairs for a word group are already in the database, the context
-    hint and Wiktionary link for that word group is not added.
-
-    Args:
-        word_object: The word object to add.
-    """
-    found_duplicate = False
-    ordgrupp = get_next_attribute_id("ordgrupp")
-    for word_pair in word_object.word_list:
-        if check_not_duplicated(word_pair):
-            id_ = get_next_attribute_id("id")
-            add_word_info(
-                id_,
-                word_object.word_type,
-                word_object.word_category,
+        Args:
+            id_: The word id for the word pair.
+            word_type: The word type of the word pair.
+            word_category: The word category of the word pair.
+            ordgrupp: The word group id of the word pair.
+            word_pair: The WordPair object.
+        """
+        query = """
+            INSERT INTO ord (
+                id,
+                engelska,
+                svenska,
+                ordtyp_id,
+                ordkategori_id,
                 ordgrupp,
-                word_pair,
+                grammar_id
             )
-            counter.tick(word_object)
-        else:
-            found_duplicate = True
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """
+        values = (
+            id_,
+            word_pair.en,
+            word_pair.sv,
+            word_type.value,
+            word_category.value,
+            ordgrupp,
+            word_pair.grammar_id.value,
+        )
+        self.cursor.execute(query, values)
 
-    if not found_duplicate:
-        add_hint_and_link(word_object, ordgrupp)
+    def __add_context_hint(self, ordgrupp: int, context_hint: str) -> None:
+        """Add hints to tips table.
 
+        Args:
+            ordgrupp: The word group id of the word pair.
+            context_hint: The context hint of the word pair.
+        """
+        query = """
+            INSERT INTO tips (
+                ordgrupp,
+                sammanhang_tips
+            )
+            VALUES (?, ?)
+        """
+        values = (ordgrupp, context_hint)
+        self.cursor.execute(query, values)
 
-def add_words(words_phrases: list[Adjective | Adverb | Generic | Noun | Verb]) -> None:
-    """Add words.
+    def __add_wiktionary_link(self, ordgrupp: int, wiktionary_link: str) -> None:
+        """Add Wiktionary link to wiktionary table.
 
-    Args:
-        words_phrases: A list of words and phrases to add.
-    """
-    for word_phrase in words_phrases:
-        add_new_word(word_phrase)
+        Args:
+            ordgrupp: The word group id of the word pair.
+            wiktionary_link: Wiktionary link for word pair.
+        """
+        query = """
+            INSERT INTO wiktionary (
+                ordgrupp,
+                länk
+            )
+            VALUES (?, ?)
+        """
+        values = (ordgrupp, wiktionary_link)
+        self.cursor.execute(query, values)
 
+    def __add_hint_and_link(
+        self, word_object: Adjective | Adverb | Generic | Noun | Verb, ordgrupp: int
+    ) -> None:
+        """Add context hint and Wiktionary link to database.
 
-def main() -> None:
-    """Main function to run script."""
-    add_words(words_phrases)
-    # close_connection(connection)
-    database.disconnect(connection, commit=True)
-    counter.print_summary()
+        Args:
+            ordgrupp: Word group id.
+        """
+        if word_object.context_hint:
+            self.__add_context_hint(ordgrupp, word_object.context_hint)
+        if word_object.wiktionary_link:
+            self.__add_wiktionary_link(ordgrupp, word_object.wiktionary_link)
+
+    def __add_new_word(
+        self, word_object: Adjective | Adverb | Generic | Noun | Verb
+    ) -> None:
+        """Add new word pairs to the database.
+
+        For each word pair in the word group, check if the pair is already
+        in the database. If is not, add the word pair. If any of the word
+        pairs for a word group are already in the database, the context
+        hint and Wiktionary link for that word group is not added.
+
+        Args:
+            word_object: The word object to add.
+        """
+        found_duplicate = False
+        ordgrupp = self.__get_next_attribute_id("ordgrupp")
+        for word_pair in word_object.word_list:
+            if self.__check_not_duplicated(word_pair):
+                id_ = self.__get_next_attribute_id("id")
+                self.__add_word_info(
+                    id_,
+                    word_object.word_type,
+                    word_object.word_category,
+                    ordgrupp,
+                    word_pair,
+                )
+                self.counter.tick(word_object)
+            else:
+                found_duplicate = True
+
+        if not found_duplicate:
+            self.__add_hint_and_link(word_object, ordgrupp)
+
+    def add(self) -> None:
+        """Add words to database.
+
+        Args:
+            words_phrases: A list of words and phrases to add.
+        """
+        for word_phrase in self.words_phrases:
+            self.__add_new_word(word_phrase)
+        database.disconnect(self.connection, commit=True)
+        self.counter.print_summary()
 
 
 if __name__ == "__main__":
-    main()
+    from words import words_phrases
+
+    NewWords(words_phrases).add()

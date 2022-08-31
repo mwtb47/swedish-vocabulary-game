@@ -13,7 +13,7 @@ Classes:
 
 from dataclasses import dataclass
 
-from enums import GrammarType, WordCategory, WordType
+from game.new_words.enums import GrammarType, WordCategory, WordType
 
 
 @dataclass

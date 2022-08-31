@@ -11,7 +11,7 @@ editing features of VS code making it much faster.
 """
 
 from enums import GrammarType, WordCategory, WordType
-from objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
+from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 
 
 words_phrases = [
