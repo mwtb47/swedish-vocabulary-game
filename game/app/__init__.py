@@ -8,4 +8,4 @@ from app.gui.menu import Menu
 from app.gui.questions import Questions
 from app.gui.summary import Summary
 from app.gui.window import Window
-from app.gui.words import WordPair, GameWords, format_text
+from app.words import WordPair, GameWords, format_text
