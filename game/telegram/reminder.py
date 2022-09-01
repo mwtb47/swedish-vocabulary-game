@@ -15,7 +15,7 @@ from datetime import datetime
 import requests
 
 from config import API_KEY, CHAT_ID
-from database import count_answers
+from answers import count_answers
 
 
 timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
