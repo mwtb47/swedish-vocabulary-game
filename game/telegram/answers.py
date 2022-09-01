@@ -1,4 +1,4 @@
-"""Module with functions to fetch data from database.
+"""Module with functions to fetch answers data from database.
 
 Functions:
     fetch: Fetch the marks table from the database.
