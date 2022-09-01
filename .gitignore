@@ -3,3 +3,4 @@ __pycache__
 vocabulary.db
 config.py
 *.log
+message_ids.csv
