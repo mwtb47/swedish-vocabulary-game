@@ -1,5 +1,10 @@
 """Script with functions to clear out old marks from database.
 
+Entries are sometimes removed from the words table in the database. The
+marks for these removed entries, however, remain in the marks table.
+This script removes all entries in the marks table for word ids which
+are no longer present in the words table.
+
 Functions:
     fetch_table: Fetch a table from the database.
     fetch_words_and_marks: Fetch words and marks tables from the database.
@@ -11,10 +16,10 @@ Functions:
 
 import pandas as pd
 
-from game import connect, disconnect
+from game import database
 
 
-connection = connect()
+connection = database.connect()
 
 
 def fetch_table(table_name: str) -> pd.DataFrame:
@@ -85,7 +90,7 @@ def commit(new_marks: pd.DataFrame) -> None:
         new_marks: Dataframe to replace the marks table.
     """
     new_marks.to_sql("betyg", connection, if_exists="replace", index=False)
-    disconnect(connection, commit=True)
+    database.disconnect(connection, commit=True)
 
 
 def main() -> None:

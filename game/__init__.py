@@ -1,1 +1,1 @@
-import game.database
+from game import database
