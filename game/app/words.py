@@ -279,17 +279,14 @@ class GameWords:
         Args:
             selected_words: A list of already selected word ids.
         """
-        remaining_words = self.words[
-            self.words.ordgrupp.isin(self.unselected_word_groups)
-        ]
-        n_missing_words = self.game.settings.n_words - len(selected_words)
-        sample_size = min(n_missing_words, len(remaining_words.id))
-        random_words = list(
+        remaining_words = (
             self.words[self.words.ordgrupp.isin(self.unselected_word_groups)]
             .sample(frac=1)
             .drop_duplicates(subset=["ordgrupp"])
-            .id.sample(n=sample_size)
         )
+        n_missing_words = self.game.settings.n_words - len(selected_words)
+        sample_size = min(n_missing_words, len(remaining_words.id))
+        random_words = list(remaining_words.id.sample(n=sample_size))
         return selected_words + random_words
 
     def __get_word_pair(self, word_id: int) -> WordPair:
