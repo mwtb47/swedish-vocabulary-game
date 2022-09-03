@@ -55,7 +55,7 @@ class Labels:
             text: The label text.
         """
         label_kwargs = {"text": text, "name": "answerIndicator", "font": ("Arial", 22)}
-        place_kwargs = {"relx": 0.5, "rely": 0.55, "anchor": "n"}
+        place_kwargs = {"relx": 0.5, "rely": 0.75, "anchor": "s"}
         self.__create(label_kwargs, place_kwargs)
 
     def create_context_hint(self, text: str, rely: float) -> None:
@@ -66,7 +66,7 @@ class Labels:
             rely: The relative y position of the label.
         """
         label_kwargs = {
-            "text": textwrap.fill(text=text, width=35),
+            "text": textwrap.fill(text=text, width=80),
             "name": "contextHint",
             "font": ("Arial", 16),
         }
@@ -81,7 +81,7 @@ class Labels:
             rely: Relative y position of the label.
         """
         label_kwargs = {
-            "text": textwrap.fill(text=text, width=35),
+            "text": textwrap.fill(text=text, width=80),
             "name": "grammarHint",
             "font": ("Arial", 16),
         }
@@ -243,5 +243,5 @@ class Labels:
             "font": "Helvetica 18 underline",
             "fg": "DeepSkyBlue2",
         }
-        place_kwargs = {"relx": 0.5, "rely": 0.7, "anchor": "n"}
+        place_kwargs = {"relx": 0.5, "rely": 0.79, "anchor": "n"}
         self.__create_with_binding(label_kwargs, place_kwargs, lambda e: callback(link))

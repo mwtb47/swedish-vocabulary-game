@@ -5,7 +5,6 @@ Classes:
 """
 
 from time import time
-import webbrowser
 
 import app
 
@@ -32,7 +31,7 @@ class Answers:
         else:
             self.__add_mark(0)
             self.__record_incorrect_answer()
-            answer_description = f"❌ Incorrect\n\nCorrect answer: {self.game.settings.current_word_pair.answer}"
+            answer_description = f"❌ Incorrect\nCorrect answer: {self.game.settings.current_word_pair.answer}"
 
         self.__display_answer_check(answer_description)
         self.game.questions.move_to_next()
@@ -56,10 +55,6 @@ class Answers:
 
     def __create_wiktionary_link(self) -> None:
         """Create a Wiktionary link for the Swedish word in the word pair."""
-
-        def callback(url: str) -> None:
-            webbrowser.open_new(url)
-
         link = self.game.settings.current_word_pair.wiktionary_link
         link_text = f"Wiktionary SV: {link.split('/')[-1]}"
         self.game.labels.create_wiktionary_link(link_text, link)

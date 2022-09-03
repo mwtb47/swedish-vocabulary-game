@@ -41,7 +41,7 @@ class Buttons:
             "command": self.game.questions.set_question,
             "font": ("Arial", 16),
         }
-        place_kwargs = {"relx": 0.5, "rely": 0.85, "anchor": "n", "width": 150}
+        place_kwargs = {"relx": 0.5, "rely": 0.9, "anchor": "n", "width": 150}
         self.__create(button_kwargs, place_kwargs)
 
     def __create_quit_button(self) -> None:
