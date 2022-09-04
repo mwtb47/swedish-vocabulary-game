@@ -55,7 +55,7 @@ class Labels:
             text: The label text.
         """
         label_kwargs = {"text": text, "name": "answerIndicator", "font": ("Arial", 22)}
-        place_kwargs = {"relx": 0.5, "rely": 0.75, "anchor": "s"}
+        place_kwargs = {"relx": 0.5, "rely": 0.73, "anchor": "s"}
         self.__create(label_kwargs, place_kwargs)
 
     def create_context_hint(self, text: str, rely: float) -> None:
@@ -243,5 +243,5 @@ class Labels:
             "font": "Helvetica 18 underline",
             "fg": "DeepSkyBlue2",
         }
-        place_kwargs = {"relx": 0.5, "rely": 0.79, "anchor": "n"}
+        place_kwargs = {"relx": 0.5, "rely": 0.77, "anchor": "n"}
         self.__create_with_binding(label_kwargs, place_kwargs, lambda e: callback(link))
