@@ -17,7 +17,7 @@ def connect() -> sqlite3.Connection:
     Returns:
         Connection to database.
     """
-    return sqlite3.connect("game/database/vocabulary_danish.db")
+    return sqlite3.connect("game/database/vocabulary.db")
 
 
 def connect_with_cursor() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
@@ -26,7 +26,7 @@ def connect_with_cursor() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
     Returns:
         Tuple with connection to database and cursor.
     """
-    connection = sqlite3.connect("game/database/vocabulary_danish.db")
+    connection = sqlite3.connect("game/database/vocabulary.db")
     cursor = connection.cursor()
     return connection, cursor
 

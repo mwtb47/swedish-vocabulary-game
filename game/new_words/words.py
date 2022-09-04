@@ -36,9 +36,9 @@ words_phrases = [
     #
     # Verb(
     #     infinitive=     WordPair(sv="att ", da="at "),
-    #     present=        WordPair(sv="jag ", da="jag "),
-    #     past_simple=    WordPair(sv="jag ", da="jag "),
-    #     past_participle=WordPair(sv="jag har ", da="jag har "),
+    #     present=        WordPair(sv="jag ", da="jeg "),
+    #     past_simple=    WordPair(sv="jag ", da="jeg "),
+    #     past_participle=WordPair(sv="jag har ", da="jeg har "),
     #     imperative=     WordPair(sv="", da="")
     # ),
     #
