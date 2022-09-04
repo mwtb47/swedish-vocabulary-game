@@ -27,7 +27,7 @@ class Settings:
         n_rounds: The number of rounds.
         word_types: The word types chosen for the game.
         word_categories: The word categories chosen for the game.
-        translation_direction: 'en to sv' or 'sv to en'.
+        translation_direction: 'sv to da' or 'da to sv'.
         call_language: The language of the question.
         response_language: The language of the response.
         translation_direction: Integer representation for database.
@@ -59,7 +59,7 @@ class Settings:
         """Set the call and response language plus the int translaton direction."""
         self.call_language = self.translation_direction.split(" ")[0]
         self.response_language = self.translation_direction.split(" ")[2]
-        self.translation_direction = 1 if self.response_language == "sv" else 2
+        self.translation_direction = 1 if self.response_language == "da" else 2
 
     def set_up_retest(self, incorrect_answers: "list[app.WordPair]") -> None:
         """Set up settings for retesting incorrect answers.

@@ -30,17 +30,17 @@ class Summary:
         self.__show_incorrect_words()
 
     def __show_incorrect_words(self) -> None:
-        """Display incorrect answers in a table showing English and Swedish."""
+        """Display incorrect answers in a table showing Swedish and Danish."""
         self.game.labels.create_incorrect_words_title()
         self.game.labels.create_incorrect_words_column(
-            words=self.__incorrect_words("sv"),
+            words=self.__incorrect_words("da"),
             justify="left",
             relx=0.65,
             text_anchor="w",
             label_anchor="nw",
         )
         self.game.labels.create_incorrect_words_column(
-            words=self.__incorrect_words("en"),
+            words=self.__incorrect_words("sv"),
             justify="right",
             relx=0.6,
             text_anchor="e",

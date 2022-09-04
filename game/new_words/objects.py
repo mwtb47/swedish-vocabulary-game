@@ -1,7 +1,7 @@
 """Module containing word type dataclasses.
 
 Classes:
-    WordPair: A dataclass to represent the English and Swedish version
+    WordPair: A dataclass to represent the Swedish and Danish version
         of a word or phrase.
     Word: Base class for all types of word objects.
     Adjective: A dataclass to represent adjectives.
@@ -21,13 +21,13 @@ class WordPair:
     """Dataclass to represent a word or phrase pair.
 
     Attributes:
-        en: Word or phrase in English.
-        sv: Word of phrase in Swedish.
+        sv: Word or phrase in Swedish.
+        da: Word of phrase in Danish.
         grammar_id: See table_summaries.txt for grammar ids.
     """
 
-    en: str
     sv: str
+    da: str
     grammar_id: GrammarType = GrammarType.NA
 
 

@@ -54,9 +54,9 @@ class Answers:
         self.__display_wiktionary_link()
 
     def __create_wiktionary_link(self) -> None:
-        """Create a Wiktionary link for the Swedish word in the word pair."""
+        """Create a Wiktionary link for the Danish word in the word pair."""
         link = self.game.settings.current_word_pair.wiktionary_link
-        link_text = f"Wiktionary SV: {link.split('/')[-1]}"
+        link_text = f"Wiktionary DA: {link.split('/')[-1]}"
         self.game.labels.create_wiktionary_link(link_text, link)
 
     def __display_wiktionary_link(self) -> None:

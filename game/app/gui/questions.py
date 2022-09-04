@@ -96,7 +96,7 @@ class Questions:
     def start_retest(self) -> None:
         """Start retesting incorrect answers."""
         self.game.destroy_widgets(
-            names=["incorrect_title", "mark_label", "score_label", "en", "sv"]
+            names=["incorrect_title", "mark_label", "score_label", "sv", "en"]
         )
         self.game.window.translation_direction_graphic()
         self.__create_retest()

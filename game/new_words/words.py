@@ -16,36 +16,36 @@ from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordP
 
 words_phrases = [
     # Adjective(
-    #     neuter=       WordPair(en="", sv=""),
-    #     common_gender=WordPair(en="", sv=""),
-    #     plural=       WordPair(en="", sv=""),
-    #     comparative=  WordPair(en="", sv=""),
-    #     superlative=  WordPair(en="", sv="")
+    #     neuter=       WordPair(sv="", da=""),
+    #     common_gender=WordPair(sv="", da=""),
+    #     plural=       WordPair(sv="", da=""),
+    #     comparative=  WordPair(sv="", da=""),
+    #     superlative=  WordPair(sv="", da="")
     # ),
     #
     # Adverb(
-    #     word=WordPair(en="", sv=""),
+    #     word=WordPair(sv="", da=""),
     # ),
     #
     # Noun(
-    #     indefinite_singular=WordPair(en="a ", sv="en "),
-    #     indefinite_plural=  WordPair(en="", sv=""),
-    #     definite_singular=  WordPair(en="the ", sv=""),
-    #     definite_plural=    WordPair(en="the ", sv=""),
+    #     indefinite_singular=WordPair(sv="", da=""),
+    #     indefinite_plural=  WordPair(sv="", da=""),
+    #     definite_singular=  WordPair(sv="", da=""),
+    #     definite_plural=    WordPair(sv="", da=""),
     # ),
     #
     # Verb(
-    #     infinitive=     WordPair(en="to ", sv="att "),
-    #     present=        WordPair(en="I ", sv="jag "),
-    #     past_simple=    WordPair(en="I ", sv="jag "),
-    #     past_participle=WordPair(en="I have ", sv="jag har "),
-    #     imperative=     WordPair(en="", sv="")
+    #     infinitive=     WordPair(sv="att ", da="at "),
+    #     present=        WordPair(sv="jag ", da="jag "),
+    #     past_simple=    WordPair(sv="jag ", da="jag "),
+    #     past_participle=WordPair(sv="jag har ", da="jag har "),
+    #     imperative=     WordPair(sv="", da="")
     # ),
     #
     # Generic(
     #     word_phrase=WordPair(
-    #         en="",
     #         sv="",
+    #         da="",
     #         grammar_id=GrammarType.NA
     #     ),
     #     word_type=WordType.,

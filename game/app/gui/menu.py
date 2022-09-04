@@ -121,7 +121,7 @@ class Menu:
             label_text="translation direction",
             relx=0.1,
             rely=0.25,
-            options=["en till sv", "sv till en"],
+            options=["sv till da", "da till sv"],
         )
         self.n_words = TextEntry(
             game=self.game,

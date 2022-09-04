@@ -31,42 +31,6 @@ class WordCategory(Enum):
     ALLMÄN = 1
     """General."""
 
-    MAT = 2
-    """Food."""
-
-    SPORT = 3
-    """Sport."""
-
-    AFFÄR = 4
-    """Business."""
-
-    GEOGRAFI = 5
-    """Geography."""
-
-    KROPP = 6
-    """Body parts."""
-
-    ORDFÖlJD = 7
-    """Phrases focusing on word order."""
-
-    TID = 8
-    """"Time."""
-
-    PARTIKELVERB = 9
-    """Paticle verbs."""
-
-    KLÄDER = 10
-    """Clothing."""
-
-    DATASPRÅK = 11
-    """Data and technology."""
-
-    VETENSKAP = 12
-    """Scientific."""
-
-    DJUR = 13
-    """Animals."""
-
 
 class GrammarType(Enum):
     """Enums for grammar types."""

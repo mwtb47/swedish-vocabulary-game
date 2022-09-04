@@ -2,7 +2,7 @@
 
 A new word can be added to the database by sending a message in the following format:
 
-    #newword english word/phrase - swedish word/phrase ~word_type ~word_category
+    #newword swedish word/phrase - danish word/phrase ~word_type ~word_category
 
 This is currently only available for generic words. All word categories in the
 WordCategories enum can be specified.
@@ -17,18 +17,6 @@ Word types:
 
 Word categories:
 ~allmän
-~mat
-~sport
-~affär
-~geografi
-~kropp
-~ordföljd
-~tid
-~partikelverb
-~kläder
-~datorspråk
-~vetenskap
-~djur
 """
 
 from enum import Enum
@@ -58,7 +46,7 @@ def return_valid_flags(attribute: Enum, flags: list[str]) -> list[str]:
 def parse_new_word(message: str) -> Generic:
     """Parse new word and return as a Generic word instance.
 
-    Parse the word, getting the English part, Swedish part, word type
+    Parse the word, getting the Swedish part, Danish part, word type
     and word category. These are then used to create a Generic word
     type instance.
 
@@ -84,8 +72,8 @@ def parse_new_word(message: str) -> Generic:
 
     return Generic(
         word_phrase=WordPair(
-            en=re.search("#newword (.*?) - ", message).group(1),
-            sv=re.search(" - (.*?)(?=$| ~)", message).group(1),
+            sv=re.search("#newword (.*?) - ", message).group(1),
+            da=re.search(" - (.*?)(?=$| ~)", message).group(1),
             grammar_id=GrammarType.NA,
         ),
         word_type=word_type,

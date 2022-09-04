@@ -121,7 +121,7 @@ class NewWords:
         return df[attribute].max() + 1
 
     def __check_not_duplicated(self, word_pair: WordPair) -> bool:
-        """Check for duplicate entry of the English - Swedish pair.
+        """Check for duplicate entry of the Swedish - Danish pair.
 
         Args:
             word_pair: WordPair object to be added to the database.
@@ -132,12 +132,12 @@ class NewWords:
         """
         current_words = self.__read_current_words()
         current_pairs = [
-            (row.engelska, row.svenska, row.grammar_id)
+            (row.svenska, row.danska, row.grammar_id)
             for row in current_words.itertuples()
         ]
-        if (word_pair.en, word_pair.sv, word_pair.grammar_id) not in current_pairs:
+        if (word_pair.sv, word_pair.da, word_pair.grammar_id) not in current_pairs:
             return True
-        print(f"Word pair already in database. {word_pair.en} - {word_pair.sv}")
+        print(f"Word pair already in database. {word_pair.sv} - {word_pair.da}")
         return False
 
     def __add_word_info(
@@ -160,8 +160,8 @@ class NewWords:
         query = """
             INSERT INTO ord (
                 id,
-                engelska,
                 svenska,
+                danska,
                 ordtyp_id,
                 ordkategori_id,
                 ordgrupp,
@@ -171,8 +171,8 @@ class NewWords:
         """
         values = (
             id_,
-            word_pair.en,
             word_pair.sv,
+            word_pair.da,
             word_type.value,
             word_category.value,
             ordgrupp,

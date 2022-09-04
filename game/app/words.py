@@ -50,8 +50,8 @@ class WordPair:
 
     Attributes:
         id: The word pair or phrase pair id.
-        en: The English part of the pair.
         sv: The Swedish part of the pair.
+        da: The Danish part of the pair.
         call_language: The language the question is set in.
         grammar_hint: A grammar hint for the word or phrase pair.
         context_hint: A context hint for the word of phrase pair.
@@ -63,8 +63,8 @@ class WordPair:
     """
 
     id: int
-    en: str
     sv: str
+    da: str
     call_language: str
     grammar_hint: str = None
     context_hint: str = None
@@ -80,8 +80,8 @@ class WordPair:
 
     def __set_question_answer(self) -> None:
         """Set the question and answer based on the call language."""
-        self.question = self.en if self.call_language == "en" else self.sv
-        self.answer = self.sv if self.call_language == "en" else self.en
+        self.question = self.sv if self.call_language == "sv" else self.da
+        self.answer = self.da if self.call_language == "sv" else self.sv
 
     def __split_question(self) -> None:
         """Select only the first word or phrase option.
@@ -134,8 +134,8 @@ class GameWords:
             SELECT 
                 O.id,
                 O.ordtyp_id,
-                O.engelska,
                 O.svenska,
+                O.danska,
                 O.ordgrupp,
                 B.betyg,
                 B.tidsstämpel,
@@ -298,8 +298,8 @@ class GameWords:
         Returns:
             WordPair object for the word with id = word_id.
         """
-        english = self.words.loc[self.words.id == word_id, "engelska"].iloc[0]
         swedish = self.words.loc[self.words.id == word_id, "svenska"].iloc[0]
+        danish = self.words.loc[self.words.id == word_id, "danska"].iloc[0]
 
         # Provide a grammar hint for adjectives. Neuter, plural, etc.
         if self.words.loc[self.words.id == word_id, "ordtyp_id"].iloc[0] == 3:
@@ -316,8 +316,8 @@ class GameWords:
 
         return WordPair(
             id=word_id,
-            en=english,
             sv=swedish,
+            da=danish,
             call_language=self.game.settings.call_language,
             grammar_hint=grammar_hint,
             context_hint=context_hint,

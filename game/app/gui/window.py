@@ -34,9 +34,9 @@ class Window:
     def translation_direction_graphic(self) -> None:
         """Create the translation direction graphic."""
         if self.game.settings.translation_direction == 1:
-            text = "🇬🇧 ⇒ 🇸🇪"
+            text = "🇸🇪 ⇒ 🇩🇰"
         else:
-            text = "🇸🇪 ⇒ 🇬🇧"
+            text = "🇩🇰 ⇒ 🇸🇪"
         self.game.labels.create_translation_direction(text)
 
     def display_progress(self) -> None:
