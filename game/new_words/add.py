@@ -132,9 +132,10 @@ class NewWords:
         """
         current_words = self.__read_current_words()
         current_pairs = [
-            (row.engelska, row.svenska) for row in current_words.itertuples()
+            (row.engelska, row.svenska, row.grammar_id)
+            for row in current_words.itertuples()
         ]
-        if (word_pair.en, word_pair.sv) not in current_pairs:
+        if (word_pair.en, word_pair.sv, word_pair.grammar_id) not in current_pairs:
             return True
         print(f"Word pair already in database. {word_pair.en} - {word_pair.sv}")
         return False
