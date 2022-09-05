@@ -46,7 +46,7 @@ class WordCategory(Enum):
     KROPP = 6
     """Body parts."""
 
-    ORDFÖlJD = 7
+    ORDFÖLJD = 7
     """Phrases focusing on word order."""
 
     TID = 8
