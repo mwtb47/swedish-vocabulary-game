@@ -24,7 +24,7 @@ import pandas as pd
 import numpy as np
 
 from game import database
-from game.new_words.enums import WordCategory, WordType
+from game.new_words.enums import PartOfSpeech, WordCategory
 from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 
 
@@ -55,7 +55,7 @@ class Counter:
                 self.verbs += 1
 
     def print_summary(self) -> None:
-        """Print summary of word types added."""
+        """Print summary of words added."""
         print(
             (
                 "Number of entries added:\n"
@@ -143,7 +143,7 @@ class NewWords:
     def __add_word_info(
         self,
         id_: int,
-        word_type: WordType,
+        part_of_speech: PartOfSpeech,
         word_category: WordCategory,
         ordgrupp: int,
         word_pair: WordPair,
@@ -152,7 +152,7 @@ class NewWords:
 
         Args:
             id_: The word id for the word pair.
-            word_type: The word type of the word pair.
+            part_of_speech: The part of speech of the word pair.
             word_category: The word category of the word pair.
             ordgrupp: The word group id of the word pair.
             word_pair: The WordPair object.
@@ -173,7 +173,7 @@ class NewWords:
             id_,
             word_pair.en,
             word_pair.sv,
-            word_type.value,
+            part_of_speech.value,
             word_category.value,
             ordgrupp,
             word_pair.grammar_id.value,
@@ -247,7 +247,7 @@ class NewWords:
                 id_ = self.__get_next_attribute_id("id")
                 self.__add_word_info(
                     id_,
-                    word_object.word_type,
+                    word_object.part_of_speech,
                     word_object.word_category,
                     ordgrupp,
                     word_pair,

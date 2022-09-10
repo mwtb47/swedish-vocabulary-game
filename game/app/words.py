@@ -124,9 +124,11 @@ class GameWords:
 
         Raises:
             NoWordsError: No words are available for the selected
-                word_types and word_categories combination.
+                parts_of_speech and word_categories combination.
         """
-        word_types = ", ".join(f"'{s}'" for s in self.game.settings.word_types)
+        parts_of_speech = ", ".join(
+            f"'{s}'" for s in self.game.settings.parts_of_speech
+        )
         word_categories = ", ".join(
             f"'{s}'" for s in self.game.settings.word_categories
         )
@@ -157,7 +159,7 @@ class GameWords:
             LEFT JOIN wiktionary W 
                 ON O.ordgrupp = W.ordgrupp
             WHERE 
-                OT.typ IN ({word_types})
+                OT.typ IN ({parts_of_speech})
                 AND OK.kategori IN ({word_categories})
         """
         connection = database.connect()

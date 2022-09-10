@@ -1,4 +1,4 @@
-"""Module containing word type dataclasses.
+"""Module containing word object dataclasses.
 
 Classes:
     WordPair: A dataclass to represent the English and Swedish version
@@ -13,7 +13,7 @@ Classes:
 
 from dataclasses import dataclass
 
-from game.new_words.enums import GrammarType, WordCategory, WordType
+from game.new_words.enums import GrammarType, PartOfSpeech, WordCategory
 
 
 @dataclass
@@ -63,7 +63,7 @@ class Adjective(Word):
             adjective. Defaults to None.
         plural: WordPair object containing plural form of
             adjective. Defaults to None.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.
             Defaults to None.
@@ -76,7 +76,7 @@ class Adjective(Word):
     plural: WordPair | None = None
     comparative: WordPair | None = None
     superlative: WordPair | None = None
-    word_type: WordType = WordType.ADJECTIV
+    part_of_speech: PartOfSpeech = PartOfSpeech.ADJECTIV
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
@@ -113,7 +113,7 @@ class Adverb(Word):
 
     Attributes:
         word: WordPair object containing word of phrase.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.
             Defaults to None.
@@ -122,7 +122,7 @@ class Adverb(Word):
     """
 
     word: WordPair
-    word_type: WordType = WordType.ADVERB
+    part_of_speech: PartOfSpeech = PartOfSpeech.ADVERB
 
     def __post_init__(self) -> None:
         self.word.grammar_id = GrammarType.NA
@@ -135,7 +135,7 @@ class Generic(Word):
 
     Attributes:
         word_phrase: WordPair object containing word of phrase.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.
             Defaults to None.
@@ -144,7 +144,7 @@ class Generic(Word):
     """
 
     word_phrase: WordPair
-    word_type: WordType
+    part_of_speech: PartOfSpeech
 
     def __post_init__(self) -> None:
         self.word_list = [self.word_phrase]
@@ -163,8 +163,8 @@ class Noun(Word):
             singular form of adjective. Defaults to None.
         definite_plural: WordPair object containing definite
             plural form of adjective. Defaults to None.
-        word_type: See table_summaries.txt for word types.
-            Defaults to 1.
+        part_of_speech: See table_summaries.txt for parts of
+            speech. Defaults to 1 (noun).
         word_category: See table_summaries.txt for word
             categories. Defaults to 1.
         context_hint: Hint to be displayed under the question.
@@ -177,7 +177,7 @@ class Noun(Word):
     indefinite_plural: WordPair | None = None
     definite_singular: WordPair | None = None
     definite_plural: WordPair | None = None
-    word_type: WordType = WordType.SUBSTANTIV
+    part_of_speech: PartOfSpeech = PartOfSpeech.SUBSTANTIV
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
@@ -222,7 +222,7 @@ class Verb(Word):
             participle tense form. Defaults to None.
         imperative: WordPair object containing verb in imperative form.
             Defaults to None.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
             Defaults to 2.
         word_category: see table_summaries.txt for word
             categories. Defaults to 1.
@@ -237,7 +237,7 @@ class Verb(Word):
     past_simple: WordPair | None = None
     past_participle: WordPair | None = None
     imperative: WordPair | None = None
-    word_type: WordType = WordType.VERB
+    part_of_speech: PartOfSpeech = PartOfSpeech.VERB
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()

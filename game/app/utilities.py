@@ -25,7 +25,7 @@ class Settings:
     Attributes:
         n_words: The number of words per round.
         n_rounds: The number of rounds.
-        word_types: The word types chosen for the game.
+        parts_of_speech: The parts of speech chosen for the game.
         word_categories: The word categories chosen for the game.
         translation_direction: 'en to sv' or 'sv to en'.
         call_language: The language of the question.
@@ -38,7 +38,7 @@ class Settings:
 
     n_words: int = field(init=False)
     n_rounds: int = field(init=False)
-    word_types: list[str] = field(init=False)
+    parts_of_speech: list[str] = field(init=False)
     word_categories: list[str] = field(init=False)
     translation_direction: str = field(init=False)
     call_language: str = field(init=False)

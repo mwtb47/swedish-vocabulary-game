@@ -1,6 +1,6 @@
 """Module with a list of new words or phrases to add to database.
 
-The commented out templates for each word type are copied and 
+The commented out templates for each part of speech are copied and 
 filled in for each new word. They then need to be deleted after 
 the add.py script has been run.
 
@@ -10,7 +10,7 @@ I always came back to adding words here due to the multi-cursor and
 editing features of VS code making it much faster.
 """
 
-from enums import GrammarType, WordCategory, WordType
+from enums import GrammarType, PartOfSpeech, WordCategory
 from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
 
 
@@ -48,7 +48,7 @@ words_phrases = [
     #         sv="",
     #         grammar_id=GrammarType.NA
     #     ),
-    #     word_type=WordType.,
+    #     part_of_speech=PartOfSpeech.,
     #     word_category=WordCategory.,
     # ),
 ]
