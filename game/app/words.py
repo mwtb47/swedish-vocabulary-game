@@ -25,8 +25,8 @@ def format_text(text: str) -> str:
 
     To avoid answers being marked as incorrect due erroneous
     keystrikes, three steps are taken:
-        - any character which is not a digit, letter, space or dash
-          is removed.
+        - any character which is not a digit, letter, space, dash
+          or colon is removed.
         - any sequence of 2 or more spaces is replace by a single
           space.
         - convert to lower case.
@@ -38,7 +38,7 @@ def format_text(text: str) -> str:
     Returns:
         The formatted text string.
     """
-    text = re.sub("[^\d\w -]", "", text)
+    text = re.sub("[^\d\w -:]", "", text)
     text = re.sub("[\s]{2,}", " ", text)
     text = text.lower().strip()
     return text
