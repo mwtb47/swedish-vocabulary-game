@@ -17,8 +17,10 @@ Functions:
     main: Function to run the script.
 """
 
+import argparse
 from dataclasses import dataclass
 import sqlite3
+import subprocess
 
 import pandas as pd
 import numpy as np
@@ -279,3 +281,11 @@ if __name__ == "__main__":
     from words import words_phrases
 
     NewWords(words_phrases).add()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--checkout", action="store_true")
+    args = parser.parse_args()
+
+    # Remove changes after they have been committed to database.
+    if args.checkout:
+        subprocess.call(["git", "checkout", "game/new_words/words.py"])
