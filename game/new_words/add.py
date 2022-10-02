@@ -1,5 +1,11 @@
 """Module to add new words to the database.
 
+Using the --checkout flag will run the following command after adding
+the words to the database, removing the added words from
+game/new_words/words.py:
+
+    git checkout game/new_words/words.py
+
 Classes:
     Counter: Dataclass to count number of entries added.
 
