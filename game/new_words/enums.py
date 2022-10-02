@@ -24,6 +24,9 @@ class PartOfSpeech(Enum):
     PREPOSITION = 6
     """Preposition."""
 
+    KONJUNKTION = 7
+    """Conjunction."""
+
 
 class WordCategory(Enum):
     """Enums for word categories."""

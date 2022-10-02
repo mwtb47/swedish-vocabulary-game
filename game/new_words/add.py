@@ -33,18 +33,28 @@ import numpy as np
 
 from game import database
 from game.new_words.enums import PartOfSpeech, WordCategory
-from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
+from game.new_words.objects import (
+    Adjective,
+    Adverb,
+    Conjunction,
+    Generic,
+    Noun,
+    Verb,
+    Word,
+    WordPair,
+)
 
 
 @dataclass
 class Counter:
     adjectives: int = 0
     adverbs: int = 0
+    conjunctions: int = 0
     nouns: int = 0
     verbs: int = 0
     words: int = 0
 
-    def tick(self, word: Adjective | Adverb | Generic | Noun | Verb):
+    def tick(self, word: Word):
         """Increase count of word object type.
 
         Args:
@@ -55,6 +65,8 @@ class Counter:
                 self.adjectives += 1
             case Adverb():
                 self.adverbs += 1
+            case Conjunction():
+                self.conjunctions += 1
             case Generic():
                 self.words += 1
             case Noun():
@@ -69,6 +81,7 @@ class Counter:
                 "Number of entries added:\n"
                 f"Adjectives - {self.adjectives}\n"
                 f"Adverbs - {self.adverbs}\n"
+                f"Conjuctions - {self.conjunctions}\n"
                 f"Nouns - {self.nouns}\n"
                 f"Verbs - {self.verbs}\n"
                 f"Generic - {self.words}"
@@ -89,9 +102,7 @@ class NewWords:
         cursor: Cursor for the database connection.
     """
 
-    def __init__(
-        self, words_phrases: list[Adjective | Adverb | Generic | Noun | Verb]
-    ) -> None:
+    def __init__(self, words_phrases: list[Word]) -> None:
         self.words_phrases = words_phrases
         self.counter = Counter()
         self.__create_connection_and_cursor()
@@ -226,9 +237,7 @@ class NewWords:
         values = (ordgrupp, wiktionary_link)
         self.cursor.execute(query, values)
 
-    def __add_hint_and_link(
-        self, word_object: Adjective | Adverb | Generic | Noun | Verb, ordgrupp: int
-    ) -> None:
+    def __add_hint_and_link(self, word_object: Word, ordgrupp: int) -> None:
         """Add context hint and Wiktionary link to database.
 
         Args:
@@ -239,9 +248,7 @@ class NewWords:
         if word_object.wiktionary_link:
             self.__add_wiktionary_link(ordgrupp, word_object.wiktionary_link)
 
-    def __add_new_word(
-        self, word_object: Adjective | Adverb | Generic | Noun | Verb
-    ) -> None:
+    def __add_new_word(self, word_object: Word) -> None:
         """Add new word pairs to the database.
 
         For each word pair in the word group, check if the pair is already

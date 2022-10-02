@@ -12,7 +12,15 @@ editing features of VS code making it much faster.
 """
 
 from enums import GrammarType, PartOfSpeech, WordCategory
-from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
+from game.new_words.objects import (
+    Adjective,
+    Conjunction,
+    Adverb,
+    Generic,
+    Noun,
+    Verb,
+    WordPair,
+)
 
 
 words_phrases = [
@@ -25,6 +33,10 @@ words_phrases = [
     # ),
     #
     # Adverb(
+    #     word=WordPair(en="", sv=""),
+    # ),
+    #
+    # Conjunction(
     #     word=WordPair(en="", sv=""),
     # ),
     #
