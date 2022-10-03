@@ -148,7 +148,7 @@ class Menu:
             game=self.game,
             label_text="word category",
             relx=0.6,
-            rely=0.45,
+            rely=0.5,
             table="ordkategori",
             column="kategori",
         )
