@@ -20,7 +20,7 @@ Classes:
 from abc import abstractmethod
 import tkinter as tk
 
-import pandas as pd
+import polars as pl
 
 from app import Game, NoWordsError
 from game import database
@@ -36,22 +36,21 @@ def fetch_options(table: str, column: str) -> list[str]:
     Returns:
         A list of the options.
     """
-    connection = database.connect()
-    options = pd.read_sql_query(f"SELECT {column} FROM {table}", connection)
-    database.disconnect(connection)
-    return list(options[column])
+    return (
+        pl.read_sql(f"SELECT {column} FROM {table}", database.connection_uri)
+        .get_column(column)
+        .to_list()
+    )
 
 
-def fetch_checkbox_options() -> pd.DataFrame:
+def fetch_checkbox_options() -> pl.DataFrame:
     """Fetch table from database to check checkbox options.
 
     Returns:
         DataFrame with word ids, part of speech labels and
         word category labels.
     """
-    connection = database.connect()
-    df = pd.read_sql_query(
-        """
+    query = """
         SELECT
             O.id, OT.typ, OK.kategori 
         FROM
@@ -60,11 +59,8 @@ def fetch_checkbox_options() -> pd.DataFrame:
             ON O.ordtyp_id = OT.id
         JOIN ordkategori OK 
             ON O.ordkategori_id = OK.id
-        """,
-        connection,
-    )
-    database.disconnect(connection)
-    return df
+    """
+    return pl.read_sql(query, database.connection_uri)
 
 
 def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, int]:
@@ -252,10 +248,12 @@ class Menu:
         """
         unchanged_option = "kategori" if updated_option == "typ" else "typ"
 
-        options = self.checkbox_options.loc[
-            self.checkbox_options[updated_option].isin(values),
-            unchanged_option,
-        ].unique()
+        options = (
+            self.checkbox_options.filter(pl.col(updated_option).is_in(values))
+            .get_column(unchanged_option)
+            .unique()
+            .to_list()
+        )
 
         for option, button in buttons.items():
             if option not in options:

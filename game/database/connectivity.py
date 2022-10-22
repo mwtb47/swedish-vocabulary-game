@@ -11,6 +11,10 @@ Functions:
 import sqlite3
 
 
+# Connection uri used by Polars to connect to database file.
+connection_uri = "sqlite://./game/database/vocabulary.db"
+
+
 def connect() -> sqlite3.Connection:
     """Return connection to database.
 
