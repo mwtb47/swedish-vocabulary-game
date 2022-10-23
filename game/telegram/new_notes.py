@@ -39,6 +39,6 @@ def add(new_notes: list[str]) -> None:
         new_notes: List of messages containing new notes.
     """
     note_file = read()
-    note_file += "\n".join([f"- {s.replace('#note ', '')}" for s in new_notes]) + "\n"
+    note_file += "".join([f"- {s.replace('#note ', '')}\n" for s in new_notes])
     write(note_file)
     print(f"Number of new notes added: {len(new_notes)}")

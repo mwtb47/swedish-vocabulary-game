@@ -29,6 +29,17 @@ import new_notes
 import new_words
 
 
+def print_message(message: str = None) -> None:
+    """Print the current time followed by a message.
+
+    Args:
+        message: The message to print after timestamp. Defaults to none.
+    """
+    print(f"{datetime.now().strftime('%d-%m-%Y %H:%M:%S')}\n")
+    if message:
+        print(f"{message}\n")
+
+
 def get_updates() -> requests.Response:
     """Get updates from the Telegram bot chat.
 
@@ -55,10 +66,10 @@ def extract_messages(
     """
     results = response.json()["result"]
     if not response.ok:
-        print(f"Connection failed.\n{response.reason}")
+        print_message(f"Connection failed.\n{response.reason}")
         sys.exit()
     elif not results:
-        print("No messages in past 24 hours.")
+        print_message("No messages in past 24 hours.")
         sys.exit()
     else:
         messages = []
@@ -136,7 +147,7 @@ def main() -> None:
     messages, new_ids = extract_messages(response, message_ids.Id)
     update_message_ids(message_ids, new_ids)
     data = parse_messages(messages)
-    print(datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+    print_message()
     new_notes.add(data["notes"])
     new_words.add(data["new_words"])
     print("\n")

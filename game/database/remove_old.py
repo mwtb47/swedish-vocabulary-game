@@ -34,7 +34,7 @@ def fetch_table(table_name: str) -> pd.DataFrame:
     return pd.read_sql_query(f"SELECT * FROM {table_name}", connection)
 
 
-def fetch_words_and_marks() -> tuple[pd.DataFrame]:
+def fetch_words_and_marks() -> tuple[pd.DataFrame, pd.DataFrame]:
     """Fetch word and marks tables.
 
     Returns:

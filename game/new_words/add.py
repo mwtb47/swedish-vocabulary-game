@@ -1,5 +1,11 @@
 """Module to add new words to the database.
 
+Using the --checkout flag will run the following command after adding
+the words to the database, removing the added words from
+game/new_words/words.py:
+
+    git checkout game/new_words/words.py
+
 Classes:
     Counter: Dataclass to count number of entries added.
 
@@ -17,26 +23,38 @@ Functions:
     main: Function to run the script.
 """
 
+import argparse
 from dataclasses import dataclass
 import sqlite3
+import subprocess
 
 import pandas as pd
 import numpy as np
 
 from game import database
-from game.new_words.enums import WordCategory, WordType
-from game.new_words.objects import Adjective, Adverb, Generic, Noun, Verb, WordPair
+from game.new_words.enums import PartOfSpeech, WordCategory
+from game.new_words.objects import (
+    Adjective,
+    Adverb,
+    Conjunction,
+    Generic,
+    Noun,
+    Verb,
+    Word,
+    WordPair,
+)
 
 
 @dataclass
 class Counter:
     adjectives: int = 0
     adverbs: int = 0
+    conjunctions: int = 0
     nouns: int = 0
     verbs: int = 0
     words: int = 0
 
-    def tick(self, word: Adjective | Adverb | Generic | Noun | Verb):
+    def tick(self, word: Word):
         """Increase count of word object type.
 
         Args:
@@ -47,6 +65,8 @@ class Counter:
                 self.adjectives += 1
             case Adverb():
                 self.adverbs += 1
+            case Conjunction():
+                self.conjunctions += 1
             case Generic():
                 self.words += 1
             case Noun():
@@ -55,12 +75,13 @@ class Counter:
                 self.verbs += 1
 
     def print_summary(self) -> None:
-        """Print summary of word types added."""
+        """Print summary of words added."""
         print(
             (
                 "Number of entries added:\n"
                 f"Adjectives - {self.adjectives}\n"
                 f"Adverbs - {self.adverbs}\n"
+                f"Conjuctions - {self.conjunctions}\n"
                 f"Nouns - {self.nouns}\n"
                 f"Verbs - {self.verbs}\n"
                 f"Generic - {self.words}"
@@ -81,9 +102,7 @@ class NewWords:
         cursor: Cursor for the database connection.
     """
 
-    def __init__(
-        self, words_phrases: list[Adjective | Adverb | Generic | Noun | Verb]
-    ) -> None:
+    def __init__(self, words_phrases: list[Word]) -> None:
         self.words_phrases = words_phrases
         self.counter = Counter()
         self.__create_connection_and_cursor()
@@ -135,7 +154,12 @@ class NewWords:
             (row.svenska, row.danska, row.grammar_id)
             for row in current_words.itertuples()
         ]
-        if (word_pair.sv, word_pair.da, word_pair.grammar_id) not in current_pairs:
+
+        if (
+            word_pair.sv,
+            word_pair.da,
+            word_pair.grammar_id.value,
+        ) not in current_pairs:
             return True
         print(f"Word pair already in database. {word_pair.sv} - {word_pair.da}")
         return False
@@ -143,7 +167,7 @@ class NewWords:
     def __add_word_info(
         self,
         id_: int,
-        word_type: WordType,
+        part_of_speech: PartOfSpeech,
         word_category: WordCategory,
         ordgrupp: int,
         word_pair: WordPair,
@@ -152,7 +176,7 @@ class NewWords:
 
         Args:
             id_: The word id for the word pair.
-            word_type: The word type of the word pair.
+            part_of_speech: The part of speech of the word pair.
             word_category: The word category of the word pair.
             ordgrupp: The word group id of the word pair.
             word_pair: The WordPair object.
@@ -173,7 +197,7 @@ class NewWords:
             id_,
             word_pair.sv,
             word_pair.da,
-            word_type.value,
+            part_of_speech.value,
             word_category.value,
             ordgrupp,
             word_pair.grammar_id.value,
@@ -214,9 +238,7 @@ class NewWords:
         values = (ordgrupp, wiktionary_link)
         self.cursor.execute(query, values)
 
-    def __add_hint_and_link(
-        self, word_object: Adjective | Adverb | Generic | Noun | Verb, ordgrupp: int
-    ) -> None:
+    def __add_hint_and_link(self, word_object: Word, ordgrupp: int) -> None:
         """Add context hint and Wiktionary link to database.
 
         Args:
@@ -227,9 +249,7 @@ class NewWords:
         if word_object.wiktionary_link:
             self.__add_wiktionary_link(ordgrupp, word_object.wiktionary_link)
 
-    def __add_new_word(
-        self, word_object: Adjective | Adverb | Generic | Noun | Verb
-    ) -> None:
+    def __add_new_word(self, word_object: Word) -> None:
         """Add new word pairs to the database.
 
         For each word pair in the word group, check if the pair is already
@@ -247,7 +267,7 @@ class NewWords:
                 id_ = self.__get_next_attribute_id("id")
                 self.__add_word_info(
                     id_,
-                    word_object.word_type,
+                    word_object.part_of_speech,
                     word_object.word_category,
                     ordgrupp,
                     word_pair,
@@ -275,3 +295,11 @@ if __name__ == "__main__":
     from words import words_phrases
 
     NewWords(words_phrases).add()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--checkout", action="store_true")
+    args = parser.parse_args()
+
+    # Remove changes after they have been committed to database.
+    if args.checkout:
+        subprocess.call(["git", "checkout", "game/new_words/words.py"])

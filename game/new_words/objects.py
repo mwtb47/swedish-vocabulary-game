@@ -1,4 +1,4 @@
-"""Module containing word type dataclasses.
+"""Module containing word object dataclasses.
 
 Classes:
     WordPair: A dataclass to represent the Swedish and Danish version
@@ -13,7 +13,7 @@ Classes:
 
 from dataclasses import dataclass
 
-from game.new_words.enums import GrammarType, WordCategory, WordType
+from game.new_words.enums import GrammarType, PartOfSpeech, WordCategory
 
 
 @dataclass
@@ -63,7 +63,8 @@ class Adjective(Word):
             adjective. Defaults to None.
         plural: WordPair object containing plural form of
             adjective. Defaults to None.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
+            Defaults to ADJECTIVE.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.
             Defaults to None.
@@ -76,14 +77,14 @@ class Adjective(Word):
     plural: WordPair | None = None
     comparative: WordPair | None = None
     superlative: WordPair | None = None
-    word_type: WordType = WordType.ADJECTIV
+    part_of_speech: PartOfSpeech = PartOfSpeech.ADJECTIV
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
         self.__create_word_list()
 
     def __assign_grammar_ids(self) -> None:
-        """Assign grammar ids where Word has been set."""
+        """Assign grammar ids where WordPair has been set."""
         if self.common_gender:
             self.common_gender.grammar_id = GrammarType.ADJEKTIV_UTRUM
         if self.neuter:
@@ -109,11 +110,12 @@ class Adjective(Word):
 
 @dataclass(kw_only=True)
 class Adverb(Word):
-    """Dataclass to represent a generic word or phrase.
+    """Dataclass to represent an adverb.
 
     Attributes:
         word: WordPair object containing word of phrase.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
+            Defaults to ADVERB.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.
             Defaults to None.
@@ -122,7 +124,30 @@ class Adverb(Word):
     """
 
     word: WordPair
-    word_type: WordType = WordType.ADVERB
+    part_of_speech: PartOfSpeech = PartOfSpeech.ADVERB
+
+    def __post_init__(self) -> None:
+        self.word.grammar_id = GrammarType.NA
+        self.word_list = [self.word]
+
+
+@dataclass(kw_only=True)
+class Conjunction(Word):
+    """Dataclass to represent a conjunction.
+
+    Attributes:
+        word: WordPair object containing conjunction.
+        part_of_speech: See table_summaries.txt for parts of speech.
+            Defaults to ADVERB.
+        word_category: See table_summaries.txt for word categories.
+        context_hint: Hint to be displayed under the question.
+            Defaults to None.
+        wiktionary_link: Link to wiktionary page. Defaults to
+            None.
+    """
+
+    word: WordPair
+    part_of_speech: PartOfSpeech = PartOfSpeech.KONJUNKTION
 
     def __post_init__(self) -> None:
         self.word.grammar_id = GrammarType.NA
@@ -135,7 +160,7 @@ class Generic(Word):
 
     Attributes:
         word_phrase: WordPair object containing word of phrase.
-        word_type: See table_summaries.txt for word types.
+        part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
         context_hint: Hint to be displayed under the question.
             Defaults to None.
@@ -144,7 +169,7 @@ class Generic(Word):
     """
 
     word_phrase: WordPair
-    word_type: WordType
+    part_of_speech: PartOfSpeech
 
     def __post_init__(self) -> None:
         self.word_list = [self.word_phrase]
@@ -163,8 +188,8 @@ class Noun(Word):
             singular form of adjective. Defaults to None.
         definite_plural: WordPair object containing definite
             plural form of adjective. Defaults to None.
-        word_type: See table_summaries.txt for word types.
-            Defaults to 1.
+        part_of_speech: See table_summaries.txt for parts of
+            speech. Defaults to NOUN.
         word_category: See table_summaries.txt for word
             categories. Defaults to 1.
         context_hint: Hint to be displayed under the question.
@@ -177,14 +202,14 @@ class Noun(Word):
     indefinite_plural: WordPair | None = None
     definite_singular: WordPair | None = None
     definite_plural: WordPair | None = None
-    word_type: WordType = WordType.SUBSTANTIV
+    part_of_speech: PartOfSpeech = PartOfSpeech.SUBSTANTIV
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
         self.__create_word_list()
 
     def __assign_grammar_ids(self) -> None:
-        """Assign grammar ids where Word has been set."""
+        """Assign grammar ids where WordPair has been set."""
         if self.indefinite_singular:
             self.indefinite_singular.grammar_id = (
                 GrammarType.OBESTÄMDT_SINGULART_SUBSTANTIV
@@ -222,8 +247,8 @@ class Verb(Word):
             participle tense form. Defaults to None.
         imperative: WordPair object containing verb in imperative form.
             Defaults to None.
-        word_type: See table_summaries.txt for word types.
-            Defaults to 2.
+        part_of_speech: See table_summaries.txt for parts of speech.
+            Defaults to VERB.
         word_category: see table_summaries.txt for word
             categories. Defaults to 1.
         context_hint: Hint to be displayed under the question.
@@ -237,14 +262,14 @@ class Verb(Word):
     past_simple: WordPair | None = None
     past_participle: WordPair | None = None
     imperative: WordPair | None = None
-    word_type: WordType = WordType.VERB
+    part_of_speech: PartOfSpeech = PartOfSpeech.VERB
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
         self.__create_word_list()
 
     def __assign_grammar_ids(self) -> None:
-        """Assign grammar ids where Word has been set."""
+        """Assign grammar ids where WordPair has been set."""
         if self.infinitive:
             self.infinitive.grammar_id = GrammarType.INFINITIVT_VERB
         if self.present:

@@ -1,10 +1,10 @@
-"""Module containing enums for word types, word categories, and grammar types."""
+"""Module containing enums for parts of speech, word categories, and grammar types."""
 
 from enum import Enum
 
 
-class WordType(Enum):
-    """Enums for word types."""
+class PartOfSpeech(Enum):
+    """Enums for parts of speech."""
 
     SUBSTANTIV = 1
     """Noun."""
@@ -23,6 +23,9 @@ class WordType(Enum):
 
     PREPOSITION = 6
     """Preposition."""
+
+    KONJUNKTION = 7
+    """Conjunction."""
 
 
 class WordCategory(Enum):

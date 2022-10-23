@@ -13,14 +13,14 @@ Classes:
         menu items.
     Round: Contains methods to create number of rounds menu items.
     NumberOfWords: Contains methods to create number of rounds menu items.
-    WordType: Contains methods to create word type menu items.
+    PartOfSpeech: Contains methods to create part of speech menu items.
     WordCategory: Contains methods to create word category menu items.
 """
 
 from abc import abstractmethod
 import tkinter as tk
 
-import pandas as pd
+import polars as pl
 
 from app import Game, NoWordsError
 from game import database
@@ -36,22 +36,21 @@ def fetch_options(table: str, column: str) -> list[str]:
     Returns:
         A list of the options.
     """
-    connection = database.connect()
-    options = pd.read_sql_query(f"SELECT {column} FROM {table}", connection)
-    database.disconnect(connection)
-    return list(options[column])
+    return (
+        pl.read_sql(f"SELECT {column} FROM {table}", database.connection_uri)
+        .get_column(column)
+        .to_list()
+    )
 
 
-def fetch_checkbox_options() -> pd.DataFrame:
+def fetch_checkbox_options() -> pl.DataFrame:
     """Fetch table from database to check checkbox options.
 
     Returns:
-        DataFrame with word ids, word type labels and
+        DataFrame with word ids, part of speech labels and
         word category labels.
     """
-    connection = database.connect()
-    df = pd.read_sql_query(
-        """
+    query = """
         SELECT
             O.id, OT.typ, OK.kategori 
         FROM
@@ -60,11 +59,8 @@ def fetch_checkbox_options() -> pd.DataFrame:
             ON O.ordtyp_id = OT.id
         JOIN ordkategori OK 
             ON O.ordkategori_id = OK.id
-        """,
-        connection,
-    )
-    database.disconnect(connection)
-    return df
+    """
+    return pl.read_sql(query, database.connection_uri)
 
 
 def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, int]:
@@ -101,8 +97,8 @@ class Menu:
             words per game.
         n_rounds: Instance of DropDownEntry for selection of number
             of rounds in game.
-        word_types: Instance of CheckboxEntry for selection of
-            word types.
+        parts_of_speech: Instance of CheckboxEntry for selection of
+            parts of speech.
         word_categories: Instance of CheckboxEntry for selection
             of word categories.
     """
@@ -136,9 +132,9 @@ class Menu:
             rely=0.55,
             options=[1, 2, 3, 4, 5],
         )
-        self.word_types = CheckboxEntry(
+        self.parts_of_speech = CheckboxEntry(
             game=self.game,
-            label_text="word type",
+            label_text="part of speech",
             relx=0.6,
             rely=0.25,
             table="ordtyp",
@@ -148,7 +144,7 @@ class Menu:
             game=self.game,
             label_text="word category",
             relx=0.6,
-            rely=0.45,
+            rely=0.5,
             table="ordkategori",
             column="kategori",
         )
@@ -158,7 +154,7 @@ class Menu:
         self.translation_direction.create_menu_items()
         self.n_rounds.create_menu_items()
         self.n_words.create_menu_items()
-        self.word_types.create_menu_items()
+        self.parts_of_speech.create_menu_items()
         self.word_categories.create_menu_items()
         self.__create_submit_button()
 
@@ -176,7 +172,7 @@ class Menu:
         """Get the values from the option selections and destroy menu."""
         self.game.settings.n_rounds = int(self.n_rounds.value)
         self.game.settings.n_words = int(self.n_words.value or 5)
-        self.game.settings.word_types = self.word_types.values
+        self.game.settings.parts_of_speech = self.parts_of_speech.values
         self.game.settings.word_categories = self.word_categories.values
         self.game.settings.translation_direction = self.translation_direction.value
         self.game.settings.set_langauges()
@@ -186,9 +182,9 @@ class Menu:
         """Try to get words with specified settings.
 
         Try to get words from the database which match the
-        specified word types and word categories selected.
-        If there are no words available, prompt the user
-        to select a different combination.
+        specified parts of speech and word categories selected.
+        If there are no words available, prompt the user to
+        select a different combination.
         """
         try:
             self.game.settings.word_pairs = self.game.game_words.return_word_pairs()
@@ -197,7 +193,7 @@ class Menu:
             self.game.destroy_widgets(names=["no_word_error"])
         except NoWordsError:
             self.game.labels.create_no_words_error(
-                "No words available with selected word types and word categories.",
+                "No words available with selected parts of speech and word categories.",
             )
 
     def update_checkbox_fonts(self, updated_option: str) -> None:
@@ -205,14 +201,14 @@ class Menu:
 
         Args:
             updated_option: The characteristic which has just been
-                updated, either word type of word category.
+                updated, either part of speech of word category.
         """
         if updated_option == "typ":
-            values = self.word_types.values
+            values = self.parts_of_speech.values
             buttons = self.word_categories.buttons
         else:
             values = self.word_categories.values
-            buttons = self.word_types.buttons
+            buttons = self.parts_of_speech.buttons
 
         if not values:
             self.__reset_font_colour(buttons)
@@ -237,14 +233,14 @@ class Menu:
     ) -> None:
         """Update font colour to reflect available combinations.
 
-        When a checkbox has been selected in either the word type
-        of word category section, get the available options in the
-        other section and update the font colour to indicate which
-        options are now available.
+        When a checkbox has been selected in either the part of
+        speech or word category section, get the available options
+        in the other section and update the font colour to indicate
+        which options are now available.
 
         Args:
-            updated_option: The updated characteristic, either word
-                type of word category.
+            updated_option: The updated characteristic, either part
+                of speech or word category.
             values: List of selected values for the updated
                 characteristic.
             buttons: Dictionary containing buttons to update font
@@ -252,10 +248,12 @@ class Menu:
         """
         unchanged_option = "kategori" if updated_option == "typ" else "typ"
 
-        options = self.checkbox_options.loc[
-            self.checkbox_options[updated_option].isin(values),
-            unchanged_option,
-        ].unique()
+        options = (
+            self.checkbox_options.filter(pl.col(updated_option).is_in(values))
+            .get_column(unchanged_option)
+            .unique()
+            .to_list()
+        )
 
         for option, button in buttons.items():
             if option not in options:
