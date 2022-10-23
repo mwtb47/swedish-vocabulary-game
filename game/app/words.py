@@ -8,7 +8,7 @@ Classes:
         which forms a question and answer in the game.
     GameWords: A class with methods to fetch and select words for
         session of the game.
-    """
+"""
 
 from dataclasses import dataclass
 import random
@@ -108,12 +108,19 @@ class GameWords:
     def __init__(self, game: Game) -> None:
         self.game = game
 
-    def __fetch_words(self) -> None:
+    def __fetch_words(self) -> pl.DataFrame:
         """Fetch words from the database.
+
+        Join in the marks, word type labels, word category labels, grammar
+        labels, tips and Wiktionary links, filtering by the selected word
+        types and word categories.
 
         Raises:
             NoWordsError: No words are available for the selected
                 parts_of_speech and word_categories combination.
+
+        Returns:
+            DataFrame containing database words.
         """
         parts_of_speech = ", ".join(
             f"'{s}'" for s in self.game.settings.parts_of_speech
@@ -134,9 +141,9 @@ class GameWords:
                 T.sammanhang_tips,
                 W.länk
             FROM
-                betyg as B
-            JOIN ord as O
-                ON B.ord_id = O.id
+                ord as O
+            LEFT OUTER JOIN betyg as B
+                ON O.id = B.ord_id
             JOIN ordtyp OT 
                 ON O.ordtyp_id = OT.id
             JOIN ordkategori OK 
@@ -184,7 +191,7 @@ class GameWords:
             .groupby(["id", "ordgrupp"])
             .agg(
                 [
-                    pl.count().alias("count"),
+                    pl.col("betyg").drop_nulls().count().alias("count"),
                     pl.col("betyg").mean().alias("mean"),
                     pl.col("betyg").tail(3).mean().alias("mean_last_3"),
                 ]
@@ -239,7 +246,7 @@ class GameWords:
         """
         return (
             inflections.filter(pl.col("mean_last_3") < 1)
-            .sort("mean_last_3")
+            .sort(["mean_last_3", "mean"])
             .head(words_per_group)
         )
 
