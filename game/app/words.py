@@ -129,34 +129,34 @@ class GameWords:
             f"'{s}'" for s in self.game.settings.word_categories
         )
         query = f"""
-            SELECT
-                O.id,
-                O.ordtyp_id,
-                O.engelska,
-                O.svenska,
-                O.ordgrupp,
-                B.betyg,
-                B.tidsstämpel,
-                G.beskrivning,
-                T.sammanhang_tips,
-                W.länk
-            FROM
-                ord as O
-            LEFT OUTER JOIN betyg as B
-                ON O.id = B.ord_id
-            JOIN ordtyp OT 
-                ON O.ordtyp_id = OT.id
-            JOIN ordkategori OK 
-                ON O.ordkategori_id = OK.id
-            JOIN grammatik G
-                ON O.grammar_id = G.id
-            LEFT JOIN tips T 
-                ON O.ordgrupp = T.ordgrupp
-            LEFT JOIN wiktionary W 
-                ON O.ordgrupp = W.ordgrupp
-            WHERE 
-                OT.typ IN ({parts_of_speech})
-                AND OK.kategori IN ({word_categories})
+        SELECT
+            W.WordID,
+            W.PartOfSpeechID,
+            W.English,
+            W.Swedish,
+            W.WordGroup,
+            M.Mark,
+            M.Timestamp,
+            G.Description AS GrammarDescription,
+            H.Hint,
+            L.WiktionaryLink
+        FROM
+            Words W
+        LEFT OUTER JOIN Marks M
+            ON W.WordID = M.WordID
+        JOIN PartsOfSpeech P
+            ON W.PartOfSpeechID = P.PartOfSpeechID
+        JOIN WordCategories C
+            ON W.WordCategoryID = C.WordCategoryID
+        JOIN Grammar G
+            ON W.GrammarID = G.GrammarID
+        LEFT JOIN Hints H
+            ON W.WordGroup = H.WordGroup
+        LEFT JOIN Links L
+            ON W.WordGroup = L.WiktionaryLink
+        WHERE
+            P.PartOfSpeech IN ({parts_of_speech})
+            AND C.Category IN ({word_categories})
         """
 
         words = pl.read_sql(query, database.connection_uri)
@@ -180,20 +180,20 @@ class GameWords:
             DataFrame with selected inflections and summary statistics.
         """
         inflections = (
-            words.select(pl.col(["id", "ordgrupp"]))
-            .groupby(by="ordgrupp")
+            words.select(pl.col(["WordID", "WordGroup"]))
+            .groupby(by="WordGroup")
             .agg(pl.all().sample(n=1))
-            .explode("id")
-            .select(["id", "ordgrupp"])
+            .explode("WordID")
+            .select(["WordID", "WordGroup"])
         )
         return (
-            inflections.join(words, how="left", on="id")
-            .groupby(["id", "ordgrupp"])
+            inflections.join(words, how="left", on="WordID")
+            .groupby(["WordID", "WordGroup"])
             .agg(
                 [
-                    pl.col("betyg").drop_nulls().count().alias("count"),
-                    pl.col("betyg").mean().alias("mean"),
-                    pl.col("betyg").tail(3).mean().alias("mean_last_3"),
+                    pl.col("Mark").drop_nulls().count().alias("count"),
+                    pl.col("Mark").mean().alias("mean"),
+                    pl.col("Mark").tail(3).mean().alias("mean_last_3"),
                 ]
             )
         )
@@ -223,7 +223,9 @@ class GameWords:
         low_count = self.__select_low_count(inflections, low_scores, words_per_group)
         random_words = self.__select_random(inflections, low_scores, low_count)
         return (
-            pl.concat([low_scores, low_count, random_words]).get_column("id").to_list()
+            pl.concat([low_scores, low_count, random_words])
+            .get_column("WordID")
+            .to_list()
         )
 
     def __select_low_scoring(
@@ -266,7 +268,7 @@ class GameWords:
         """
         return (
             inflections.filter(
-                ~pl.col("ordgrupp").is_in(low_scores.get_column("ordgrupp"))
+                ~pl.col("WordGroup").is_in(low_scores.get_column("WordGroup"))
             )
             .sort("count")
             .head(words_per_group)
@@ -291,7 +293,7 @@ class GameWords:
         """
         selected_words = pl.concat([low_scores, low_frequency])
         remaining_words = inflections.filter(
-            ~pl.col("ordgrupp").is_in(selected_words.get_column("ordgrupp"))
+            ~pl.col("WordGroup").is_in(selected_words.get_column("WordGroup"))
         )
 
         n_missing_words = self.game.settings.n_words - selected_words.shape[0]
@@ -308,18 +310,18 @@ class GameWords:
         Returns:
             WordPair object for the word with id = word_id.
         """
-        word = words.filter(pl.col("id") == word_id)
-        english = word.get_column("engelska")[0]
-        swedish = word.get_column("svenska")[0]
+        word = words.filter(pl.col("WordID") == word_id)
+        english = word.get_column("English")[0]
+        swedish = word.get_column("Swedish")[0]
 
         # Provide a grammar hint for adjectives. Neuter, plural, etc.
-        if word.get_column("ordtyp_id")[0] == 3:
-            grammar_hint = word.get_column("beskrivning")[0]
+        if word.get_column("PartOfSpeechID")[0] == 3:
+            grammar_hint = word.get_column("GrammarDescription")[0]
         else:
             grammar_hint = None
 
-        context_hint = word.get_column("sammanhang_tips")[0]
-        wiktionary_link = word.get_column("länk")[0]
+        context_hint = word.get_column("Hint")[0]
+        wiktionary_link = word.get_column("WiktionaryLink")[0]
 
         return WordPair(
             id=word_id,

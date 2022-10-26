@@ -24,7 +24,7 @@ class Summary:
 
     def show_summary(self) -> None:
         """Display % correct answers."""
-        mark = np.mean([m["betyg"] for m in self.game.status.marks]) * 100
+        mark = np.mean([m["Mark"] for m in self.game.status.marks]) * 100
         self.game.labels.create_score_title()
         self.game.labels.create_score(mark)
         self.__show_incorrect_words()

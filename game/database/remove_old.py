@@ -41,8 +41,8 @@ def fetch_words_and_marks() -> tuple[pd.DataFrame, pd.DataFrame]:
         Tuple of DataFrames. The first DataFrame is the words
         table, the second is the marks table.
     """
-    words = fetch_table("ord")
-    marks = fetch_table("betyg")
+    words = fetch_table("Words")
+    marks = fetch_table("Marks")
     return words, marks
 
 
@@ -89,7 +89,7 @@ def commit(new_marks: pd.DataFrame) -> None:
     Args:
         new_marks: Dataframe to replace the marks table.
     """
-    new_marks.to_sql("betyg", connection, if_exists="replace", index=False)
+    new_marks.to_sql("Marks", connection, if_exists="replace", index=False)
     database.disconnect(connection, commit=True)
 
 

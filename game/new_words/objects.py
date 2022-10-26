@@ -43,7 +43,7 @@ class Word:
             None.
     """
 
-    word_category: WordCategory = WordCategory.ALLMÄN
+    word_category: WordCategory = WordCategory.GENERAL
     context_hint: str | None = None
     wiktionary_link: str | None = None
 
@@ -53,10 +53,10 @@ class Adjective(Word):
     """Dataclass to represent an adjective.
 
     Attributes:
-        neuter: WordPair object containing neuter form of adjective.
+        neutrum: WordPair object containing neutrum form of adjective.
             Defaults to None.
-        common_gender: WordPair object containing common gender form
-            of adjective. Defaults to None.
+        utrum: WordPair object containing utrum form of adjective.
+            Defaults to None.
         comparative: WordPair object containing comparative form of
             adjective. Defaults to None.
         superlative: WordPair object containing superlative form of
@@ -72,12 +72,12 @@ class Adjective(Word):
             None.
     """
 
-    common_gender: WordPair | None = None
-    neuter: WordPair | None = None
+    utrum: WordPair | None = None
+    neutrum: WordPair | None = None
     plural: WordPair | None = None
     comparative: WordPair | None = None
     superlative: WordPair | None = None
-    part_of_speech: PartOfSpeech = PartOfSpeech.ADJECTIV
+    part_of_speech: PartOfSpeech = PartOfSpeech.ADJECTIVE
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
@@ -85,22 +85,22 @@ class Adjective(Word):
 
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
-        if self.common_gender:
-            self.common_gender.grammar_id = GrammarType.ADJEKTIV_UTRUM
-        if self.neuter:
-            self.neuter.grammar_id = GrammarType.ADJEKTIV_NEUTRUM
+        if self.utrum:
+            self.utrum.grammar_id = GrammarType.ADJECTIVE_UTRUM
+        if self.neutrum:
+            self.neutrum.grammar_id = GrammarType.ADJECTIVE_NEUTRUM
         if self.plural:
-            self.plural.grammar_id = GrammarType.ADJEKTIV_PLURAL
+            self.plural.grammar_id = GrammarType.ADJECTIVE_PLURAL
         if self.comparative:
-            self.comparative.grammar_id = GrammarType.ADJEKTIV_KOMPARATIV
+            self.comparative.grammar_id = GrammarType.ADJECTIVE_COMPARATIVE
         if self.superlative:
-            self.superlative.grammar_id = GrammarType.ADJEKTIV_SUPERLATIV
+            self.superlative.grammar_id = GrammarType.ADJECTIVE_SUPERLATIVE
 
     def __create_word_list(self) -> None:
         """Create a list of words."""
         word_pairs = [
-            self.common_gender,
-            self.neuter,
+            self.utrum,
+            self.neutrum,
             self.plural,
             self.comparative,
             self.superlative,
@@ -147,7 +147,7 @@ class Conjunction(Word):
     """
 
     word: WordPair
-    part_of_speech: PartOfSpeech = PartOfSpeech.KONJUNKTION
+    part_of_speech: PartOfSpeech = PartOfSpeech.CONJUNCTION
 
     def __post_init__(self) -> None:
         self.word.grammar_id = GrammarType.NA
@@ -202,7 +202,7 @@ class Noun(Word):
     indefinite_plural: WordPair | None = None
     definite_singular: WordPair | None = None
     definite_plural: WordPair | None = None
-    part_of_speech: PartOfSpeech = PartOfSpeech.SUBSTANTIV
+    part_of_speech: PartOfSpeech = PartOfSpeech.NOUN
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
@@ -211,15 +211,13 @@ class Noun(Word):
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
         if self.indefinite_singular:
-            self.indefinite_singular.grammar_id = (
-                GrammarType.OBESTÄMDT_SINGULART_SUBSTANTIV
-            )
+            self.indefinite_singular.grammar_id = GrammarType.NOUN_INDEFINITE_SINGULAR
         if self.indefinite_plural:
-            self.indefinite_plural.grammar_id = GrammarType.OBESTÄMT_PLURAL_SUBSTANTIV
+            self.indefinite_plural.grammar_id = GrammarType.NOUN_INDEFINITE_PLURAL
         if self.definite_singular:
-            self.definite_singular.grammar_id = GrammarType.BESTÄMT_SINGULART_SUBSTANTIV
+            self.definite_singular.grammar_id = GrammarType.NOUN_DEFINITE_SINGULAR
         if self.definite_plural:
-            self.definite_plural.grammar_id = GrammarType.BESTÄMT_PLURAL_SUBSTANTIV
+            self.definite_plural.grammar_id = GrammarType.NOUN_DEFINITE_PLURAL
 
     def __create_word_list(self) -> None:
         """Create a list of words."""
@@ -239,12 +237,12 @@ class Verb(Word):
     Attributes:
         infinitive: WordPair object containing verb in infinitive form.
             Defaults to None.
-        present: WordPair object containing verb in present tense form.
-            Defaults to None.
+        present_simple: WordPair object containing verb in present tense
+            form. Defaults to None.
         past_simple: WordPair object containing verb in past simple
             tense form. Defaults to None.
-        past_participle: WordPair object containing verb in past
-            participle tense form. Defaults to None.
+        present_perfect: WordPair object containing verb in present
+            perfect tense form. Defaults to None.
         imperative: WordPair object containing verb in imperative form.
             Defaults to None.
         part_of_speech: See table_summaries.txt for parts of speech.
@@ -258,9 +256,9 @@ class Verb(Word):
     """
 
     infinitive: WordPair | None = None
-    present: WordPair | None = None
+    present_simple: WordPair | None = None
     past_simple: WordPair | None = None
-    past_participle: WordPair | None = None
+    present_perfect: WordPair | None = None
     imperative: WordPair | None = None
     part_of_speech: PartOfSpeech = PartOfSpeech.VERB
 
@@ -271,23 +269,23 @@ class Verb(Word):
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
         if self.infinitive:
-            self.infinitive.grammar_id = GrammarType.INFINITIVT_VERB
-        if self.present:
-            self.present.grammar_id = GrammarType.PRESENS_VERB
+            self.infinitive.grammar_id = GrammarType.VERB_INFINITIVE
+        if self.present_simple:
+            self.present_simple.grammar_id = GrammarType.VERB_PRESENT_SIMPLE
         if self.past_simple:
-            self.past_simple.grammar_id = GrammarType.PRETERITUM_VERB
-        if self.past_participle:
-            self.past_participle.grammar_id = GrammarType.SUPINUM_VERB
+            self.past_simple.grammar_id = GrammarType.VERB_PAST_SIMPLE
+        if self.present_perfect:
+            self.present_perfect.grammar_id = GrammarType.VERB_PRESENT_PERFECT
         if self.imperative:
-            self.imperative.grammar_id = GrammarType.IMPERATIV_VERB
+            self.imperative.grammar_id = GrammarType.VERB_IMPERATIVE
 
     def __create_word_list(self) -> None:
         """Create a list of words."""
         word_pairs = [
             self.infinitive,
-            self.present,
+            self.present_simple,
             self.past_simple,
-            self.past_participle,
+            self.present_perfect,
             self.imperative,
         ]
         self.word_list = [wp for wp in word_pairs if wp is not None]

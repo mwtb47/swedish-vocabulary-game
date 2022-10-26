@@ -21,7 +21,7 @@ def fetch() -> pd.DataFrame:
         DataFrame with marks.
     """
     connection = database.connect()
-    df = pd.read_sql_query("SELECT * FROM betyg", connection)
+    df = pd.read_sql_query("SELECT * FROM Marks", connection)
     database.disconnect(connection)
     return df
 
@@ -47,7 +47,7 @@ def count_answers() -> tuple[int, int]:
     """
     df = fetch()
     today = datetime.now().date()
-    df["date"] = unix_to_date(df["tidsstämpel"])
+    df["date"] = unix_to_date(df["Timestamp"])
     df["week"] = [date.isocalendar().week for date in df.date]
     day_count = len(df[df.date >= today])
     week_count = len(df[df.week == today.isocalendar().week])

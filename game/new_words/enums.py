@@ -6,68 +6,68 @@ from enum import Enum
 class PartOfSpeech(Enum):
     """Enums for parts of speech."""
 
-    SUBSTANTIV = 1
+    NOUN = 1
     """Noun."""
 
     VERB = 2
     """Verb."""
 
-    ADJECTIV = 3
+    ADJECTIVE = 3
     """Adjective."""
 
     ADVERB = 4
     """Adverb."""
 
-    FRAS = 5
+    PHRASE = 5
     """Phrase."""
 
     PREPOSITION = 6
     """Preposition."""
 
-    KONJUNKTION = 7
+    CONJUNCTION = 7
     """Conjunction."""
 
 
 class WordCategory(Enum):
     """Enums for word categories."""
 
-    ALLMÄN = 1
+    GENERAL = 1
     """General."""
 
-    MAT = 2
+    FOOD = 2
     """Food."""
 
     SPORT = 3
     """Sport."""
 
-    AFFÄR = 4
+    BUSINESS = 4
     """Business."""
 
-    GEOGRAFI = 5
+    GEOGRAPHY = 5
     """Geography."""
 
-    KROPP = 6
+    BODY = 6
     """Body parts."""
 
-    ORDFÖLJD = 7
+    WORD_ORDER = 7
     """Phrases focusing on word order."""
 
-    TID = 8
+    TIME = 8
     """"Time."""
 
-    PARTIKELVERB = 9
+    PARTICLE_VERBS = 9
     """Paticle verbs."""
 
-    KLÄDER = 10
+    CLOTHES = 10
     """Clothing."""
 
-    DATASPRÅK = 11
+    COMPUTERS = 11
     """Data and technology."""
 
-    VETENSKAP = 12
+    SCIENCE = 12
     """Scientific."""
 
-    DJUR = 13
+    ANIMALS = 13
     """Animals."""
 
 
@@ -77,47 +77,47 @@ class GrammarType(Enum):
     NA = 0
     """No grammar id."""
 
-    OBESTÄMDT_SINGULART_SUBSTANTIV = 1
+    NOUN_INDEFINITE_SINGULAR = 1
     """Indefinite singular noun."""
 
-    BESTÄMT_SINGULART_SUBSTANTIV = 2
+    NOUN_DEFINITE_SINGULAR = 2
     """Definite singular noun."""
 
-    OBESTÄMT_PLURAL_SUBSTANTIV = 3
+    NOUN_INDEFINITE_PLURAL = 3
     """Indefinite plural noun."""
 
-    BESTÄMT_PLURAL_SUBSTANTIV = 4
+    NOUN_DEFINITE_PLURAL = 4
     """Definite plural noun."""
 
-    ADJEKTIV_UTRUM = 5
-    """Common gender adjective."""
+    ADJECTIVE_UTRUM = 5
+    """Utrum adjective."""
 
-    ADJEKTIV_NEUTRUM = 6
+    ADJECTIVE_NEUTRUM = 6
     """Neuter adjective."""
 
-    ADJEKTIV_PLURAL = 7
+    ADJECTIVE_PLURAL = 7
     """Plural adjective."""
 
     PREPOSITION = 8
     """Preposition."""
 
-    INFINITIVT_VERB = 9
-    """Verb in infinitive form."""
+    VERB_INFINITIVE = 9
+    """Infinitive verb."""
 
-    PRESENS_VERB = 10
-    """Verb in present tense."""
+    VERB_PRESENT_SIMPLE = 10
+    """Simple present verb."""
 
-    PRETERITUM_VERB = 11
-    """Simple past form of a verb."""
+    VERB_PAST_SIMPLE = 11
+    """Simple past verb."""
 
-    SUPINUM_VERB = 12
-    """Past perfect form of a verb."""
+    VERB_PRESENT_PERFECT = 12
+    """Perfect present verb."""
 
-    IMPERATIV_VERB = 13
-    """Impertive form of verb."""
+    VERB_IMPERATIVE = 13
+    """Impertive verb."""
 
-    ADJEKTIV_KOMPARATIV = 14
+    ADJECTIVE_COMPARATIVE = 14
     """Comparative adjective."""
 
-    ADJEKTIV_SUPERLATIV = 15
+    ADJECTIVE_SUPERLATIVE = 15
     """"Superlative adjective."""

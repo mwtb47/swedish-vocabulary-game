@@ -53,7 +53,7 @@ def table_to_string(df: pd.DataFrame, table_name: str) -> str:
     """
     longest_index = max(max(len(str(i)) for i in df.iloc[:, 0]), len(df.columns[0]))
     longest_row = max(len(str(i)) for i in df.iloc[:, 1]) + longest_index + 2
-    lines = [[table_name]] + [[]] + [list(df.columns)] + [["-" * longest_row]]
+    lines = [list(df.columns)] + [["-" * longest_row]]
     lines += [
         [add_spacing(df.iloc[row, 0], longest_index), df.iloc[row, 1]]
         for row in df.index
@@ -62,9 +62,9 @@ def table_to_string(df: pd.DataFrame, table_name: str) -> str:
 
 
 def main() -> None:
-    """Create txt file with ordtyp, ordkategori and grammatik tables."""
+    """Create txt file with word type, word category and grammar tables."""
     strings = []
-    for table_name in ["ordtyp", "ordkategori", "grammatik"]:
+    for table_name in ["PartsOfSpeech", "WordCategories", "Grammar"]:
         df = fetch_table(table_name)
         strings.append(table_to_string(df, table_name))
 

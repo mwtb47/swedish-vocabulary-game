@@ -73,9 +73,9 @@ class Answers:
         if not self.game.status.retest:
             self.game.status.marks.append(
                 {
-                    "ord_id": self.game.settings.current_word_pair.id,
-                    "betyg": mark,
-                    "översättningsriktning": self.game.settings.translation_direction,
-                    "tidsstämpel": time(),
+                    "WordID": self.game.settings.current_word_pair.id,
+                    "Mark": mark,
+                    "TranslationDirection": self.game.settings.translation_direction,
+                    "Timestamp": time(),
                 }
             )

@@ -52,19 +52,24 @@ def fetch_checkbox_options() -> pl.DataFrame:
     """
     query = """
         SELECT
-            O.id, OT.typ, OK.kategori 
+            W.WordID,
+            P.PartOfSpeech,
+            C.Category
         FROM
-            ord AS O
-        JOIN ordtyp OT
-            ON O.ordtyp_id = OT.id
-        JOIN ordkategori OK 
-            ON O.ordkategori_id = OK.id
+            Words W
+        JOIN PartsOfSpeech P
+            ON W.PartOfSpeechID = P.PartOfSpeechID
+        JOIN WordCategories C
+            ON W.WordCategoryID = C.WordCategoryID
     """
     return pl.read_sql(query, database.connection_uri)
 
 
 def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, int]:
     """Return the position for the nth checkbox in a collection.
+
+    Checkboxes are arranged in two columns and are populated row
+    by row.
 
     Args:
         checkbox_number: Index of the checkbox in the collection.
@@ -137,16 +142,16 @@ class Menu:
             label_text="part of speech",
             relx=0.6,
             rely=0.25,
-            table="ordtyp",
-            column="typ",
+            table="PartsOfSpeech",
+            column="PartOfSpeech",
         )
         self.word_categories = CheckboxEntry(
             game=self.game,
             label_text="word category",
             relx=0.6,
             rely=0.5,
-            table="ordkategori",
-            column="kategori",
+            table="WordCategories",
+            column="Category",
         )
 
     def create(self) -> None:
@@ -203,7 +208,7 @@ class Menu:
             updated_option: The characteristic which has just been
                 updated, either part of speech of word category.
         """
-        if updated_option == "typ":
+        if updated_option == "PartOfSpeech":
             values = self.parts_of_speech.values
             buttons = self.word_categories.buttons
         else:
@@ -246,7 +251,9 @@ class Menu:
             buttons: Dictionary containing buttons to update font
                 colours of.
         """
-        unchanged_option = "kategori" if updated_option == "typ" else "typ"
+        unchanged_option = (
+            "Category" if updated_option == "PartOfSpeech" else "PartOfSpeech"
+        )
 
         options = (
             self.checkbox_options.filter(pl.col(updated_option).is_in(values))

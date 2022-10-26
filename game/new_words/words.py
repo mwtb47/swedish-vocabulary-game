@@ -25,11 +25,11 @@ from game.new_words.objects import (
 
 words_phrases = [
     # Adjective(
-    #     neuter=       WordPair(en="", sv=""),
-    #     common_gender=WordPair(en="", sv=""),
-    #     plural=       WordPair(en="", sv=""),
-    #     comparative=  WordPair(en="", sv=""),
-    #     superlative=  WordPair(en="", sv="")
+    #     neutrum=     WordPair(en="", sv=""),
+    #     utrum=       WordPair(en="", sv=""),
+    #     plural=      WordPair(en="", sv=""),
+    #     comparative= WordPair(en="", sv=""),
+    #     superlative= WordPair(en="", sv="")
     # ),
     #
     # Adverb(
@@ -49,9 +49,9 @@ words_phrases = [
     #
     # Verb(
     #     infinitive=     WordPair(en="to ", sv="att "),
-    #     present=        WordPair(en="I ", sv="jag "),
+    #     present_simple= WordPair(en="I ", sv="jag "),
     #     past_simple=    WordPair(en="I ", sv="jag "),
-    #     past_participle=WordPair(en="I have ", sv="jag har "),
+    #     present_perfect=WordPair(en="I have ", sv="jag har "),
     #     imperative=     WordPair(en="", sv="")
     # ),
     #

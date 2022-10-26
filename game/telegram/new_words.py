@@ -8,27 +8,28 @@ This is currently only available for generic words. All word categories in the
 WordCategories enum can be specified.
 
 Parts of speech:
-~substantiv
+~noun
 ~verb
-~adjektiv
+~adjective
 ~adverb
-~fras
+~phrase
 ~preposition
+~conjunction
 
 Word categories:
-~allmän
-~mat
+~general
+~food
 ~sport
-~affär
-~geografi
-~kropp
-~ordföljd
-~tid
-~partikelverb
-~kläder
-~datorspråk
-~vetenskap
-~djur
+~business
+~geography
+~body
+~word_order
+~time
+~particle_verbs
+~clothes
+~computers
+~science
+~animals
 """
 
 from enum import Enum
@@ -80,7 +81,7 @@ def parse_new_word(message: str) -> Generic:
     if len(word_categories) == 1:
         word_category = word_categories[0]
     else:
-        word_category = WordCategory.ALLMÄN
+        word_category = WordCategory.GENERAL
 
     return Generic(
         word_phrase=WordPair(

@@ -125,7 +125,7 @@ class NewWords:
         Returns:
             DataFrame containing words table from database.
         """
-        return pd.read_sql_query("""SELECT * FROM ord""", self.connection)
+        return pd.read_sql_query("""SELECT * FROM Words""", self.connection)
 
     def __get_next_attribute_id(self, attribute: str) -> int:
         """Get an unused attribute id. This is the max current id + 1.
@@ -136,7 +136,7 @@ class NewWords:
         Returns:
             Integer to be used as next id.
         """
-        df = pd.read_sql_query(f"""SELECT {attribute} FROM ord""", self.connection)
+        df = pd.read_sql_query(f"""SELECT {attribute} FROM Words""", self.connection)
         return df[attribute].max() + 1
 
     def __check_not_duplicated(self, word_pair: WordPair) -> bool:
@@ -151,7 +151,7 @@ class NewWords:
         """
         current_words = self.__read_current_words()
         current_pairs = [
-            (row.engelska, row.svenska, row.grammar_id)
+            (row.English, row.Swedish, row.GrammarID)
             for row in current_words.itertuples()
         ]
         if (
@@ -168,7 +168,7 @@ class NewWords:
         id_: int,
         part_of_speech: PartOfSpeech,
         word_category: WordCategory,
-        ordgrupp: int,
+        word_group: int,
         word_pair: WordPair,
     ) -> None:
         """Add word information to the word table.
@@ -177,18 +177,18 @@ class NewWords:
             id_: The word id for the word pair.
             part_of_speech: The part of speech of the word pair.
             word_category: The word category of the word pair.
-            ordgrupp: The word group id of the word pair.
+            word_group: The word group id of the word pair.
             word_pair: The WordPair object.
         """
         query = """
-            INSERT INTO ord (
-                id,
-                engelska,
-                svenska,
-                ordtyp_id,
-                ordkategori_id,
-                ordgrupp,
-                grammar_id
+            INSERT INTO Words (
+                WordID,
+                English,
+                Swedish,
+                PartOfSpeechID,
+                WordCategoryID,
+                WordGroup,
+                GrammarID
             )
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """
@@ -198,55 +198,55 @@ class NewWords:
             word_pair.sv,
             part_of_speech.value,
             word_category.value,
-            ordgrupp,
+            word_group,
             word_pair.grammar_id.value,
         )
         self.cursor.execute(query, values)
 
-    def __add_context_hint(self, ordgrupp: int, context_hint: str) -> None:
+    def __add_context_hint(self, word_group: int, context_hint: str) -> None:
         """Add hints to tips table.
 
         Args:
-            ordgrupp: The word group id of the word pair.
+            word_group: The word group id of the word pair.
             context_hint: The context hint of the word pair.
         """
         query = """
-            INSERT INTO tips (
-                ordgrupp,
-                sammanhang_tips
+            INSERT INTO Hints (
+                WordGroup,
+                Hint
             )
             VALUES (?, ?)
         """
-        values = (ordgrupp, context_hint)
+        values = (word_group, context_hint)
         self.cursor.execute(query, values)
 
-    def __add_wiktionary_link(self, ordgrupp: int, wiktionary_link: str) -> None:
+    def __add_wiktionary_link(self, word_group: int, wiktionary_link: str) -> None:
         """Add Wiktionary link to wiktionary table.
 
         Args:
-            ordgrupp: The word group id of the word pair.
+            word_group: The word group id of the word pair.
             wiktionary_link: Wiktionary link for word pair.
         """
         query = """
-            INSERT INTO wiktionary (
-                ordgrupp,
-                länk
+            INSERT INTO Links (
+                WordGroup,
+                WiktionaryLink
             )
             VALUES (?, ?)
         """
-        values = (ordgrupp, wiktionary_link)
+        values = (word_group, wiktionary_link)
         self.cursor.execute(query, values)
 
-    def __add_hint_and_link(self, word_object: Word, ordgrupp: int) -> None:
+    def __add_hint_and_link(self, word_object: Word, word_group: int) -> None:
         """Add context hint and Wiktionary link to database.
 
         Args:
-            ordgrupp: Word group id.
+            word_group: Word group id.
         """
         if word_object.context_hint:
-            self.__add_context_hint(ordgrupp, word_object.context_hint)
+            self.__add_context_hint(word_group, word_object.context_hint)
         if word_object.wiktionary_link:
-            self.__add_wiktionary_link(ordgrupp, word_object.wiktionary_link)
+            self.__add_wiktionary_link(word_group, word_object.wiktionary_link)
 
     def __add_new_word(self, word_object: Word) -> None:
         """Add new word pairs to the database.
@@ -260,15 +260,15 @@ class NewWords:
             word_object: The word object to add.
         """
         found_duplicate = False
-        ordgrupp = self.__get_next_attribute_id("ordgrupp")
+        word_group = self.__get_next_attribute_id("WordGroup")
         for word_pair in word_object.word_list:
             if self.__check_not_duplicated(word_pair):
-                id_ = self.__get_next_attribute_id("id")
+                id_ = self.__get_next_attribute_id("WordID")
                 self.__add_word_info(
                     id_,
                     word_object.part_of_speech,
                     word_object.word_category,
-                    ordgrupp,
+                    word_group,
                     word_pair,
                 )
                 self.counter.tick(word_object)
@@ -276,7 +276,7 @@ class NewWords:
                 found_duplicate = True
 
         if not found_duplicate:
-            self.__add_hint_and_link(word_object, ordgrupp)
+            self.__add_hint_and_link(word_object, word_group)
 
     def add(self) -> None:
         """Add words to database.

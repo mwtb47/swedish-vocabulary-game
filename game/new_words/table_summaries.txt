@@ -1,51 +1,46 @@
-ordtyp
-
-id  typ
----------------
- 1  substantiv
- 2  verb
- 3  adjektiv
- 4  adverb
- 5  fras
- 6  preposition
-
-
-ordkategori
-
-id  kategori
-----------------
- 1  allmän
- 2  mat
- 3  sport
- 4  affär
- 5  geografi
- 6  kropp
- 7  ordföljd
- 8  tid
- 9  partikelverb
-10  kläder
-11  datorspråk
-12  vetenskap
-13  djur
+PartOfSpeechID  PartOfSpeech
+---------------------------
+             1  noun
+             2  verb
+             3  adjective
+             4  adverb
+             5  phrase
+             6  preposition
+             7  conjunction
 
 
-grammatik
+WordCategoryID  Category
+------------------------------
+             1  general
+             2  food
+             3  sport
+             4  business
+             5  geography
+             6  body
+             7  word_order
+             8  time
+             9  particle_verbs
+            10  clothes
+            11  computers
+            12  science
+            13  animals
 
-id  beskrivning
-----------------------------------
- 0  NA
- 1  obestämdt singulart substantiv
- 2  bestämt singulart substantiv
- 3  obestämt plural substantiv
- 4  bestämt plural substantiv
- 5  adjektiv (utrum)
- 6  adjektiv (neutrum)
- 7  adjektiv (plural)
- 8  preposition
- 9  infinitivt verb
-10  presens verb
-11  preteritum verb
-12  supinum verb
-13  imperativ verb
-14  adjektiv (komparativ)
-15  adjektiv (superlativ)
+
+GrammarID  Description
+-------------------------------------
+        0  NA
+        1  noun (indefinite singular)
+        2  noun (definite singular)
+        3  noun (indefinite singular)
+        4  noun (definite plural)
+        5  adjektiv (utrum)
+        6  adjective (neutrum)
+        7  adjective (plural)
+        8  preposition
+        9  verb (infinitive)
+       10  verb (present simple)
+       11  verb (past simple)
+       12  verb (present perfect)
+       13  verb (imperative)
+       14  adjective (comparative)
+       15  adjective (superlative)
