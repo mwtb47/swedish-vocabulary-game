@@ -28,7 +28,8 @@ class Buttons:
 
         Args:
             button_kwargs: Dictionary of arguments for Button object.
-            place_kwargs: Dictionary of arguments for Button place method.
+            place_kwargs: Dictionary of arguments for Button place
+                method.
         """
         button = tk.Button(master=self.game.gui, **button_kwargs)
         button.place(place_kwargs)

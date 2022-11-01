@@ -17,10 +17,9 @@ from game import database
 class Settings:
     """Class containing the game's settings.
 
-    All settings, except for total_questions and word_pairs,
-    do not change during the game after being set.
-    total_questions and word_pairs are updated if a retest
-    is started.
+    All settings, except for total_questions and word_pairs, do not
+    change during the game after being set. total_questions and
+    word_pairs are updated if a retest is started.
 
     Attributes:
         n_words: The number of words per round.
@@ -56,7 +55,11 @@ class Settings:
         self.total_questions = n_questions
 
     def set_langauges(self) -> None:
-        """Set the call and response language plus the int translaton direction."""
+        """Set the call and response language.
+
+        The call (question) and response (answer), language is set as
+        well as the ID for the translation direction.
+        """
         self.call_language = self.translation_direction.split(" ")[0]
         self.response_language = self.translation_direction.split(" ")[2]
         self.translation_direction = 1 if self.response_language == "sv" else 2
@@ -88,7 +91,8 @@ class Status:
         incorrect_answers: A set of incorrect answers.
         marks: A list of marks.
         question_number: The current question number.
-        retest: A boolean indicating if game is in normal or retest mode.
+        retest: A boolean indicating if game is in normal or retest
+            mode.
     """
 
     incorrect_answers: "set[app.WordPair]" = field(default_factory=set)

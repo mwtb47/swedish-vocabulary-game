@@ -113,7 +113,9 @@ class NewWords:
         self.connection, self.cursor = database.connect_with_cursor()
 
     def __set_sqlite3_cast_rule(self) -> None:
-        """sqlite does not accept integers of more than 8 bytes therefore
+        """Set sqlite3 cast rule for NumPy int64 type.
+
+        sqlite does not accept integers of more than 8 bytes therefore
         the np.int64 returned by get_next_attribute_id has to be cast to
         an int.
         """
@@ -247,10 +249,11 @@ class NewWords:
     def __add_new_word(self, word_object: Word) -> None:
         """Add new word pairs to the database.
 
-        For each word pair in the word group, check if the pair is already
-        in the database. If is not, add the word pair. If any of the word
-        pairs for a word group are already in the database, the context
-        hint and Wiktionary link for that word group is not added.
+        For each word pair in the word group, check if the pair is
+        already in the database. If is not, add the word pair. If any of
+        the word pairs for a word group are already in the database, the
+        context hint and Wiktionary link for that word group is not
+        added.
 
         Args:
             word_object: The word object to add.

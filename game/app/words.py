@@ -4,8 +4,8 @@ Functions:
     format_text: Clean up text for answer comparison.
 
 Classes:
-    WordPair: A dataclass containing information about a word pair
-        which forms a question and answer in the game.
+    WordPair: A dataclass containing information about a word pair which
+        forms a question and answer in the game.
     GameWords: A class with methods to fetch and select words for
         session of the game.
 """
@@ -27,12 +27,11 @@ from game import database
 def format_text(text: str) -> str:
     """Format text for string comparison.
 
-    To avoid answers being marked as incorrect due erroneous
+    To avoid answers being marked as incorrect due to erroneous
     keystrikes, three steps are taken:
-        - any character which is not a digit, letter, space, dash
-          or colon is removed.
-        - any sequence of 2 or more spaces is replace by a single
-          space.
+        - any character which is not a digit, letter, space, dash or
+          colon is removed.
+        - any sequence of 2 or more spaces is replace by a single space.
         - convert to lower case.
         - strip leading and trailing spaces.
 
@@ -58,8 +57,8 @@ class WordPair:
         call_language: The language the question is set in.
         grammar_hint: A grammar hint for the word or phrase pair.
         context_hint: A context hint for the word of phrase pair.
-        wiktionary_hint: Link to Wiktionary article on the word
-            or phrase pair.
+        wiktionary_hint: Link to Wiktionary article on the word or
+            phrase pair.
     """
 
     id: int
@@ -111,9 +110,9 @@ class GameWords:
     def __fetch_words(self) -> pl.DataFrame:
         """Fetch words from the database.
 
-        Join in the marks, word type labels, word category labels, grammar
-        labels, tips and Wiktionary links, filtering by the selected word
-        types and word categories.
+        Join in the marks, word type labels, word category labels,
+        grammar labels, tips and Wiktionary links, filtering by the
+        selected word types and word categories.
 
         Raises:
             NoWordsError: No words are available for the selected
@@ -201,8 +200,8 @@ class GameWords:
     def __select_game_words(self, words: pl.DataFrame) -> list[int]:
         """Return list of word ids to be used in the game.
 
-        Words are selected using three methods, each responsible for
-        one third of the words in the game.
+        Words are selected using three methods, each responsible for one
+        third of the words in the game.
 
         1. The inflections with the lowest mean_last_3 value.
         2. The inflections with the fewest answers.
@@ -259,7 +258,8 @@ class GameWords:
 
         Args:
             inflections: DataFrame with selected inflections.
-            low_scores: DataFrame with selection of lowest scoring words.
+            low_scores: DataFrame with selection of lowest scoring
+                words.
             words_per_group: The number of lowest scoring words to
                 select.
 
@@ -284,7 +284,8 @@ class GameWords:
 
         Args:
             inflections: DataFrame with selected inflections.
-            low_scores: DataFrame with selection of lowest scoring words.
+            low_scores: DataFrame with selection of lowest scoring
+                words.
             low_frequency: DataFrame with selection of lowest frequency
                 words.
 
@@ -338,8 +339,8 @@ class GameWords:
 
         Create a single list of words for the game, including
         repetitions for multiple rounds. The word list is shuffled
-        before adding another round so words appear in a different
-        order each round.
+        before adding another round so words appear in a different order
+        each round.
 
         Returns:
             List of WordPair objects, one for each word in the game.

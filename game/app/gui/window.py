@@ -1,8 +1,8 @@
 """Module with a class to manage GUI game window elements.
 
 Classes:
-    Window: Class containing methods to style and create widgets for
-        the GUI window.
+    Window: Class containing methods to style and create widgets for the
+        GUI window.
 """
 
 from app import Game

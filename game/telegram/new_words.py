@@ -1,11 +1,12 @@
 """Module with functions to add new words to database.
 
-A new word can be added to the database by sending a message in the following format:
+A new word can be added to the database by sending a message in the
+following format:
 
     #newword english word/phrase - swedish word/phrase ~part_of_speech ~word_category
 
-This is currently only available for generic words. All word categories in the
-WordCategories enum can be specified.
+This is currently only available for generic words. All word categories
+in the WordCategories enum can be specified.
 
 Parts of speech:
 ~noun
@@ -71,13 +72,13 @@ def parse_new_word(message: str) -> Generic:
     """
     flags = re.findall("~\\w+", message)
 
-    # TODO This will raise an error if empty. It should perhaps
-    # send an error message instead.
+    # TODO This will raise an error if empty. It should perhaps send an
+    # error message instead.
     part_of_speech = return_valid_flags(PartOfSpeech, flags)[0]
     word_categories = return_valid_flags(WordCategory, flags)
 
-    # Default to generic word category if either no word category
-    # or more than one word category has been specified.
+    # Default to generic word category if either no word category or
+    # more than one word category has been specified.
     if len(word_categories) == 1:
         word_category = word_categories[0]
     else:

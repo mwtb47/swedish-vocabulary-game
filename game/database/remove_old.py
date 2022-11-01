@@ -7,7 +7,8 @@ are no longer present in the words table.
 
 Functions:
     fetch_table: Fetch a table from the database.
-    fetch_words_and_marks: Fetch words and marks tables from the database.
+    fetch_words_and_marks: Fetch words and marks tables from the
+        database.
     remove_old_marks: Remove old marks from the table.
     print_summary: Print a summary of what has been removed.
     commit: Commit the new table to the database and close connection.
@@ -38,8 +39,8 @@ def fetch_words_and_marks() -> tuple[pd.DataFrame, pd.DataFrame]:
     """Fetch word and marks tables.
 
     Returns:
-        Tuple of DataFrames. The first DataFrame is the words
-        table, the second is the marks table.
+        Tuple of DataFrames. The first DataFrame is the words table, the
+        second is the marks table.
     """
     words = fetch_table("Words")
     marks = fetch_table("Marks")
@@ -49,8 +50,8 @@ def fetch_words_and_marks() -> tuple[pd.DataFrame, pd.DataFrame]:
 def remove_old_marks() -> pd.DataFrame:
     """Remove old marks from marks table.
 
-    Remove all marks for word ids which are no longer present
-    in the words table.
+    Remove all marks for word ids which are no longer present in the
+    words table.
     """
     words, marks = fetch_words_and_marks()
     merged = words.merge(
@@ -83,8 +84,8 @@ def print_summary(old_words: list[int]) -> None:
 def commit(new_marks: pd.DataFrame) -> None:
     """Replace the marks table with the updated one.
 
-    Update the table, commit the changes to the database and
-    then close the connections.
+    Update the table, commit the changes to the database and then close
+    the connections.
 
     Args:
         new_marks: Dataframe to replace the marks table.

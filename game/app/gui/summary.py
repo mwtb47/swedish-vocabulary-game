@@ -1,7 +1,8 @@
 """Module with a class to display summary of game.
 
 Classes:
-    Summary: Class containing methods to show a summary of a game session.
+    Summary: Class containing methods to show a summary of a game
+        session.
 """
 
 import numpy as np
@@ -30,7 +31,11 @@ class Summary:
         self.__show_incorrect_words()
 
     def __show_incorrect_words(self) -> None:
-        """Display incorrect answers in a table showing English and Swedish."""
+        """Display incorrect answers in a table.
+
+        The table has two columns, one for the English part of the word
+        pair and one for the Swedish.
+        """
         self.game.labels.create_incorrect_words_title()
         self.game.labels.create_incorrect_words_column(
             words=self.__incorrect_words("sv"),
@@ -50,8 +55,8 @@ class Summary:
     def __incorrect_words(self, language: str) -> str:
         """Return a list of incorrectly answered words.
 
-        The list contains the specified language version of
-        each incorrectly answered word pair.
+        The list contains the specified language version of each
+        incorrectly answered word pair.
 
         Args:
             language: Which language version of the word pair to return.

@@ -1,12 +1,11 @@
 """Script to fetch updates from Telegram bot chat.
 
-The script fetches all updates from the Telegram bot chat (updates
-are only available for the past 24 hours). New notes are added to
-the notes file game/new_words/notes.txt and new words are added
-to the database.
+The script fetches all updates from the Telegram bot chat (updates are
+only available for the past 24 hours). New notes are added to the notes
+file game/new_words/notes.txt and new words are added to the database.
 
-This script is run on the hour, every hour, between 7pm and 11pm
-every day using cron and the output is written to the log file
+This script is run on the hour, every hour, between 7pm and 11pm every
+day using cron and the output is written to the log file
 telegram_fetch.log.
 
 Functions:
@@ -61,8 +60,8 @@ def extract_messages(
             to notes or database.
 
     Returns:
-        Tuple, the first element being a list of messages, the second a list
-        of dictionaries containing message ids and dates.
+        Tuple, the first element being a list of messages, the second a
+        list of dictionaries containing message ids and dates.
     """
     results = response.json()["result"]
     if not response.ok:
@@ -93,8 +92,8 @@ def parse_messages(messages: str) -> dict[str, list[str]]:
         messages: List of messages.
 
     Returns:
-        Dictionary containing one list of messages with new notes
-        and one list of messages with new words.
+        Dictionary containing one list of messages with new notes and
+        one list of messages with new words.
     """
     return {
         "notes": [line for line in messages if line.startswith("#note")],
@@ -105,11 +104,10 @@ def parse_messages(messages: str) -> dict[str, list[str]]:
 def get_message_ids() -> pd.DataFrame:
     """Add message ids to csv.
 
-    Add the message ids of the parsed messages to a csv file
-    along with the timestamp. This is so that notes and new
-    words are not added multiple times. Message ids which are
-    more than 48 hours old are deleted as updates are only
-    available for 24 hours.
+    Add the message ids of the parsed messages to a csv file along with
+    the timestamp. This is so that notes and new words are not added
+    multiple times. Message ids which are more than 48 hours old are
+    deleted as updates are only available for 24 hours.
 
     Returns:
         DataFrame with message ids and their date.
@@ -130,9 +128,8 @@ def update_message_ids(
 
     Args:
         ids: DataFrame with message ids from past 48 hours.
-        new_ids: List of dictionaries containing message
-            id and date for all messages not already in
-            the DataFrame.
+        new_ids: List of dictionaries containing message id and date for
+            all messages not already in the DataFrame.
     """
     ids = ids[ids.Date > datetime.today() - timedelta(days=2)]
     pd.concat([ids, pd.DataFrame(new_ids)]).to_csv(

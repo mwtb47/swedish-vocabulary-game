@@ -1,7 +1,7 @@
 """Module with functions to add notes from Telegram bot.
 
-A new note can be added to game/new_words/notes.txt by sending a message in
-the following format:
+A new note can be added to game/new_words/notes.txt by sending a message
+in the following format:
 
     #note text to add as note
 

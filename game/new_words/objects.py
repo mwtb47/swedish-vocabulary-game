@@ -37,11 +37,11 @@ class Word:
     """Base class for a word object.
 
     Attributes:
+        part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     part_of_speech: PartOfSpeech
@@ -67,15 +67,14 @@ class Adjective(Word):
             adjective. Defaults to None.
         superlative: WordPair object containing superlative form of
             adjective. Defaults to None.
-        plural: WordPair object containing plural form of
-            adjective. Defaults to None.
+        plural: WordPair object containing plural form of adjective.
+            Defaults to None.
         part_of_speech: See table_summaries.txt for parts of speech.
             Defaults to ADJECTIVE.
         word_category: See table_summaries.txt for word categories.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     utrum: WordPair | None = None
@@ -123,10 +122,9 @@ class Adverb(Word):
         part_of_speech: See table_summaries.txt for parts of speech.
             Defaults to ADVERB.
         word_category: See table_summaries.txt for word categories.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     word: WordPair
@@ -150,10 +148,9 @@ class Conjunction(Word):
         part_of_speech: See table_summaries.txt for parts of speech.
             Defaults to ADVERB.
         word_category: See table_summaries.txt for word categories.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     word: WordPair
@@ -176,10 +173,9 @@ class Generic(Word):
         word_phrase: WordPair object containing word of phrase.
         part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     word_phrase: WordPair
@@ -198,20 +194,19 @@ class Noun(Word):
     Attributes:
         indefinite_singular: WordPair object containing indefinite
             singular form of adjective. Defaults to None.
-        indefinite_plural: WordPair object containing indefinite
-            plural form of adjective. Defaults to None.
-        definite_singular: WordPair object containing definite
-            singular form of adjective. Defaults to None.
-        definite_plural: WordPair object containing definite
-            plural form of adjective. Defaults to None.
-        part_of_speech: See table_summaries.txt for parts of
-            speech. Defaults to NOUN.
-        word_category: See table_summaries.txt for word
-            categories. Defaults to 1.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        indefinite_plural: WordPair object containing indefinite plural
+            form of adjective. Defaults to None.
+        definite_singular: WordPair object containing definite singular
+            form of adjective. Defaults to None.
+        definite_plural: WordPair object containing definite plural form
+            of adjective. Defaults to None.
+        part_of_speech: See table_summaries.txt for parts of speech.
+            Defaults to NOUN.
+        word_category: See table_summaries.txt for word categories.
+            Defaults to 1.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     indefinite_singular: WordPair | None = None
@@ -265,12 +260,11 @@ class Verb(Word):
             Defaults to None.
         part_of_speech: See table_summaries.txt for parts of speech.
             Defaults to VERB.
-        word_category: see table_summaries.txt for word
-            categories. Defaults to 1.
-        context_hint: Hint to be displayed under the question.
-            Defaults to None.
-        wiktionary_link: Link to wiktionary page. Defaults to
-            None.
+        word_category: see table_summaries.txt for word categories.
+            Defaults to 1.
+        context_hint: Hint to be displayed under the question. Defaults
+            to None.
+        wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
     infinitive: WordPair | None = None

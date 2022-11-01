@@ -27,7 +27,8 @@ class Labels:
 
         Args:
             label_kwargs: Dictionary of arguments for Label object.
-            place_kwargs: Dictionary of arguments for Label place method.
+            place_kwargs: Dictionary of arguments for Label place
+                method.
         """
         label = tk.Label(master=self.master, **label_kwargs)
         label.place(**place_kwargs)
@@ -38,10 +39,9 @@ class Labels:
         """Create the Label object, place it and add binding.
 
         Args:
-            label_kwargs: Dictionary of arguments for Label
-                object.
-            place_kwargs: Dictionary of arguments for Label
-                place method.
+            label_kwargs: Dictionary of arguments for Label object.
+            place_kwargs: Dictionary of arguments for Label place
+                method.
             binding: The function to bind to the label.
         """
         label = tk.Label(master=self.master, **label_kwargs)

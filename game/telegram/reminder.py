@@ -1,9 +1,9 @@
 """Script to send a reminder if daily answer quota not reached.
 
-This script will send a message via a Telegram bot if fewer
-than 80 answers have been recorded during the current day. This
-script is run at 8pm each day using cron and the output is written
-to the log file telegram_reminder.log.
+This script will send a message via a Telegram bot if fewer than 80
+answers have been recorded during the current day. This script is run at
+8pm each day using cron and the output is written to the log file
+telegram_reminder.log.
 
 Fuctions:
     send_message: Send a message via the Telegram bot.

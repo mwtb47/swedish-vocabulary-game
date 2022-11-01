@@ -1,7 +1,7 @@
 """Script to run the translation game.
 
-This script runs the translation game with the option of not
-committing the marks to the database at the end of the game.
+This script runs the translation game with the option of not committing
+the marks to the database at the end of the game.
 
 Arguments:
     --no-commit: Do not commit marks to database.

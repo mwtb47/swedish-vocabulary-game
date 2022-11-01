@@ -1,4 +1,10 @@
-"""Module containing enums for parts of speech, word categories, and grammar types."""
+"""Module containing enums for word classification.
+
+Classes:
+    PartOfSpeech: Parts of speech enums.
+    WordCategory: Word category enums.
+    GrammarCategory: Grammar category enums.
+"""
 
 from enum import Enum
 

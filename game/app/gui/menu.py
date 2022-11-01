@@ -1,18 +1,19 @@
 """Module with a class to create start game menu.
 
 Functions:
-    fetch_options: Get a list of options for a menu item from
-        the database.
+    fetch_options: Get a list of options for a menu item from the
+        database.
     fetch_checkbox_options: Get a DataFrame of checkbox options.
     checkbox_position: Return the position for the nth checkbox.
 
 Classes:
     Menu: Base class for menu items.
     CharacteristicEntry: Base class for characteristic entry.
-    TranslationDirection: Contains methods to create translation direction
-        menu items.
+    TranslationDirection: Contains methods to create translation
+        direction menu items.
     Round: Contains methods to create number of rounds menu items.
-    NumberOfWords: Contains methods to create number of rounds menu items.
+    NumberOfWords: Contains methods to create number of rounds menu
+        items.
     PartOfSpeech: Contains methods to create part of speech menu items.
     WordCategory: Contains methods to create word category menu items.
 """
@@ -62,8 +63,8 @@ def fetch_checkbox_options() -> pl.DataFrame:
     """Fetch table from database to check checkbox options.
 
     Returns:
-        DataFrame with word ids, part of speech labels and
-        word category labels.
+        DataFrame with word ids, part of speech labels and word category
+        labels.
     """
     query = """
         SELECT
@@ -83,8 +84,7 @@ def fetch_checkbox_options() -> pl.DataFrame:
 def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, int]:
     """Return the position for the nth checkbox in a collection.
 
-    Checkboxes are arranged in two columns and are populated row
-    by row.
+    Checkboxes are arranged in two columns and are populated row by row.
 
     Args:
         checkbox_number: Index of the checkbox in the collection.
@@ -111,16 +111,16 @@ class Menu:
         values_set_indicator: Indicator which is set to 1 when the
             submit values button is pressed.
         submit_values_button: Button used to submit values.
-        translation_direction: Instance of DropDownEntry for
-            translation direction selection.
-        n_words: Instance of TextEntry for selection of number of
-            words per game.
-        n_rounds: Instance of DropDownEntry for selection of number
-            of rounds in game.
+        translation_direction: Instance of DropDownEntry for translation
+            direction selection.
+        n_words: Instance of TextEntry for selection of number of words
+            per game.
+        n_rounds: Instance of DropDownEntry for selection of number of
+            rounds in game.
         parts_of_speech: Instance of CheckboxEntry for selection of
             parts of speech.
-        word_categories: Instance of CheckboxEntry for selection
-            of word categories.
+        word_categories: Instance of CheckboxEntry for selection of word
+            categories.
     """
 
     def __init__(self, game: Game) -> None:
@@ -181,9 +181,9 @@ class Menu:
     def __create_submit_button(self) -> None:
         """Create button to submit selections.
 
-        When the commit button is pressed, this triggers the
-        function populations the game settings and attempts
-        to get words from the database.
+        When the commit button is pressed, this triggers the function
+        which populates the game settings and attempts to get words from
+        the database.
         """
         self.values_set_indicator = tk.IntVar()
         self.game.buttons.create_submit_options_button(self._get_values)
@@ -201,10 +201,10 @@ class Menu:
     def __try_get_words(self) -> None:
         """Try to get words with specified settings.
 
-        Try to get words from the database which match the
-        specified parts of speech and word categories selected.
-        If there are no words available, prompt the user to
-        select a different combination.
+        Try to get words from the database which match the specified
+        parts of speech and word categories selected. If there are no
+        words available, prompt the user to select a different
+        combination.
         """
         try:
             self.game.settings.word_pairs = self.game.game_words.return_word_pairs()
@@ -239,8 +239,8 @@ class Menu:
         """Reset label font colour to white for all buttons.
 
         Args:
-            buttons: Dictionary containing buttons to reset
-                font colour of.
+            buttons: Dictionary containing buttons to reset font colour
+                of.
         """
         for button in buttons.values():
             button.config(fg="white")
@@ -253,14 +253,14 @@ class Menu:
     ) -> None:
         """Update font colour to reflect available combinations.
 
-        When a checkbox has been selected in either the part of
-        speech or word category section, get the available options
-        in the other section and update the font colour to indicate
-        which options are now available.
+        When a checkbox has been selected in either the part of speech
+        or word category section, get the available options in the other
+        section and update the font colour to indicate which options are
+        now available.
 
         Args:
-            updated_option: The updated characteristic, either part
-                of speech or word category.
+            updated_option: The updated characteristic, either part of
+                speech or word category.
             values: List of selected values for the updated
                 characteristic.
             buttons: Dictionary containing buttons to update font
@@ -330,7 +330,8 @@ class CheckboxEntry(CharacteristicEntry):
         label_text: Text to complete the label 'Choose <label_text>'.
         relx: Relative x position of the label.
         rely: Relative y position of the label.
-        table: Name of the database table containing column with options.
+        table: Name of the database table containing column with
+            options.
         column: Name of the column containing the options.
 
     Attributes:
@@ -339,7 +340,8 @@ class CheckboxEntry(CharacteristicEntry):
         relx: Relative x position of the label.
         rely: Relative y position of the label.
         label: The label widget.
-        table: Name of the database table containing column with options.
+        table: Name of the database table containing column with
+            options.
         column: Name of the column containing the options.
         option_vars: Dictionary of option names and variables.
     """

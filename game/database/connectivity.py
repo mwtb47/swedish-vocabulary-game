@@ -2,10 +2,9 @@
 
 Functions:
     connect: Return sqlite3 connection to database.
-    connect_with_cursor: Return sqlite3 connection
-        to database and a cursor.
-    disconnect: Close connection to server with option
-        to commit.
+    connect_with_cursor: Return sqlite3 connection to database and a
+        cursor.
+    disconnect: Close connection to server with option to commit.
 """
 
 import sqlite3

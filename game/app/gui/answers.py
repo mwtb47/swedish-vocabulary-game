@@ -37,30 +37,41 @@ class Answers:
         self.game.questions.move_to_next()
 
     def __record_incorrect_answer(self) -> None:
-        """Add incorrectly answered WordPair to set of incorrect answers."""
+        """Record an incorrectly answered WordPair.
+
+        The incorrectly answered WordPair is added to a set of incorrect
+        answers.
+        """
         if not self.game.status.retest:
             self.game.status.incorrect_answers.add(self.game.settings.current_word_pair)
 
     def __display_answer_check(self, description: str) -> None:
-        """Display if answer is correct or not plus a link to Wiktionary entry.
+        """Display if answer is correct or not.
+
+        If the answer is incorrect, display the correct answer. Also
+        display a link to Wiktionary page if a link exists.
 
         Args:
-            description: String either indicating the answer is correct or that
-                it is incorrect. If it is incorrect, the correct answer is
-                included.
+            description: String either indicating the answer is correct
+                or that it is incorrect. If it is incorrect, the correct
+                answer is included.
         """
         self.game.labels.create_answer_indicator(description)
         self.game.destroy_widgets(names=["submitButton"])
         self.__display_wiktionary_link()
 
     def __create_wiktionary_link(self) -> None:
-        """Create a Wiktionary link for the Swedish word in the word pair."""
+        """Create the Wiktionary link.
+
+        The string in the URL after the final "/" is used as the display
+        text for the link.
+        """
         link = self.game.settings.current_word_pair.wiktionary_link
         link_text = f"Wiktionary SV: {link.split('/')[-1]}"
         self.game.labels.create_wiktionary_link(link_text, link)
 
     def __display_wiktionary_link(self) -> None:
-        """Display wiktionary link if the current word pair has one."""
+        """Display Wiktionary link if the current word pair has one."""
         if self.game.settings.current_word_pair.wiktionary_link:
             self.__create_wiktionary_link()
 

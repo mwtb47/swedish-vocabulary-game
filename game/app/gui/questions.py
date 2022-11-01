@@ -1,7 +1,8 @@
 """Module with a class to manage questions in the game.
 
 Classes:
-    Questions: Class containing methods to set questions in the GUI game.
+    Questions: Class containing methods to set questions in the GUI
+        game.
 """
 
 import tkinter as tk
@@ -31,7 +32,11 @@ class Questions:
         self.set_question()
 
     def __prepare_questions_frame(self) -> None:
-        """Create submit button, destroy unwanted widgets and update progress."""
+        """Prepare the frame for a question.
+
+        Create the submit button, destroy unwanted widgets and update
+        the progress indicator.
+        """
         self.game.destroy_widgets_except(names=["titleText", "translationDirection"])
         self.game.buttons.create_submit_answer_button()
         self.game.window.display_progress()

@@ -1,14 +1,14 @@
 """Module with a list of new words or phrases to add to database.
 
-The commented out templates for each part of speech are copied and 
-filled in for each new word. They then need to be deleted after 
-the add.py script has been run. (This can also be done by adding
-the --checkout flag when running game/new_words/add.py)
+The commented out templates for each part of speech are copied and
+filled in for each new word. They then need to be deleted after the
+add.py script has been run. (This can also be done by adding the
+--checkout flag when running game/new_words/add.py)
 
-I have experimented with a GUI and Excel as an interface for adding
-new words. They both have certain advantages over this method, but
-I always came back to adding words here due to the multi-cursor and
-editing features of VS code making it much faster.
+I have experimented with a GUI and Excel as an interface for adding new
+words. They both have certain advantages over this method, but I always
+came back to adding words here due to the multi-cursor and editing
+features of VS code making it much faster.
 """
 
 from enums import GrammarCategory, PartOfSpeech, WordCategory

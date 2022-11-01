@@ -13,10 +13,12 @@ class Game:
     """The base class for the translation game gui.
 
     Args:
-        no_commit: Boolean denoting whether marks are committed to database.
+        no_commit: Boolean denoting whether marks are committed to
+            database.
 
     Attributes:
-        no_commit: Boolean denoting whether marks are committed to database.
+        no_commit: Boolean denoting whether marks are committed to
+            database.
         gui: tkinter top level widget.
         window: Instance of the Window class.
         settings: Instance of the Settings class.
@@ -34,7 +36,7 @@ class Game:
         self.__initiate_game()
 
     def __initiate_game(self) -> None:
-        """Create top level widget, game window and call method to start game."""
+        """Create top level widget, game window and start game."""
         self.gui = tk.Tk()
         self.labels = app.Labels(self.gui)
         self.window = app.Window(self)
@@ -80,7 +82,7 @@ class Game:
                 widget.destroy()
 
     def destroy_widgets_except(self, names: list[str]) -> None:
-        """Destroy all widgets in the window except for those in names list.
+        """Destroy all widgets in the window except for those in names.
 
         Args:
             names: List of widget names to not destroy.

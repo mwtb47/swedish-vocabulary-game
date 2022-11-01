@@ -3,8 +3,8 @@
 Functions:
     fetch: Fetch the marks table from the database.
     unix_to_datetime: Convert unix timestamp to a date.
-    count_answers: Count the number of answers during the
-        current day and week.
+    count_answers: Count the number of answers during the current day
+        and week.
 """
 
 from datetime import datetime
@@ -42,8 +42,8 @@ def count_answers() -> tuple[int, int]:
     """Count the number of answers on current day and current week.
 
     Returns:
-        Tuple with the number of answers on current day and number
-        of answers during current week.
+        Tuple with the number of answers on current day and number of
+        answers during current week.
     """
     df = fetch()
     today = datetime.now().date()
