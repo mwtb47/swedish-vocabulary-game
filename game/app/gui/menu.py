@@ -26,6 +26,21 @@ from app import Game, NoWordsError
 from game import database
 
 
+def format_option_text(option: str) -> str:
+    """Format the string of the option checkboxes.
+
+    Replace "_" with spaces and capitalise the first letter of the
+    string.
+
+    Args:
+        option: String to format.
+
+    Returns:
+        Formatted string with a capitalised first letter.
+    """
+    return option.replace("_", " ").capitalize()
+
+
 def fetch_options(table: str, column: str) -> list[str]:
     """Fetch the options from the Vocabulary database.
 
@@ -350,8 +365,9 @@ class CheckboxEntry(CharacteristicEntry):
         self.option_vars = {option: tk.IntVar() for option in options}
         self.buttons = {}
         for i, (option, variable) in enumerate(self.option_vars.items()):
+            formatted_option = format_option_text(option)
             button = tk.Checkbutton(
-                text=option,
+                text=formatted_option,
                 variable=variable,
                 onvalue=1,
                 command=lambda: self.game.menu.update_checkbox_fonts(self.column),
