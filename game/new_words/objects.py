@@ -11,6 +11,7 @@ Classes:
     Verb: A dataclass to represent verbs.
 """
 
+from abc import abstractproperty
 from dataclasses import dataclass
 
 from game.new_words.enums import GrammarCategory, PartOfSpeech, WordCategory
@@ -31,7 +32,7 @@ class WordPair:
     grammar_id: GrammarCategory = GrammarCategory.NA
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Word:
     """Base class for a word object.
 
@@ -43,9 +44,14 @@ class Word:
             None.
     """
 
+    part_of_speech: PartOfSpeech
     word_category: WordCategory = WordCategory.GENERAL
     context_hint: str | None = None
     wiktionary_link: str | None = None
+
+    @abstractproperty
+    def word_list(self) -> list[WordPair]:
+        pass
 
 
 @dataclass
@@ -81,7 +87,6 @@ class Adjective(Word):
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
-        self.__create_word_list()
 
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
@@ -96,8 +101,9 @@ class Adjective(Word):
         if self.superlative:
             self.superlative.grammar_id = GrammarCategory.ADJECTIVE_SUPERLATIVE
 
-    def __create_word_list(self) -> None:
-        """Create a list of words."""
+    @property
+    def word_list(self) -> list[WordPair]:
+        """List of word pairs for specified grammatical categories."""
         word_pairs = [
             self.utrum,
             self.neutrum,
@@ -105,7 +111,7 @@ class Adjective(Word):
             self.comparative,
             self.superlative,
         ]
-        self.word_list = [wp for wp in word_pairs if wp is not None]
+        return [wp for wp in word_pairs if wp is not None]
 
 
 @dataclass(kw_only=True)
@@ -127,7 +133,11 @@ class Adverb(Word):
     part_of_speech: PartOfSpeech = PartOfSpeech.ADVERB
 
     def __post_init__(self) -> None:
-        self.word.grammar_id = GrammarType.NA
+        self.word.grammar_id = GrammarCategory.NA
+
+    @property
+    def word_list(self) -> list[WordPair]:
+        """List containing the adverb word pair."""
         self.word_list = [self.word]
 
 
@@ -150,7 +160,11 @@ class Conjunction(Word):
     part_of_speech: PartOfSpeech = PartOfSpeech.CONJUNCTION
 
     def __post_init__(self) -> None:
-        self.word.grammar_id = GrammarType.NA
+        self.word.grammar_id = GrammarCategory.NA
+
+    @property
+    def word_list(self) -> list[WordPair]:
+        """List containing the conjunction word pair."""
         self.word_list = [self.word]
 
 
@@ -171,8 +185,10 @@ class Generic(Word):
     word_phrase: WordPair
     part_of_speech: PartOfSpeech
 
-    def __post_init__(self) -> None:
-        self.word_list = [self.word_phrase]
+    @property
+    def word_list(self) -> list[WordPair]:
+        """List containing the generic word or phrase pair."""
+        self.word_list = [self.word]
 
 
 @dataclass
@@ -206,7 +222,6 @@ class Noun(Word):
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
-        self.__create_word_list()
 
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
@@ -221,15 +236,16 @@ class Noun(Word):
         if self.definite_plural:
             self.definite_plural.grammar_id = GrammarCategory.NOUN_DEFINITE_PLURAL
 
-    def __create_word_list(self) -> None:
-        """Create a list of words."""
+    @property
+    def word_list(self) -> list[WordPair]:
+        """List of word pairs for specified noun inflections."""
         word_pairs = [
             self.indefinite_singular,
             self.indefinite_plural,
             self.definite_singular,
             self.definite_plural,
         ]
-        self.word_list = [wp for wp in word_pairs if wp is not None]
+        return [wp for wp in word_pairs if wp is not None]
 
 
 @dataclass
@@ -266,7 +282,6 @@ class Verb(Word):
 
     def __post_init__(self) -> None:
         self.__assign_grammar_ids()
-        self.__create_word_list()
 
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
@@ -281,8 +296,9 @@ class Verb(Word):
         if self.imperative:
             self.imperative.grammar_id = GrammarCategory.VERB_IMPERATIVE
 
-    def __create_word_list(self) -> None:
-        """Create a list of words."""
+    @property
+    def word_list(self) -> list[WordPair]:
+        """List of word pairs for specified verb inflections."""
         word_pairs = [
             self.infinitive,
             self.present_simple,
@@ -290,4 +306,4 @@ class Verb(Word):
             self.present_perfect,
             self.imperative,
         ]
-        self.word_list = [wp for wp in word_pairs if wp is not None]
+        return [wp for wp in word_pairs if wp is not None]
