@@ -11,7 +11,7 @@ I always came back to adding words here due to the multi-cursor and
 editing features of VS code making it much faster.
 """
 
-from enums import GrammarType, PartOfSpeech, WordCategory
+from enums import GrammarCategory, PartOfSpeech, WordCategory
 from game.new_words.objects import (
     Adjective,
     Conjunction,
@@ -59,7 +59,7 @@ words_phrases = [
     #     word_phrase=WordPair(
     #         en="",
     #         sv="",
-    #         grammar_id=GrammarType.NA
+    #         grammar_id=GrammarCategory.NA
     #     ),
     #     part_of_speech=PartOfSpeech.,
     #     word_category=WordCategory.,

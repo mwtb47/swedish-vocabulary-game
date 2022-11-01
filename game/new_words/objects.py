@@ -13,7 +13,7 @@ Classes:
 
 from dataclasses import dataclass
 
-from game.new_words.enums import GrammarType, PartOfSpeech, WordCategory
+from game.new_words.enums import GrammarCategory, PartOfSpeech, WordCategory
 
 
 @dataclass
@@ -28,7 +28,7 @@ class WordPair:
 
     en: str
     sv: str
-    grammar_id: GrammarType = GrammarType.NA
+    grammar_id: GrammarCategory = GrammarCategory.NA
 
 
 @dataclass
@@ -86,15 +86,15 @@ class Adjective(Word):
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
         if self.utrum:
-            self.utrum.grammar_id = GrammarType.ADJECTIVE_UTRUM
+            self.utrum.grammar_id = GrammarCategory.ADJECTIVE_UTRUM
         if self.neutrum:
-            self.neutrum.grammar_id = GrammarType.ADJECTIVE_NEUTRUM
+            self.neutrum.grammar_id = GrammarCategory.ADJECTIVE_NEUTRUM
         if self.plural:
-            self.plural.grammar_id = GrammarType.ADJECTIVE_PLURAL
+            self.plural.grammar_id = GrammarCategory.ADJECTIVE_PLURAL
         if self.comparative:
-            self.comparative.grammar_id = GrammarType.ADJECTIVE_COMPARATIVE
+            self.comparative.grammar_id = GrammarCategory.ADJECTIVE_COMPARATIVE
         if self.superlative:
-            self.superlative.grammar_id = GrammarType.ADJECTIVE_SUPERLATIVE
+            self.superlative.grammar_id = GrammarCategory.ADJECTIVE_SUPERLATIVE
 
     def __create_word_list(self) -> None:
         """Create a list of words."""
@@ -211,13 +211,15 @@ class Noun(Word):
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
         if self.indefinite_singular:
-            self.indefinite_singular.grammar_id = GrammarType.NOUN_INDEFINITE_SINGULAR
+            self.indefinite_singular.grammar_id = (
+                GrammarCategory.NOUN_INDEFINITE_SINGULAR
+            )
         if self.indefinite_plural:
-            self.indefinite_plural.grammar_id = GrammarType.NOUN_INDEFINITE_PLURAL
+            self.indefinite_plural.grammar_id = GrammarCategory.NOUN_INDEFINITE_PLURAL
         if self.definite_singular:
-            self.definite_singular.grammar_id = GrammarType.NOUN_DEFINITE_SINGULAR
+            self.definite_singular.grammar_id = GrammarCategory.NOUN_DEFINITE_SINGULAR
         if self.definite_plural:
-            self.definite_plural.grammar_id = GrammarType.NOUN_DEFINITE_PLURAL
+            self.definite_plural.grammar_id = GrammarCategory.NOUN_DEFINITE_PLURAL
 
     def __create_word_list(self) -> None:
         """Create a list of words."""
@@ -269,15 +271,15 @@ class Verb(Word):
     def __assign_grammar_ids(self) -> None:
         """Assign grammar ids where WordPair has been set."""
         if self.infinitive:
-            self.infinitive.grammar_id = GrammarType.VERB_INFINITIVE
+            self.infinitive.grammar_id = GrammarCategory.VERB_INFINITIVE
         if self.present_simple:
-            self.present_simple.grammar_id = GrammarType.VERB_PRESENT_SIMPLE
+            self.present_simple.grammar_id = GrammarCategory.VERB_PRESENT_SIMPLE
         if self.past_simple:
-            self.past_simple.grammar_id = GrammarType.VERB_PAST_SIMPLE
+            self.past_simple.grammar_id = GrammarCategory.VERB_PAST_SIMPLE
         if self.present_perfect:
-            self.present_perfect.grammar_id = GrammarType.VERB_PRESENT_PERFECT
+            self.present_perfect.grammar_id = GrammarCategory.VERB_PRESENT_PERFECT
         if self.imperative:
-            self.imperative.grammar_id = GrammarType.VERB_IMPERATIVE
+            self.imperative.grammar_id = GrammarCategory.VERB_IMPERATIVE
 
     def __create_word_list(self) -> None:
         """Create a list of words."""

@@ -151,7 +151,7 @@ class NewWords:
         """
         current_words = self.__read_current_words()
         current_pairs = [
-            (row.English, row.Swedish, row.GrammarID)
+            (row.English, row.Swedish, row.GrammarCategoryID)
             for row in current_words.itertuples()
         ]
         if (
@@ -165,7 +165,6 @@ class NewWords:
 
     def __add_word_info(
         self,
-        id_: int,
         part_of_speech: PartOfSpeech,
         word_category: WordCategory,
         word_group: int,
@@ -174,7 +173,6 @@ class NewWords:
         """Add word information to the word table.
 
         Args:
-            id_: The word id for the word pair.
             part_of_speech: The part of speech of the word pair.
             word_category: The word category of the word pair.
             word_group: The word group id of the word pair.
@@ -182,18 +180,16 @@ class NewWords:
         """
         query = """
             INSERT INTO Words (
-                WordID,
                 English,
                 Swedish,
                 PartOfSpeechID,
                 WordCategoryID,
                 WordGroup,
-                GrammarID
+                GrammarCategoryID
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
         """
         values = (
-            id_,
             word_pair.en,
             word_pair.sv,
             part_of_speech.value,
@@ -263,9 +259,7 @@ class NewWords:
         word_group = self.__get_next_attribute_id("WordGroup")
         for word_pair in word_object.word_list:
             if self.__check_not_duplicated(word_pair):
-                id_ = self.__get_next_attribute_id("WordID")
                 self.__add_word_info(
-                    id_,
                     word_object.part_of_speech,
                     word_object.word_category,
                     word_group,

@@ -69,7 +69,7 @@ def fetch_checkbox_options() -> pl.DataFrame:
         SELECT
             W.WordID,
             P.PartOfSpeech,
-            C.Category
+            C.WordCategory
         FROM
             Words W
         JOIN PartsOfSpeech P
@@ -166,7 +166,7 @@ class Menu:
             relx=0.6,
             rely=0.5,
             table="WordCategories",
-            column="Category",
+            column="WordCategory",
         )
 
     def create(self) -> None:
@@ -267,7 +267,7 @@ class Menu:
                 colours of.
         """
         unchanged_option = (
-            "Category" if updated_option == "PartOfSpeech" else "PartOfSpeech"
+            "WordCategory" if updated_option == "PartOfSpeech" else "PartOfSpeech"
         )
 
         options = (

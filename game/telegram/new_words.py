@@ -36,7 +36,7 @@ from enum import Enum
 import re
 
 from game.new_words.add import NewWords
-from game.new_words.enums import GrammarType, PartOfSpeech, WordCategory
+from game.new_words.enums import GrammarCategory, PartOfSpeech, WordCategory
 from game.new_words.objects import Generic, WordPair
 
 
@@ -87,7 +87,7 @@ def parse_new_word(message: str) -> Generic:
         word_phrase=WordPair(
             en=re.search("#newword (.*?) - ", message).group(1),
             sv=re.search(" - (.*?)(?=$| ~)", message).group(1),
-            grammar_id=GrammarType.NA,
+            grammar_id=GrammarCategory.NA,
         ),
         part_of_speech=part_of_speech,
         word_category=word_category,

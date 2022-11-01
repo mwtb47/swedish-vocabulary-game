@@ -137,7 +137,7 @@ class GameWords:
             W.WordGroup,
             M.Mark,
             M.Timestamp,
-            G.Description AS GrammarDescription,
+            G.GrammarCategory,
             H.Hint,
             L.WiktionaryLink
         FROM
@@ -148,15 +148,15 @@ class GameWords:
             ON W.PartOfSpeechID = P.PartOfSpeechID
         JOIN WordCategories C
             ON W.WordCategoryID = C.WordCategoryID
-        JOIN Grammar G
-            ON W.GrammarID = G.GrammarID
+        JOIN GrammarCategories G
+            ON W.GrammarCategoryID = G.GrammarCategoryID
         LEFT JOIN Hints H
             ON W.WordGroup = H.WordGroup
         LEFT JOIN Links L
             ON W.WordGroup = L.WiktionaryLink
         WHERE
             P.PartOfSpeech IN ({parts_of_speech})
-            AND C.Category IN ({word_categories})
+            AND C.WordCategory IN ({word_categories})
         """
 
         words = pl.read_sql(query, database.connection_uri)
@@ -316,7 +316,7 @@ class GameWords:
 
         # Provide a grammar hint for adjectives. Neuter, plural, etc.
         if word.get_column("PartOfSpeechID")[0] == 3:
-            grammar_hint = word.get_column("GrammarDescription")[0]
+            grammar_hint = word.get_column("GrammarCategory")[0]
         else:
             grammar_hint = None
 

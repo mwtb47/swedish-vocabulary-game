@@ -71,8 +71,8 @@ class WordCategory(Enum):
     """Animals."""
 
 
-class GrammarType(Enum):
-    """Enums for grammar types."""
+class GrammarCategory(Enum):
+    """Enums for grammar categories."""
 
     NA = 0
     """No grammar id."""
