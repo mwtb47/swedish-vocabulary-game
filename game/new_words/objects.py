@@ -24,7 +24,7 @@ class WordPair:
     Attributes:
         en: Word or phrase in English.
         sv: Word of phrase in Swedish.
-        grammar_id: See table_summaries.txt for grammar ids.
+        grammar_id: GrammarCategory enum.
     """
 
     en: str
@@ -37,8 +37,8 @@ class Word:
     """Base class for a word object.
 
     Attributes:
-        part_of_speech: See table_summaries.txt for parts of speech.
-        word_category: See table_summaries.txt for word categories.
+        part_of_speech: PartOfSpeech enum.
+        word_category: WordCategory enum.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
@@ -69,9 +69,8 @@ class Adjective(Word):
             adjective. Defaults to None.
         plural: WordPair object containing plural form of adjective.
             Defaults to None.
-        part_of_speech: See table_summaries.txt for parts of speech.
-            Defaults to ADJECTIVE.
-        word_category: See table_summaries.txt for word categories.
+        part_of_speech: PartOfSpeech enum. Defaults to ADJECTIVE.
+        word_category: WordCategory enum.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
@@ -119,9 +118,8 @@ class Adverb(Word):
 
     Attributes:
         word: WordPair object containing word of phrase.
-        part_of_speech: See table_summaries.txt for parts of speech.
-            Defaults to ADVERB.
-        word_category: See table_summaries.txt for word categories.
+        part_of_speech: PartOfSpeech enum. Defaults to ADVERB.
+        word_category: WordCategory enum.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
@@ -136,7 +134,7 @@ class Adverb(Word):
     @property
     def word_list(self) -> list[WordPair]:
         """List containing the adverb word pair."""
-        self.word_list = [self.word]
+        return [self.word]
 
 
 @dataclass(kw_only=True)
@@ -145,9 +143,8 @@ class Conjunction(Word):
 
     Attributes:
         word: WordPair object containing conjunction.
-        part_of_speech: See table_summaries.txt for parts of speech.
-            Defaults to ADVERB.
-        word_category: See table_summaries.txt for word categories.
+        part_of_speech: PartOfSpeech enum. Defaults to ADVERB.
+        word_category: WordCategory enum.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
@@ -162,7 +159,7 @@ class Conjunction(Word):
     @property
     def word_list(self) -> list[WordPair]:
         """List containing the conjunction word pair."""
-        self.word_list = [self.word]
+        return [self.word]
 
 
 @dataclass(kw_only=True)
@@ -170,9 +167,9 @@ class Generic(Word):
     """Dataclass to represent a generic word or phrase.
 
     Attributes:
-        part_of_speech: See table_summaries.txt for parts of speech.
-        word_category: See table_summaries.txt for word categories.
         word_phrase: List of WordPair objects containing word of phrase.
+        part_of_speech: PartOfSpeech enum.
+        word_category: WordCategory enum.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
@@ -200,10 +197,8 @@ class Noun(Word):
             form of adjective. Defaults to None.
         definite_plural: WordPair object containing definite plural form
             of adjective. Defaults to None.
-        part_of_speech: See table_summaries.txt for parts of speech.
-            Defaults to NOUN.
-        word_category: See table_summaries.txt for word categories.
-            Defaults to 1.
+        part_of_speech: PartOfSpeech enum. Defaults to NOUN.
+        word_category: WordCategory enum. Defaults to 1.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
@@ -258,10 +253,8 @@ class Verb(Word):
             perfect tense form. Defaults to None.
         imperative: WordPair object containing verb in imperative form.
             Defaults to None.
-        part_of_speech: See table_summaries.txt for parts of speech.
-            Defaults to VERB.
-        word_category: see table_summaries.txt for word categories.
-            Defaults to 1.
+        part_of_speech: PartOfSpeech enum. Defaults to VERB.
+        word_category: WordCategory enum. Defaults to 1.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
