@@ -170,21 +170,21 @@ class Generic(Word):
     """Dataclass to represent a generic word or phrase.
 
     Attributes:
-        word_phrase: WordPair object containing word of phrase.
         part_of_speech: See table_summaries.txt for parts of speech.
         word_category: See table_summaries.txt for word categories.
+        word_phrase: List of WordPair objects containing word of phrase.
         context_hint: Hint to be displayed under the question. Defaults
             to None.
         wiktionary_link: Link to wiktionary page. Defaults to None.
     """
 
-    word_phrase: WordPair
+    words_phrases: list[WordPair]
     part_of_speech: PartOfSpeech
 
     @property
     def word_list(self) -> list[WordPair]:
         """List containing the generic word or phrase pair."""
-        self.word_list = [self.word]
+        return self.words_phrases
 
 
 @dataclass
