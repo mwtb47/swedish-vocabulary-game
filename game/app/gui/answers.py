@@ -76,7 +76,7 @@ class Answers:
             self.__create_wiktionary_link()
 
     def __add_mark(self, mark: int) -> None:
-        """Add mark to marklist if not during retest.
+        """Add mark to mark list if not during retest.
 
         Args:
             mark: 1 if correct, 0 if incorrect.

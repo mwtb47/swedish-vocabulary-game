@@ -5,7 +5,7 @@ answers have been recorded during the current day. This script is run at
 8pm each day using cron and the output is written to the log file
 telegram_reminder.log.
 
-Fuctions:
+Functions:
     send_message: Send a message via the Telegram bot.
     check_status: Check the status of the send message request.
     main: Send message if daily answer quota not reached.
@@ -43,7 +43,7 @@ def check_status(response: requests.Response) -> None:
         response: Response object.
     """
     if response.status_code == 200:
-        print(f"{timestamp} - Message sent succesfully.")
+        print(f"{timestamp} - Message sent successfully.")
     else:
         print(f"{timestamp} - Sending failed. Error {response.status_code}")
 

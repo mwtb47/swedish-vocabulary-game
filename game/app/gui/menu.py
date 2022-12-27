@@ -64,7 +64,7 @@ def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, 
         checkbox_number: Index of the checkbox in the collection.
         relx: The relative x position of the first checkbox in
             collection.
-        rely: The relative y postiion of the first checkbox in
+        rely: The relative y position of the first checkbox in
             collection.
 
     Returns:
@@ -169,7 +169,7 @@ class Menu:
         self.game.settings.parts_of_speech = self.parts_of_speech.values
         self.game.settings.word_categories = self.word_categories.values
         self.game.settings.translation_direction = self.translation_direction.value
-        self.game.settings.set_langauges()
+        self.game.settings.set_languages()
         self.__try_get_words()
 
     def __try_get_words(self) -> None:
@@ -286,7 +286,7 @@ class CharacteristicEntry:
 
     @abstractmethod
     def create_entry(self) -> None:
-        """Create input functionality for characterstic."""
+        """Create input functionality for characteristic."""
 
     def create_menu_items(self) -> None:
         """Create label and button."""
@@ -434,5 +434,5 @@ class TextEntry(CharacteristicEntry):
 
     @property
     def value(self) -> str:
-        """Return the inputed value."""
+        """Return the inputted value."""
         return self.entry.get()

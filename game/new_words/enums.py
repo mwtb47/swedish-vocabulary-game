@@ -62,7 +62,7 @@ class WordCategory(Enum):
     """"Time."""
 
     PARTICLE_VERBS = 9
-    """Paticle verbs."""
+    """Particle verbs."""
 
     CLOTHES = 10
     """Clothing."""
@@ -120,7 +120,7 @@ class GrammarCategory(Enum):
     """Perfect present verb."""
 
     VERB_IMPERATIVE = 13
-    """Impertive verb."""
+    """Imperative verb."""
 
     ADJECTIVE_COMPARATIVE = 14
     """Comparative adjective."""

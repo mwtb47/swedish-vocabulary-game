@@ -54,7 +54,7 @@ class Settings:
         self.questions_per_round = int(n_questions / self.n_rounds)
         self.total_questions = n_questions
 
-    def set_langauges(self) -> None:
+    def set_languages(self) -> None:
         """Set the call and response language.
 
         The call (question) and response (answer), language is set as

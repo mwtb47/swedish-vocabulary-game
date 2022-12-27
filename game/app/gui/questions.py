@@ -26,7 +26,7 @@ class Questions:
         self.answer_entry: tk.Entry = None
 
     def initialise(self) -> None:
-        """Prepare game for qustions and then set the first question."""
+        """Prepare game for questions and then set the first question."""
         self.game.settings.set_question_stats()
         self.game.window.translation_direction_graphic()
         self.set_question()

@@ -28,7 +28,7 @@ def format_text(text: str) -> str:
     """Format text for string comparison.
 
     To avoid answers being marked as incorrect due to erroneous
-    keystrikes, three steps are taken:
+    key strikes, three steps are taken:
         - any character which is not a digit, letter, space, dash or
           colon is removed.
         - any sequence of 2 or more spaces is replace by a single space.
