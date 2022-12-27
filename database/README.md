@@ -2,9 +2,9 @@
 
 All words for the game are stored in a .db in this directory in file called `vocabulary.db`. This is also where a record of all answers is kept.
 
-Below is a diagram of the database's structure and a summary of each table. This database structure can be created using the `game/database/create_db.py` script.
+Below is a diagram of the database's structure and a summary of each table. This database structure can be created using the `database/create_db.py` script.
 
-![Database diagram coule not be displayed.](DatabaseDiagram.png "Database diagram")
+![Database diagram could not be displayed.](DatabaseDiagram.png "Database diagram")
 
 &nbsp;
 
@@ -12,7 +12,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
-| GrammarCategoryID | INTEGER | PRIMARY KEY, AUTOINCREMENT | Unique identifier for the grammar cateogry. |
+| GrammarCategoryID | INTEGER | PRIMARY KEY, AUTOINCREMENT | Unique identifier for the grammar category. |
 | GrammarCategory | TEXT | NOT NULL | Description of the grammar category. These include the the types of adjectives (utrum, neutrum, plural), the different forms of a noun (singular and plural versions of definite and indefinite) etc. |
 
 &nbsp;

@@ -28,10 +28,9 @@ from dataclasses import dataclass
 import sqlite3
 import subprocess
 
-import pandas as pd
 import numpy as np
 
-from game import database
+import database as db
 from game.new_words.enums import PartOfSpeech, WordCategory
 from game.new_words.objects import (
     Adjective,
@@ -105,12 +104,8 @@ class NewWords:
     def __init__(self, words_phrases: list[Word]) -> None:
         self.words_phrases = words_phrases
         self.counter = Counter()
-        self.__create_connection_and_cursor()
+        self.connection, self.cursor = db.connect_with_cursor()
         self.__set_sqlite3_cast_rule()
-
-    def __create_connection_and_cursor(self) -> None:
-        """Create sqlite3 database connection and cursor."""
-        self.connection, self.cursor = database.connect_with_cursor()
 
     def __set_sqlite3_cast_rule(self) -> None:
         """Set sqlite3 cast rule for NumPy int64 type.
@@ -121,14 +116,6 @@ class NewWords:
         """
         sqlite3.register_adapter(np.int64, int)
 
-    def __read_current_words(self) -> pd.DataFrame:
-        """Fetch all columns from the ord table.
-
-        Returns:
-            DataFrame containing words table from database.
-        """
-        return pd.read_sql_query("""SELECT * FROM Words""", self.connection)
-
     def __get_next_attribute_id(self, attribute: str) -> int:
         """Get an unused attribute id. This is the max current id + 1.
 
@@ -138,7 +125,7 @@ class NewWords:
         Returns:
             Integer to be used as next id.
         """
-        df = pd.read_sql_query(f"""SELECT {attribute} FROM Words""", self.connection)
+        df = db.to_pandas(f"""SELECT {attribute} FROM Words""")
         return df[attribute].max() + 1
 
     def __check_not_duplicated(self, word_pair: WordPair) -> bool:
@@ -151,7 +138,7 @@ class NewWords:
             True if the word or phrase pair is not already in the
             database, False if it is.
         """
-        current_words = self.__read_current_words()
+        current_words = db.to_pandas("SELECT * FROM Words")
         current_pairs = [
             (row.English, row.Swedish, row.GrammarCategoryID)
             for row in current_words.itertuples()
@@ -283,7 +270,7 @@ class NewWords:
         """
         for word_phrase in self.words_phrases:
             self.__add_new_word(word_phrase)
-        database.disconnect(self.connection, commit=True)
+        db.commit_and_close(self.connection)
         self.counter.print_summary()
 
 

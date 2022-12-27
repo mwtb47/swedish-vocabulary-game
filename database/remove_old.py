@@ -6,9 +6,6 @@ This script removes all entries in the marks table for word ids which
 are no longer present in the words table.
 
 Functions:
-    fetch_table: Fetch a table from the database.
-    fetch_words_and_marks: Fetch words and marks tables from the
-        database.
     remove_old_marks: Remove old marks from the table.
     print_summary: Print a summary of what has been removed.
     commit: Commit the new table to the database and close connection.
@@ -17,34 +14,7 @@ Functions:
 
 import pandas as pd
 
-from game import database
-
-
-connection = database.connect()
-
-
-def fetch_table(table_name: str) -> pd.DataFrame:
-    """Fetch all columns from table.
-
-    Args:
-        table_name: The name of the table to fetch.
-
-    Returns:
-        DataFrame containing all columns from the table.
-    """
-    return pd.read_sql_query(f"SELECT * FROM {table_name}", connection)
-
-
-def fetch_words_and_marks() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Fetch word and marks tables.
-
-    Returns:
-        Tuple of DataFrames. The first DataFrame is the words table, the
-        second is the marks table.
-    """
-    words = fetch_table("Words")
-    marks = fetch_table("Marks")
-    return words, marks
+import database as db
 
 
 def remove_old_marks() -> pd.DataFrame:
@@ -53,18 +23,18 @@ def remove_old_marks() -> pd.DataFrame:
     Remove all marks for word ids which are no longer present in the
     words table.
     """
-    words, marks = fetch_words_and_marks()
+    words = db.to_pandas("SELECT * FROM Words")
+    marks = db.to_pandas("SELECT * FROM Marks")
     merged = words.merge(
         marks,
-        left_on="id",
-        right_on="ord_id",
+        on="WordID",
         how="outer",
         indicator=True,
     )
-    old_words = list(merged[merged["_merge"] == "right_only"].ord_id)
+    old_words = list(merged[merged["_merge"] == "right_only"].WordID)
     print_summary(old_words)
 
-    return marks.drop(marks[marks.ord_id.isin(old_words)].index)
+    return marks.drop(marks[marks.WordID.isin(old_words)].index)
 
 
 def print_summary(old_words: list[int]) -> None:
@@ -88,10 +58,11 @@ def commit(new_marks: pd.DataFrame) -> None:
     the connections.
 
     Args:
-        new_marks: Dataframe to replace the marks table.
+        new_marks: DataFrame to replace the marks table.
     """
+    connection = db.connect()
     new_marks.to_sql("Marks", connection, if_exists="replace", index=False)
-    database.disconnect(connection, commit=True)
+    db.commit_and_close(connection)
 
 
 def main() -> None:

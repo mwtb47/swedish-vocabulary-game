@@ -21,7 +21,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 import polars as pl
 
 from app import Game, NoWordsError
-from game import database
+import database as db
 
 
 def format_text(text: str) -> str:
@@ -127,38 +127,11 @@ class GameWords:
         word_categories = ", ".join(
             f"'{s}'" for s in self.game.settings.word_categories
         )
-        query = f"""
-        SELECT
-            W.WordID,
-            W.PartOfSpeechID,
-            W.English,
-            W.Swedish,
-            W.WordGroup,
-            M.Mark,
-            M.Timestamp,
-            G.GrammarCategory,
-            H.Hint,
-            L.WiktionaryLink
-        FROM
-            Words W
-        LEFT OUTER JOIN Marks M
-            ON W.WordID = M.WordID
-        JOIN PartsOfSpeech P
-            ON W.PartOfSpeechID = P.PartOfSpeechID
-        JOIN WordCategories C
-            ON W.WordCategoryID = C.WordCategoryID
-        JOIN GrammarCategories G
-            ON W.GrammarCategoryID = G.GrammarCategoryID
-        LEFT JOIN Hints H
-            ON W.WordGroup = H.WordGroup
-        LEFT JOIN Links L
-            ON W.WordGroup = L.WiktionaryLink
-        WHERE
-            P.PartOfSpeech IN ({parts_of_speech})
-            AND C.WordCategory IN ({word_categories})
-        """
-
-        words = pl.read_sql(query, database.connection_uri)
+        query = db.views.game_words.format(
+            parts_of_speech=parts_of_speech,
+            word_categories=word_categories,
+        )
+        words = db.to_polars(query)
         if words.shape[0] == 0:
             raise NoWordsError
         return words

@@ -86,7 +86,7 @@ class Answers:
                 {
                     "WordID": self.game.settings.current_word_pair.id,
                     "Mark": mark,
-                    "TranslationDirection": self.game.settings.translation_direction,
+                    "TranslationDirectionID": self.game.settings.translation_direction,
                     "Timestamp": time(),
                 }
             )

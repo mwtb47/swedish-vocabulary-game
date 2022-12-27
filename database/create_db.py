@@ -1,4 +1,4 @@
-"""Script to create the vocabulary game database structure.
+"""Script to create the vocabulary game database.
 
 Arguments:
     db_name: Name of the database file, including .db extension.
@@ -77,6 +77,21 @@ CREATE TABLE Words (
 """
 
 
+def parse_args() -> argparse.Namespace:
+    """_summary_
+
+    Returns:
+        _description_
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "db_name", type=str, help="Name of .db file, including extension."
+    )
+    parser.add_argument("language1", type=str, help="Name of first language field.")
+    parser.add_argument("language2", type=str, help="Name of second language field.")
+    return parser.parse_args()
+
+
 def exists(db_name: str) -> bool:
     """Check if a file with the provided name already exists.
 
@@ -106,13 +121,7 @@ def create_db(db_name: str, language1: str, language2: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "db_name", type=str, help="Name of .db file, including extension."
-    )
-    parser.add_argument("language1", type=str, help="Name of first language field.")
-    parser.add_argument("language2", type=str, help="Name of second language field.")
-    args = parser.parse_args()
+    args = parse_args()
 
     if not exists(args.db_name):
         create_db(args.db_name, args.language1, args.language2)

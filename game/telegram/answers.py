@@ -1,7 +1,6 @@
 """Module with functions to fetch answers data from database.
 
 Functions:
-    fetch: Fetch the marks table from the database.
     unix_to_datetime: Convert unix timestamp to a date.
     count_answers: Count the number of answers during the current day
         and week.
@@ -11,19 +10,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from game import database
-
-
-def fetch() -> pd.DataFrame:
-    """Fetch data from the marks table in the database.
-
-    Returns:
-        DataFrame with marks.
-    """
-    connection = database.connect()
-    df = pd.read_sql_query("SELECT * FROM Marks", connection)
-    database.disconnect(connection)
-    return df
+import database as db
 
 
 def unix_to_date(timestamps: pd.Series) -> list:
@@ -45,7 +32,7 @@ def count_answers() -> tuple[int, int]:
         Tuple with the number of answers on current day and number of
         answers during current week.
     """
-    df = fetch()
+    df = db.to_pandas("SELECT * FROM Marks")
     today = datetime.now().date()
     df["date"] = unix_to_date(df["Timestamp"])
     df["week"] = [date.isocalendar().week for date in df.date]

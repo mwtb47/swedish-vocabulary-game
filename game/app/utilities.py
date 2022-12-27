@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 import app
-from game import database
+import database as db
 
 
 @dataclass
@@ -108,9 +108,9 @@ class Status:
         game.
         """
         marks = pd.DataFrame(self.marks)
-        connection = database.connect()
+        connection = db.connect()
         marks.to_sql("Marks", connection, if_exists="append", index=False)
-        database.disconnect(connection, commit=True)
+        db.commit_and_close(connection)
 
     def question_number_in_round(self, questions_per_round: int) -> int:
         """Return the question number within the round.

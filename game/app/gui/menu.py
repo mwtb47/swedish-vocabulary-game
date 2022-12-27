@@ -24,7 +24,7 @@ import tkinter as tk
 import polars as pl
 
 from app import Game, NoWordsError
-from game import database
+import database as db
 
 
 def format_option_text(option: str) -> str:
@@ -52,33 +52,7 @@ def fetch_options(table: str, column: str) -> list[str]:
     Returns:
         A list of the options.
     """
-    return (
-        pl.read_sql(f"SELECT {column} FROM {table}", database.connection_uri)
-        .get_column(column)
-        .to_list()
-    )
-
-
-def fetch_checkbox_options() -> pl.DataFrame:
-    """Fetch table from database to check checkbox options.
-
-    Returns:
-        DataFrame with word ids, part of speech labels and word category
-        labels.
-    """
-    query = """
-        SELECT
-            W.WordID,
-            P.PartOfSpeech,
-            C.WordCategory
-        FROM
-            Words W
-        JOIN PartsOfSpeech P
-            ON W.PartOfSpeechID = P.PartOfSpeechID
-        JOIN WordCategories C
-            ON W.WordCategoryID = C.WordCategoryID
-    """
-    return pl.read_sql(query, database.connection_uri)
+    return db.to_polars(f"SELECT {column} FROM {table}").get_column(column).to_list()
 
 
 def checkbox_position(checkbox_number: int, relx: int, rely: int) -> tuple[int, int]:
@@ -125,7 +99,7 @@ class Menu:
 
     def __init__(self, game: Game) -> None:
         self.game = game
-        self.checkbox_options = fetch_checkbox_options()
+        self.checkbox_options = db.to_polars(db.views.checkboxes)
         self.values_set_indicator = None
         self.submit_values_button = None
         self.__initialise_options()
