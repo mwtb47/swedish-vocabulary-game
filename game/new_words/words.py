@@ -56,11 +56,13 @@ words_phrases = [
     # ),
     #
     # Generic(
-    #     word_phrase=WordPair(
-    #         en="",
-    #         sv="",
-    #         grammar_id=GrammarCategory.NA
-    #     ),
+    #     words_phrases=[
+    #         WordPair(
+    #             en="",
+    #             sv="",
+    #             grammar_id=GrammarCategory.NA
+    #         ),
+    #     ],
     #     part_of_speech=PartOfSpeech.,
     #     word_category=WordCategory.,
     # ),
