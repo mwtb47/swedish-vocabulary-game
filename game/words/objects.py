@@ -14,7 +14,7 @@ Classes:
 from abc import abstractproperty
 from dataclasses import dataclass
 
-from game.new_words.enums import GrammarCategory, PartOfSpeech, WordCategory
+from game.words import GrammarCategory, PartOfSpeech, WordCategory
 
 
 @dataclass

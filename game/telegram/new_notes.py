@@ -1,14 +1,14 @@
 """Module with functions to add notes from Telegram bot.
 
-A new note can be added to game/new_words/notes.txt by sending a message
-in the following format:
+A new note can be added to database/new_words/notes.txt by sending a
+message in the following format:
 
     #note text to add as note
 
 Functions:
-    read: Read the game/new_words/notes.txt file as a string.
+    read: Read the database/new_words/notes.txt file as a string.
     add_notes: Add notes to the string.
-    write: Write the string back to game/new_words/notes.txt.
+    write: Write the string back to database/new_words/notes.txt.
 """
 
 
@@ -18,7 +18,7 @@ def read() -> str:
     Returns:
         Notes file as a string.
     """
-    with open("game/new_words/notes.txt", "r", encoding="utf-8") as file_handle:
+    with open("database/new_words/notes.txt", "r", encoding="utf-8") as file_handle:
         return file_handle.read()
 
 
@@ -28,7 +28,7 @@ def write(note_file: str) -> None:
     Args:
         note_file: String to write to txt file.
     """
-    with open("game/new_words/notes.txt", "w", encoding="utf-8") as file_handle:
+    with open("database/new_words/notes.txt", "w", encoding="utf-8") as file_handle:
         file_handle.write(note_file)
 
 

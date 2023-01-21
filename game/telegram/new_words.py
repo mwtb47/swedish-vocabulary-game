@@ -36,9 +36,8 @@ Word categories:
 from enum import Enum
 import re
 
-from game.new_words.add import NewWords
-from game.new_words.enums import GrammarCategory, PartOfSpeech, WordCategory
-from game.new_words.objects import Generic, WordPair
+from database.new_words.add import NewWords
+from game.words import GrammarCategory, PartOfSpeech, WordCategory, Generic, WordPair
 
 
 def return_valid_flags(attribute: Enum, flags: list[str]) -> list[str]:

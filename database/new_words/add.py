@@ -2,9 +2,9 @@
 
 Using the --checkout flag will run the following command after adding
 the words to the database, removing the added words from
-game/new_words/words.py:
+database/new_words/words.py:
 
-    git checkout game/new_words/words.py
+    git checkout database/new_words/words.py
 
 Classes:
     Counter: Dataclass to count number of entries added.
@@ -31,8 +31,9 @@ import subprocess
 import numpy as np
 
 import database as db
-from game.new_words.enums import PartOfSpeech, WordCategory
-from game.new_words.objects import (
+from game.words import (
+    PartOfSpeech,
+    WordCategory,
     Adjective,
     Adverb,
     Conjunction,
@@ -53,7 +54,7 @@ class Counter:
     verbs: int = 0
     words: int = 0
 
-    def tick(self, word: Word):
+    def tick(self, word: Word) -> None:
         """Increase count of word object type.
 
         Args:
@@ -262,6 +263,8 @@ class NewWords:
         if not found_duplicate:
             self.__add_hint_and_link(word_object, word_group)
 
+        self.connection.commit()
+
     def add(self) -> None:
         """Add words to database.
 
@@ -270,7 +273,7 @@ class NewWords:
         """
         for word_phrase in self.words_phrases:
             self.__add_new_word(word_phrase)
-        db.commit_and_close(self.connection)
+        self.connection.close()
         self.counter.print_summary()
 
 
@@ -285,4 +288,4 @@ if __name__ == "__main__":
 
     # Remove changes after they have been committed to database.
     if args.checkout:
-        subprocess.call(["git", "checkout", "game/new_words/words.py"])
+        subprocess.call(["git", "checkout", "database/new_words/words.py"])

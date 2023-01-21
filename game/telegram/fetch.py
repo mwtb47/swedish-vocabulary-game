@@ -2,7 +2,8 @@
 
 The script fetches all updates from the Telegram bot chat (updates are
 only available for the past 24 hours). New notes are added to the notes
-file game/new_words/notes.txt and new words are added to the database.
+file database/new_words/notes.txt and new words are added to the
+database.
 
 This script is run on the hour, every hour, between 7pm and 11pm every
 day using cron and the output is written to the log file
