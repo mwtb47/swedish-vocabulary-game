@@ -1,0 +1,21 @@
+body {
+    background-color: rgba(40, 40, 40, 1);
+    color: rgb(240, 240, 240);
+    height: 10vh;
+    margin: 3%;
+}
+
+.divCard {
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 60px;
+    padding: 15px 15px 15px 15px;
+    margin: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+.divRoundedBorder {
+    border-radius: 15px;
+    background-color: rgba(30, 30, 30, 1);
+    padding: 15px 15px 15px 15px;
+    margin: 5px 5px 5px 5px;
+}
