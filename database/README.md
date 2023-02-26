@@ -61,7 +61,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
 | TranslationDirectionID | INTEGER | PRIMARY KEY, NOT NULL | Unique identifier for the translation direction. |
-| TranslationDirection | TEXT | NOT NULL | Description of the translation direction, e.g., "en to sv" or "sv to en". |
+| TranslationDirection | TEXT | NOT NULL | Description of the translation direction, e.g. "en to sv" or "sv to en". |
 
 &nbsp;
 
@@ -70,7 +70,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
 | WordCategoryID | INTEGER | PRIMARY KEY, AUTOINCREMENT | Unique identifier for the word category. |
-| WordCategory | TEXT | NOT NULL | The name of the word category. These categories are used to group words by theme, e.g., "sport", "food", "science" etc. |
+| WordCategory | TEXT | NOT NULL | The name of the word category. These categories are used to group words by theme, e.g. "sport", "food", "science" etc. |
 
 &nbsp;
 
@@ -83,5 +83,5 @@ Below is a diagram of the database's structure and a summary of each table. This
 | Swedish | TEXT | NOT NULL | Swedish part of the word or phrase pair. |
 | WordCategoryID | INTEGER | NOT NULL | ID for the word category. |
 | PartOfSpeechID | INTEGER | NOT NULL | ID for the part of speech. |
-| WordGroup | INTEGER | NOT NULL | Unique identifier for the word group a word or phrase belongs to. Inflections of the same word have unique WordIDs, but share the same word group. E.g., "a dog", "dogs", "the dog" and "the dogs" would have the same word group. |
+| WordGroup | INTEGER | NOT NULL | Unique identifier for the word group a word or phrase belongs to. Inflections of the same word have unique WordIDs, but share the same word group. E.g. "a dog", "dogs", "the dog" and "the dogs" would have the same word group. |
 | GrammarCategoryID | INTEGER | NOT NULL | ID for the grammar. |
