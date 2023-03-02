@@ -18,9 +18,9 @@ layout = html.Div(
                 dbc.Col(
                     [
                         html.H4("Number of Words in Database", className="text-center"),
-                        html.Div(db_data.unique_word_count, className="divCard"),
+                        html.Div(db_data.unique_word_count, className="card"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
                 dbc.Col(
                     [
@@ -28,9 +28,9 @@ layout = html.Div(
                             "Number of Word Groups in Database",
                             className="text-center",
                         ),
-                        html.Div(db_data.unique_word_group_count, className="divCard"),
+                        html.Div(db_data.unique_word_group_count, className="card"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
             ],
         ),
@@ -48,15 +48,15 @@ layout = html.Div(
             [
                 dbc.Col(
                     html.Div(id=ids.WORD_CATEGORY_BAR_CHART),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
                 dbc.Col(
                     html.Div(id=ids.PART_OF_SPEECH_BAR_CHART),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
                 dbc.Col(
                     html.Div(id=ids.GRAMMAR_CATEGORY_BAR_CHART),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
             ],
         ),

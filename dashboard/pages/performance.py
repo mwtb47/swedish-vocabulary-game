@@ -19,15 +19,15 @@ layout = html.Div(
                 dbc.Col(
                     [
                         html.H3("Overall % Correct", className="text-center"),
-                        html.Div(db_data.percent_correct, className="divCard"),
+                        html.Div(db_data.percent_correct, className="card"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
                 dbc.Col(
                     html.Div(
                         plot_marks_summary("TranslationDirection"),
                     ),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
             ],
         ),
@@ -37,19 +37,19 @@ layout = html.Div(
                     html.Div(
                         plot_marks_summary("PartOfSpeech"),
                     ),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
                 dbc.Col(
                     html.Div(
                         plot_marks_summary("GrammarCategory"),
                     ),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
                 dbc.Col(
                     html.Div(
                         plot_marks_summary("WordCategory"),
                     ),
-                    className="divRoundedBorder",
+                    className="rounded-border",
                 ),
             ]
         ),
@@ -58,7 +58,7 @@ layout = html.Div(
                 html.Div(
                     plot_cumulative_average(),
                 ),
-                className="divRoundedBorder",
+                className="rounded-border",
             ),
         ),
     ],

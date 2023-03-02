@@ -1,8 +1,5 @@
 """Module docstring."""
 
-# TODO Answers over time callback causes page to jump to top
-# TODO Alignment of containers in first two rows is off
-
 import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
@@ -28,41 +25,41 @@ layout = html.Div(
                 dbc.Col(
                     [
                         html.H6("Total Answers", className="text-center"),
-                        html.Div(db_data.answer_count, className="divCard"),
+                        html.Div(db_data.answer_count, className="card"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
                         html.H6("Weekly Answers Target", className="text-center"),
                         plot_gauge(db_data.answer_count_this_week, 560),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
                         html.H6("Daily Answers Target", className="text-center"),
                         plot_gauge(db_data.answer_count_today, 80),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
                         html.H6("Daily Target Success", className="text-center"),
                         html.Div(
-                            db_data.percent_daily_target_achieved, className="divCard"
+                            db_data.percent_daily_target_achieved, className="card"
                         ),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
                         html.H6("Weekly Target Success", className="text-center"),
                         html.Div(
-                            db_data.percent_weekly_target_achieved, className="divCard"
+                            db_data.percent_weekly_target_achieved, className="card"
                         ),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
@@ -77,7 +74,7 @@ layout = html.Div(
                             threshold=0.5,
                         ),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border six-per-row",
                 ),
             ],
         ),
@@ -91,7 +88,7 @@ layout = html.Div(
                         ),
                         plot_answers_summary("PartOfSpeech"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border three-per-row",
                 ),
                 dbc.Col(
                     [
@@ -101,7 +98,7 @@ layout = html.Div(
                         ),
                         plot_answers_summary("GrammarCategory"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border three-per-row",
                 ),
                 dbc.Col(
                     [
@@ -111,22 +108,24 @@ layout = html.Div(
                         ),
                         plot_answers_summary("WordCategory"),
                     ],
-                    className="divRoundedBorder",
+                    className="rounded-border three-per-row",
                 ),
             ]
         ),
         dbc.Row(
-            [
-                dbc.Row(
-                    dcc.RadioItems(
-                        id=ids.ANSWERS_OVER_TIME_INPUT,
-                        options=["Day", "Week", "Month"],
-                        value="Week",
+            dbc.Col(
+                [
+                    dbc.Row(
+                        dcc.RadioItems(
+                            id=ids.ANSWERS_OVER_TIME_INPUT,
+                            options=["Day", "Week", "Month"],
+                            value="Week",
+                        ),
                     ),
-                ),
-                dbc.Row(html.Div(id=ids.ANSWERS_OVER_TIME)),
-            ],
-            className="divRoundedBorder",
+                    dbc.Row(html.Div(id=ids.ANSWERS_OVER_TIME)),
+                ],
+                className="rounded-border one-per-row",
+            )
         ),
     ]
 )
