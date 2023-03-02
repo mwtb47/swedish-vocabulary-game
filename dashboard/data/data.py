@@ -71,24 +71,31 @@ def add_period_columns(df: pl.DataFrame, period: str) -> pl.DataFrame:
     Returns:
         _description_
     """
+    # fmt: off
     if period == "Day":
-        return df.rename({"Date": "Period"}).with_column(
-            pl.col("Period").alias("Period Sort")
+        return (
+            df.with_column(pl.col("Date").alias("Period"))
+            .with_column(pl.col("Date").alias("Period Sort"))
         )
 
     if period == "Week":
-        return df.with_column(
-            (pl.col("Date").dt.year() * 100 + pl.col("Date").dt.week()).alias(
-                "Period Sort"
+        return (
+            df.with_column(pl.col("Date").dt.strftime("w%V '%G").alias("Period"))
+            .with_column(
+                (pl.col("Date").dt.iso_year() * 100 + pl.col("Date").dt.week())
+                .alias("Period Sort")
             )
-        ).with_column(pl.col("Date").dt.strftime("w%W '%y").alias("Period"))
+        )
 
     if period == "Month":
-        return df.with_column(
-            (pl.col("Date").dt.year() * 100 + pl.col("Date").dt.month()).alias(
-                "Period Sort"
+        return (
+            df.with_column(pl.col("Date").dt.strftime("%b '%y").alias("Period"))
+            .with_column(
+                (pl.col("Date").dt.year() * 100 + pl.col("Date").dt.month())
+                .alias("Period Sort")
             )
-        ).with_column(pl.col("Date").dt.strftime("%b '%y").alias("Period"))
+        )
+    # fmt: on
 
     raise ValueError(f"Unsupported time period: {period}.")
 
