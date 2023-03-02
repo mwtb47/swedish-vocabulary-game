@@ -67,7 +67,7 @@ def plot_answers_summary(category: str) -> html.Div:
     Output(ids.ANSWERS_OVER_TIME, "children"),
     Input(ids.ANSWERS_OVER_TIME_INPUT, "value"),
 )
-def plot_answers_over_time(period: str) -> html.Div:
+def plot_answers_over_time(period: str) -> dcc.Graph:
     """Plot number of answers over time.
 
     Args:
@@ -128,4 +128,4 @@ def plot_answers_over_time(period: str) -> html.Div:
 
     fig = go.Figure(data=data, layout=layout)
 
-    return html.Div(dcc.Graph(figure=fig), id=ids.ANSWERS_OVER_TIME)
+    return dcc.Graph(figure=fig)
