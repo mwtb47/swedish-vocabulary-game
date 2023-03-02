@@ -49,7 +49,6 @@ def plot_answers_summary(category: str) -> html.Div:
     layout = dict(
         **general_chart_layout,
         **horizontal_bar_layout,
-        margin={"t": 15, "r": 30, "b": 40},
     )
 
     fig = go.Figure(data=data, layout=layout)
@@ -121,8 +120,7 @@ def plot_answers_over_time(period: str) -> dcc.Graph:
     layout = dict(
         **general_chart_layout,
         **line_chart_layout,
-        title_text=f"Answers per {period.capitalize()}",
-        margin={"t": 60},
+        margin={"t": 30},
         height=600,
     )
 

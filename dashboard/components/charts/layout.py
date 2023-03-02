@@ -1,5 +1,4 @@
 """"""
-from enum import Enum
 
 
 general_chart_layout = {
@@ -20,12 +19,12 @@ horizontal_bar_layout = {
         "linecolor": "rgb(200, 200, 200)",
         "linewidth": 3,
     },
+    "margin": {"t": 20, "b": 30, "r": 30},
 }
 
 line_chart_layout = {
     "xaxis": {
-        "gridcolor": "rgb(50, 50, 50)",
-        "gridwidth": 1,
+        "gridcolor": "rgba(0, 0, 0, 0)",
     },
     "yaxis": {
         "rangemode": "tozero",
@@ -49,5 +48,5 @@ class SummaryColours:
     """Class with colours for summary bar chart."""
 
     BAR = "rgba(50, 160, 200, 0.8)"
-    LINE = "rgb(50, 130, 180)"
+    LINE = "rgba(50, 160, 200, 0.8)"
     AVERAGE_LINE = "rgb(200, 50, 80)"

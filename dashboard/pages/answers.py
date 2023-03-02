@@ -1,7 +1,7 @@
 """Module docstring."""
 
 import dash
-from dash import dcc, html
+from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 from dashboard.app import db_data
@@ -13,6 +13,23 @@ from dashboard.components.charts import (
 
 
 dash.register_page(__name__, path="/", name="Answers Summary", title="Answers")
+
+
+@callback(
+    Output(ids.ANSWERS_OVER_TIME_TITLE, "children"),
+    Input(ids.ANSWERS_OVER_TIME_INPUT, "value"),
+)
+def update_chart_title(period: str):
+    """_summary_
+
+    Args:
+        period: _description_
+
+    Returns:
+        _description_
+    """
+    return html.H6(f"Answers per {period}")
+
 
 layout = html.Div(
     children=[
@@ -32,14 +49,20 @@ layout = html.Div(
                 dbc.Col(
                     [
                         html.H6("Weekly Answers Target", className="text-center"),
-                        plot_gauge(db_data.answer_count_this_week, 560),
+                        plot_gauge(
+                            ids.ANSWER_COUNT_WEEKLY,
+                            db_data.answer_count_this_week,
+                            560,
+                        ),
                     ],
                     className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
                         html.H6("Daily Answers Target", className="text-center"),
-                        plot_gauge(db_data.answer_count_today, 80),
+                        plot_gauge(
+                            ids.ANSWER_COUNT_TODAY, db_data.answer_count_today, 80
+                        ),
                     ],
                     className="rounded-border six-per-row",
                 ),
@@ -47,7 +70,8 @@ layout = html.Div(
                     [
                         html.H6("Daily Target Success", className="text-center"),
                         html.Div(
-                            db_data.percent_daily_target_achieved, className="card"
+                            db_data.percent_daily_target_achieved,
+                            className="card",
                         ),
                     ],
                     className="rounded-border six-per-row",
@@ -56,7 +80,8 @@ layout = html.Div(
                     [
                         html.H6("Weekly Target Success", className="text-center"),
                         html.Div(
-                            db_data.percent_weekly_target_achieved, className="card"
+                            db_data.percent_weekly_target_achieved,
+                            className="card",
                         ),
                     ],
                     className="rounded-border six-per-row",
@@ -67,6 +92,7 @@ layout = html.Div(
                             "% English to Swedish Answers", className="text-center"
                         ),
                         plot_gauge(
+                            ids.ENGLISH_TO_SWEDISH,
                             score=db_data.english_to_swedish_percentage,
                             upper_limit=1,
                             is_percentage=True,
@@ -120,8 +146,11 @@ layout = html.Div(
                             id=ids.ANSWERS_OVER_TIME_INPUT,
                             options=["Day", "Week", "Month"],
                             value="Week",
+                            inputStyle={"margin-right": "2px"},
+                            labelStyle={"margin-right": "10px"},
                         ),
                     ),
+                    dbc.Row(id=ids.ANSWERS_OVER_TIME_TITLE, className="text-center"),
                     dbc.Row(html.Div(id=ids.ANSWERS_OVER_TIME)),
                 ],
                 className="rounded-border one-per-row",

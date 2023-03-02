@@ -1,6 +1,6 @@
 """Module docstring"""
 
-from dash import dcc, html, Input, Output, callback
+from dash import dcc, Input, Output, callback
 import plotly.graph_objects as go
 import numpy as np
 
@@ -9,15 +9,16 @@ from dashboard.components import ids
 from dashboard.components.charts.layout import (
     general_chart_layout,
     horizontal_bar_layout,
+    SummaryColours,
 )
-from dashboard.utilities import format_enums, split_title
+from dashboard.utilities import format_enums
 
 
-def plot_database_summary(field: str, component_id: str, category: str) -> html.Div:
+def plot_database_summary(field: str, category: str) -> dcc.Graph:
     """_summary_
 
     Args:
-        component_id: _description_
+        field: _description_
         category: _description_
     """
     df = db_data.count_words_per_category(field, category)
@@ -29,7 +30,7 @@ def plot_database_summary(field: str, component_id: str, category: str) -> html.
     data = go.Bar(
         y=categories,
         x=df.get_column(field).to_list(),
-        marker={"color": "steelblue"},
+        marker={"color": SummaryColours.BAR},
         orientation="h",
         customdata=customdata,
         hovertemplate=hovertemplate,
@@ -38,36 +39,32 @@ def plot_database_summary(field: str, component_id: str, category: str) -> html.
     layout = dict(
         **general_chart_layout,
         **horizontal_bar_layout,
-        title_text=f"{split_title(field)} Count per {split_title(category)}",
-        margin={"t": 60, "r": 30},
     )
 
     fig = go.Figure(data=data, layout=layout)
 
-    return html.Div(dcc.Graph(figure=fig), id=component_id)
+    return dcc.Graph(figure=fig)
 
 
 @callback(
     Output(ids.PART_OF_SPEECH_BAR_CHART, "children"),
-    Input(ids.ID_WORD_SELECTOR, "value"),
+    Input(ids.ID_GROUP_SELECTOR, "value"),
 )
-def plot_database_part_of_speech_summary(field: str) -> html.Div:
-    return plot_database_summary(field, ids.PART_OF_SPEECH_BAR_CHART, "PartOfSpeech")
+def plot_database_part_of_speech_summary(field: str) -> dcc.Graph:
+    return plot_database_summary(field, "PartOfSpeech")
 
 
 @callback(
     Output(ids.WORD_CATEGORY_BAR_CHART, "children"),
-    Input(ids.ID_WORD_SELECTOR, "value"),
+    Input(ids.ID_GROUP_SELECTOR, "value"),
 )
-def plot_database_word_category_summary(field: str) -> html.Div:
-    return plot_database_summary(field, ids.WORD_CATEGORY_BAR_CHART, "WordCategory")
+def plot_database_word_category_summary(field: str) -> dcc.Graph:
+    return plot_database_summary(field, "WordCategory")
 
 
 @callback(
     Output(ids.GRAMMAR_CATEGORY_BAR_CHART, "children"),
-    Input(ids.ID_WORD_SELECTOR, "value"),
+    Input(ids.ID_GROUP_SELECTOR, "value"),
 )
-def plot_database_grammar_category_summary(field: str) -> html.Div:
-    return plot_database_summary(
-        field, ids.GRAMMAR_CATEGORY_BAR_CHART, "GrammarCategory"
-    )
+def plot_database_grammar_category_summary(field: str) -> dcc.Graph:
+    return plot_database_summary(field, "GrammarCategory")

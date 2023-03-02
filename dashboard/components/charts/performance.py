@@ -13,7 +13,7 @@ from dashboard.components.charts.layout import (
     line_chart_layout,
     PerformanceColours,
 )
-from dashboard.utilities import format_enums, split_title
+from dashboard.utilities import format_enums
 
 
 def add_colours(df: pl.DataFrame) -> pl.DataFrame:
@@ -35,7 +35,7 @@ def add_colours(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def plot_marks_summary(category: str) -> html.Div:
+def plot_marks_summary(category: str, height: int = None) -> html.Div:
     """_summary_
 
     Args:
@@ -65,8 +65,7 @@ def plot_marks_summary(category: str) -> html.Div:
     layout = dict(
         **general_chart_layout,
         **horizontal_bar_layout,
-        title_text=f"Mean Score per {split_title(category)}",
-        margin={"t": 60},
+        height=height,
     )
 
     fig = go.Figure(data=data, layout=layout)
@@ -94,8 +93,7 @@ def plot_cumulative_average() -> html.Div:
     layout = dict(
         **general_chart_layout,
         **line_chart_layout,
-        title_text="Cumulative Mean Score",
-        margin={"t": 60},
+        margin={"t": 30},
     )
 
     fig = go.Figure(data=data, layout=layout)

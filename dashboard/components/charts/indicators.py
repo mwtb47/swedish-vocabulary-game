@@ -1,16 +1,17 @@
 """Module docstring"""
 
-from dash import dcc
+from dash import dcc, html
 import plotly.graph_objects as go
 
 
 def plot_gauge(
+    component_id: str,
     score: int | float,
     upper_limit: int,
     is_percentage: bool = False,
     value_format: str = ".0f",
     threshold: int = None,
-) -> dcc.Graph:
+) -> html.Div:
     """_summary_
 
     Args:
@@ -61,4 +62,4 @@ def plot_gauge(
 
     fig = go.Figure(data=data, layout=layout)
 
-    return dcc.Graph(id="indicator", figure=fig)
+    return html.Div(dcc.Graph(figure=fig), id=component_id)

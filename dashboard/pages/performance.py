@@ -18,15 +18,19 @@ layout = html.Div(
             [
                 dbc.Col(
                     [
-                        html.H3("Overall % Correct", className="text-center"),
+                        html.H6("Overall % Correct", className="text-center"),
                         html.Div(db_data.percent_correct, className="card"),
                     ],
                     className="rounded-border",
                 ),
                 dbc.Col(
-                    html.Div(
-                        plot_marks_summary("TranslationDirection"),
-                    ),
+                    [
+                        html.H6(
+                            "Mean Score per Translation Direction",
+                            className="text-center",
+                        ),
+                        plot_marks_summary("TranslationDirection", height=200),
+                    ],
                     className="rounded-border",
                 ),
             ],
@@ -34,30 +38,46 @@ layout = html.Div(
         dbc.Row(
             [
                 dbc.Col(
-                    html.Div(
+                    [
+                        html.H6(
+                            "Mean Score per Part of Speech",
+                            className="text-center",
+                        ),
                         plot_marks_summary("PartOfSpeech"),
-                    ),
+                    ],
                     className="rounded-border",
                 ),
                 dbc.Col(
-                    html.Div(
+                    [
+                        html.H6(
+                            "Mean Score per Grammar Category",
+                            className="text-center",
+                        ),
                         plot_marks_summary("GrammarCategory"),
-                    ),
+                    ],
                     className="rounded-border",
                 ),
                 dbc.Col(
-                    html.Div(
+                    [
+                        html.H6(
+                            "Mean Score per Word Category",
+                            className="text-center",
+                        ),
                         plot_marks_summary("WordCategory"),
-                    ),
+                    ],
                     className="rounded-border",
                 ),
             ]
         ),
         dbc.Row(
             dbc.Col(
-                html.Div(
+                [
+                    html.H6(
+                        "Cumulative Mean Score",
+                        className="text-center",
+                    ),
                     plot_cumulative_average(),
-                ),
+                ],
                 className="rounded-border",
             ),
         ),
