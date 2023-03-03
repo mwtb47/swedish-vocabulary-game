@@ -87,13 +87,15 @@ def plot_answers_over_time(period: str) -> dcc.Graph:
     periods = df.get_column("Period")
     counts = df.get_column("Count")
     rolling_averages = df.get_column("Rolling Average")
-    # TODO fix error with np.stack and period='Day'
-    # customdata = np.stack((periods, counts, rolling_averages), axis=-1)
-    # hovertemplate = (
-    #    "Period: %{customdata[0]}<br>"
-    #    + "Answers: %{customdata[1]}<br>"
-    #    + "Rolling Average: %{customdata[2]}"
-    # )
+    customdata = np.stack(
+        (periods.cast(str), counts.cast(str), rolling_averages.round(2).cast(str)),
+        axis=-1,
+    )
+    hovertemplate = (
+        "Period: %{customdata[0]}<br>"
+        + "Answers: %{customdata[1]}<br>"
+        + "Rolling Average: %{customdata[2]}"
+    )
 
     data = [
         go.Scatter(
@@ -102,8 +104,8 @@ def plot_answers_over_time(period: str) -> dcc.Graph:
             marker={"color": SummaryColours.LINE},
             mode="lines",
             name="Answers",
-            # customdata=customdata,
-            # hovertemplate=hovertemplate,
+            customdata=customdata,
+            hovertemplate=hovertemplate,
         ),
         go.Scatter(
             x=periods,
@@ -112,8 +114,8 @@ def plot_answers_over_time(period: str) -> dcc.Graph:
             mode="lines",
             line={"dash": "dash"},
             name=f"{rolling_period}-{period.capitalize()} Average",
-            # customdata=customdata,
-            # hovertemplate=hovertemplate,
+            customdata=customdata,
+            hovertemplate=hovertemplate,
         ),
     ]
 
