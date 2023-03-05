@@ -13,7 +13,7 @@ dash.register_page(__name__, name="Performance Summary")
 
 layout = html.Div(
     children=[
-        html.H1(children="Performance Summary"),
+        html.H1(children="Performance Summary", style={"margin-bottom": "15px"}),
         dbc.Row(
             [
                 dbc.Col(

@@ -5,7 +5,7 @@ from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 from dashboard.app import db_data
-from dashboard.components import ids
+from dashboard.components import AnswerIds
 from dashboard.components.charts import (
     plot_answers_summary,
     plot_gauge,
@@ -16,8 +16,8 @@ dash.register_page(__name__, path="/", name="Answers Summary", title="Answers")
 
 
 @callback(
-    Output(ids.ANSWERS_OVER_TIME_TITLE, "children"),
-    Input(ids.ANSWERS_OVER_TIME_INPUT, "value"),
+    Output(AnswerIds.ANSWERS_OVER_TIME_TITLE, "children"),
+    Input(AnswerIds.TIME_PERIOD_INPUT, "value"),
 )
 def update_chart_title(period: str):
     """_summary_
@@ -28,7 +28,7 @@ def update_chart_title(period: str):
     Returns:
         _description_
     """
-    return html.H6(f"Answers per {period}")
+    return html.H6(f"Answers Count per {period}")
 
 
 layout = html.Div(
@@ -49,10 +49,9 @@ layout = html.Div(
                 dbc.Col(
                     [
                         html.H6("Weekly Answers Target", className="text-center"),
-                        plot_gauge(
-                            ids.ANSWER_COUNT_WEEKLY,
-                            db_data.answer_count_this_week,
-                            560,
+                        html.Div(
+                            plot_gauge(db_data.answer_count_this_week, 560),
+                            id=AnswerIds.ANSWER_COUNT_WEEKLY,
                         ),
                     ],
                     className="rounded-border six-per-row",
@@ -60,8 +59,9 @@ layout = html.Div(
                 dbc.Col(
                     [
                         html.H6("Daily Answers Target", className="text-center"),
-                        plot_gauge(
-                            ids.ANSWER_COUNT_TODAY, db_data.answer_count_today, 80
+                        html.Div(
+                            plot_gauge(db_data.answer_count_today, 80),
+                            AnswerIds.ANSWER_COUNT_TODAY,
                         ),
                     ],
                     className="rounded-border six-per-row",
@@ -91,13 +91,14 @@ layout = html.Div(
                         html.H6(
                             "% English to Swedish Answers", className="text-center"
                         ),
-                        plot_gauge(
-                            ids.ENGLISH_TO_SWEDISH,
-                            score=db_data.english_to_swedish_percentage,
-                            upper_limit=1,
-                            is_percentage=True,
-                            value_format=".1%",
-                            threshold=0.5,
+                        html.Div(
+                            plot_gauge(
+                                score=db_data.swedish_answer_percentage,
+                                axis_limit=1,
+                                value_format=".1%",
+                                threshold=0.5,
+                            ),
+                            AnswerIds.ENGLISH_TO_SWEDISH,
                         ),
                     ],
                     className="rounded-border six-per-row",
@@ -143,15 +144,18 @@ layout = html.Div(
                 [
                     dbc.Row(
                         dcc.RadioItems(
-                            id=ids.ANSWERS_OVER_TIME_INPUT,
+                            id=AnswerIds.TIME_PERIOD_INPUT,
                             options=["Day", "Week", "Month"],
                             value="Week",
                             inputStyle={"margin-right": "2px"},
                             labelStyle={"margin-right": "10px"},
                         ),
                     ),
-                    dbc.Row(id=ids.ANSWERS_OVER_TIME_TITLE, className="text-center"),
-                    dbc.Row(html.Div(id=ids.ANSWERS_OVER_TIME)),
+                    dbc.Row(
+                        id=AnswerIds.ANSWERS_OVER_TIME_TITLE,
+                        className="text-center",
+                    ),
+                    dbc.Row(html.Div(id=AnswerIds.ANSWERS_OVER_TIME)),
                 ],
                 className="rounded-border one-per-row",
             )

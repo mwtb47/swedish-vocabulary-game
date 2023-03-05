@@ -45,12 +45,10 @@ def add_missing_dates(df: pl.DataFrame) -> pl.DataFrame:
         DataFrame with missing dates added.
     """
     dates = df.get_column("Date")
+    low: datetime = dates.min()
+    high: datetime = dates.max()
     date_range = pl.DataFrame(
-        {
-            "Date": pl.date_range(
-                low=dates.min(), high=dates.max(), interval=timedelta(days=1)
-            ).cast(pl.Date)
-        }
+        {"Date": pl.date_range(low, high, timedelta(days=1)).cast(pl.Date)}
     )
 
     # Use an anti-join to find all dates not present in the database
@@ -100,19 +98,6 @@ def add_period_columns(df: pl.DataFrame, period: str) -> pl.DataFrame:
     raise ValueError(f"Unsupported time period: {period}.")
 
 
-def join_answers_and_words(words: pl.DataFrame) -> pl.DataFrame:
-    """Join the answers table to the words table.
-
-    Args:
-        words: DataFrame containing words.
-
-    Returns:
-        Joined DataFrame.
-    """
-    answers = db.to_polars(db.views.answers)
-    return answers.join(words, on="WordID", how="left")
-
-
 def aggregate_marks(marks: pl.DataFrame) -> pl.DataFrame:
     """Aggregate the responses, counting the number of marks per day.
 
@@ -144,8 +129,8 @@ class Data:
         """"""
         self._marks = db.to_polars("SELECT * FROM Marks")
         self._words = db.to_polars(db.views.words_info)
-        self._marks_and_info = join_answers_and_words(self._words)
-        self._aggregate_marks = aggregate_marks(self._marks)
+        self._answers = db.to_polars(db.views.answers)
+        self._aggregated_marks = aggregate_marks(self._marks)
 
     @property
     def answer_count(self) -> int:
@@ -173,12 +158,12 @@ class Data:
         ).shape[0]
 
     @property
-    def english_to_swedish_percentage(self) -> None:
         """The percentage of English to Swedish answers.
 
         This is the percentage of all answers given which were answered
         in Swedish.
         """
+    def swedish_answer_percentage(self) -> None:
         return (
             self._marks.filter(pl.col("TranslationDirectionID") == 1).shape[0]
             / self._marks.shape[0]
@@ -193,7 +178,7 @@ class Data:
     def percent_daily_target_achieved(self) -> float:
         """The percentage of days where daily target achieved."""
         return format_percentage(
-            self._aggregate_marks.with_column(
+            self._aggregated_marks.with_column(
                 pl.when(pl.col("Daily Answers") >= 80)
                 .then(1)
                 .otherwise(0)
@@ -207,7 +192,7 @@ class Data:
     def percent_weekly_target_achieved(self) -> float:
         """The percentage of weeks where weekly target achieved."""
         return format_percentage(
-            self._aggregate_marks.groupby(pl.col("Date").dt.week())
+            self._aggregated_marks.groupby(pl.col("Date").dt.week())
             .agg(pl.col("Daily Answers").sum().alias("Weekly Answers"))
             .with_column(
                 pl.when(pl.col("Weekly Answers") >= 560)
@@ -229,7 +214,7 @@ class Data:
         """The number of unique word groups."""
         return self._words.get_column("WordGroup").unique().len()
 
-    def count_answers_per_category(self, category: str) -> pl.DataFrame:
+    def count_answers_by_category(self, category: str) -> pl.DataFrame:
         """_summary_
 
         Args:
@@ -240,7 +225,7 @@ class Data:
         """
         word_count = self._words.groupby(category).agg(pl.count().alias("Word Count"))
         answer_count = (
-            self._marks_and_info.select(pl.col(category))
+            self._answers.select(pl.col(category))
             .groupby(category)
             .agg(pl.count().alias("Answer Count"))
         )
@@ -250,8 +235,8 @@ class Data:
             .sort("Ratio")
         )
 
-    def calculate_answer_percentage_per_category(self, category: str) -> pl.DataFrame:
         """_summary_
+    def calculate_mean_marks_by_category(self, category: str) -> pl.DataFrame:
 
         Args:
             category: _description_
@@ -260,15 +245,14 @@ class Data:
             _description_
         """
         return (
-            self._marks_and_info.groupby(category)
+            self._answers.groupby(category)
             .agg(pl.col("Mark").mean().alias("Mean"))
             .sort("Mean")
+            .rename({category: "Category"})
         )
 
-    def calculate_answers_per_time_period(
-        self, period: str, rolling_period
-    ) -> pl.DataFrame:
         """_summary_
+    def count_answers_by_time_period(self, period: str, rolling_period) -> pl.DataFrame:
 
         Args:
             period: _description_
@@ -277,7 +261,7 @@ class Data:
         Returns:
             _description_
         """
-        df = add_period_columns(self._aggregate_marks, period)
+        df = add_period_columns(self._aggregated_marks, period)
 
         return (
             df.groupby(["Period", "Period Sort"])
@@ -296,10 +280,8 @@ class Data:
         Returns:
             _description_
         """
-        all_answers = self._marks_and_info.with_column(
-            pl.lit("All").alias("WordCategory")
-        )
-        df = pl.concat([all_answers, self._marks_and_info])
+        all_answers = self._answers.with_column(pl.lit("All").alias("WordCategory"))
+        df = pl.concat([all_answers, self._answers])
         return (
             df.with_column(
                 (pl.col("Timestamp") * 1000000)
@@ -318,8 +300,8 @@ class Data:
             )
         )
 
-    def count_words_per_category(self, field: str, category: str) -> pl.DataFrame:
         """Count the number of words per category.
+    def count_words_by_category(self, group_by: str, count_by: str) -> pl.DataFrame:
 
         Args:
             field: _description_
@@ -329,7 +311,8 @@ class Data:
             _description_
         """
         return (
-            self._words.groupby(category)
-            .agg(pl.col(field).unique().count().alias(field))
-            .sort(field, reverse=False)
+            self._words.groupby(group_by)
+            .agg(pl.col(count_by).unique().count().alias("Count"))
+            .sort("Count", reverse=False)
+            .rename({group_by: "Category"})
         )

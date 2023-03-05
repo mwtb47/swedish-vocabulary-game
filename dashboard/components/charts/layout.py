@@ -1,39 +1,52 @@
-""""""
 
 
-general_chart_layout = {
-    "title": {"x": 0.5},
-    "font": {"color": "rgb(240, 240, 240)"},
-    "plot_bgcolor": "rgba(0, 0, 0, 0)",
-    "paper_bgcolor": "rgba(0, 0, 0, 0)",
-}
+class ChartLayout:
 
-horizontal_bar_layout = {
-    "xaxis": {
-        "gridcolor": "rgb(100, 100, 100)",
-        "gridwidth": 1,
-        "linecolor": "rgb(200, 200, 200)",
-        "linewidth": 3,
-    },
-    "yaxis": {
-        "linecolor": "rgb(200, 200, 200)",
-        "linewidth": 3,
-    },
-    "margin": {"t": 20, "b": 30, "r": 30},
-}
+    GENERAL = {
+        "font": {
+            "color": "rgb(240, 240, 240)",
+        },
+        "plot_bgcolor": "rgba(0, 0, 0, 0)",
+        "paper_bgcolor": "rgba(0, 0, 0, 0)",
+    }
+    """Layout specifications used on all charts.
+    
+    This specifies the font as well as making the plot and paper
+    backgrounds transparent.
+    """
 
-line_chart_layout = {
-    "xaxis": {
-        "gridcolor": "rgba(0, 0, 0, 0)",
-    },
-    "yaxis": {
-        "rangemode": "tozero",
-        "gridcolor": "rgb(50, 50, 50)",
-        "gridwidth": 1,
-        "linecolor": "rgb(200, 200, 200)",
-        "linewidth": 3,
-    },
-}
+    HORIZONTAL_BAR = {
+        "xaxis": {
+            "gridcolor": "rgb(100, 100, 100)",
+            "gridwidth": 1,
+            "linecolor": "rgb(200, 200, 200)",
+            "linewidth": 3,
+        },
+        "yaxis": {
+            "linecolor": "rgb(200, 200, 200)",
+            "linewidth": 3,
+        },
+        "margin": {
+            "t": 20,
+            "b": 30,
+            "r": 30,
+        },
+    }
+    """Layout specifications for horizontal bar charts."""
+
+    LINE = {
+        "xaxis": {
+            "gridcolor": "rgba(0, 0, 0, 0)",
+        },
+        "yaxis": {
+            "gridcolor": "rgb(50, 50, 50)",
+            "gridwidth": 1,
+            "linecolor": "rgb(200, 200, 200)",
+            "linewidth": 3,
+            "rangemode": "tozero",
+        },
+    }
+    """Layout specifications for line charts."""
 
 
 class PerformanceColours:

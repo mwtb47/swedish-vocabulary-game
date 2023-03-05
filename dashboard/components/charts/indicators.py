@@ -1,18 +1,16 @@
 """Module docstring"""
 
-from dash import dcc, html
+from dash import dcc
 import plotly.graph_objects as go
 
 
 def plot_gauge(
-    component_id: str,
     score: int | float,
-    upper_limit: int,
-    is_percentage: bool = False,
+    axis_limit: int,
     value_format: str = ".0f",
     threshold: int = None,
-) -> html.Div:
     """_summary_
+) -> dcc.Graph:
 
     Args:
         score: _description_
@@ -26,7 +24,7 @@ def plot_gauge(
 
     gauge = {
         "axis": {
-            "range": [0, upper_limit],
+            "range": [0, axis_limit],
         },
         "bar": {"color": "steelblue", "thickness": 0.8},
         "bordercolor": "rgb(220,220,220)",
@@ -34,7 +32,7 @@ def plot_gauge(
         "shape": "bullet",
     }
 
-    if is_percentage:
+    if "%" in value_format:
         gauge["axis"]["tickformat"] = ".0%"
 
     if threshold:
@@ -62,4 +60,4 @@ def plot_gauge(
 
     fig = go.Figure(data=data, layout=layout)
 
-    return html.Div(dcc.Graph(figure=fig), id=component_id)
+    return dcc.Graph(figure=fig)

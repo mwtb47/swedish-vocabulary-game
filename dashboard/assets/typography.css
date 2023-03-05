@@ -2,7 +2,9 @@ body {
     background-color: rgba(40, 40, 40, 1);
     color: rgb(240, 240, 240);
     height: 10vh;
-    margin: 2%;
+    margin-top: 1%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 .nav-button {
@@ -21,8 +23,11 @@ body {
 }
 
 .rounded-border {
-    border-radius: 15px;
-    background-color: rgba(30, 30, 30, 1);
+    border-radius: 5px;
+    border-color: rgba(50, 160, 200, 0.4);
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(30, 30, 30);
     padding: 15px 15px 15px 15px;
     margin: 0.5% 0.5% 0.5% 0.5%;
 }

@@ -6,13 +6,9 @@ import polars as pl
 import numpy as np
 
 from dashboard.app import db_data
-from dashboard.components import ids
-from dashboard.components.charts.layout import (
-    general_chart_layout,
-    horizontal_bar_layout,
-    line_chart_layout,
-    PerformanceColours,
-)
+from dashboard.components import PerformanceIds
+from dashboard.components.charts import horizontal_bar
+from dashboard.components.charts.layout import ChartLayout, PerformanceColours
 from dashboard.utilities import format_enums
 
 
@@ -31,12 +27,12 @@ def add_colours(df: pl.DataFrame) -> pl.DataFrame:
         .when(pl.col("Mean") >= 0.7)
         .then(PerformanceColours.YELLOW)
         .otherwise(PerformanceColours.RED)
-        .alias("PerformanceIndicator")
+        .alias("BarColour")
     )
 
 
-def plot_marks_summary(category: str, height: int = None) -> html.Div:
     """_summary_
+def plot_marks_summary(category: str, height: int = 450) -> html.Div:
 
     Args:
         category: _description_
@@ -45,30 +41,22 @@ def plot_marks_summary(category: str, height: int = None) -> html.Div:
     Returns:
         _description_
     """
-    df = db_data.calculate_answer_percentage_per_category(category)
+    df = db_data.calculate_mean_marks_by_category(category)
     df = add_colours(df)
 
-    categories = [format_enums(cat) for cat in df.get_column(category).to_list()]
+    categories = [format_enums(cat) for cat in df.get_column("Category").to_list()]
     means = df.get_column("Mean")
-    customdata = np.stack((means, categories), axis=-1)
+    customdata = np.stack((categories, means), axis=-1)
     hovertemplate = "%{customdata[0]}<br>%{customdata[1]:.3f}<extra></extra>"
 
-    data = go.Bar(
-        y=categories,
+    fig = horizontal_bar.plot(
         x=means,
-        marker={"color": df.get_column("PerformanceIndicator")},
-        orientation="h",
+        y=categories,
         customdata=customdata,
         hovertemplate=hovertemplate,
-    )
-
-    layout = dict(
-        **general_chart_layout,
-        **horizontal_bar_layout,
+        marker_colour=df.get_column("BarColour"),
         height=height,
     )
-
-    fig = go.Figure(data=data, layout=layout)
 
     return html.Div(dcc.Graph(figure=fig), id=f"marks-summary-{category}")
 
@@ -91,11 +79,11 @@ def plot_cumulative_average() -> html.Div:
     ]
 
     layout = dict(
-        **general_chart_layout,
-        **line_chart_layout,
+        **ChartLayout.GENERAL,
+        **ChartLayout.LINE,
         margin={"t": 30},
     )
 
     fig = go.Figure(data=data, layout=layout)
 
-    return html.Div(dcc.Graph(figure=fig), id=ids.CUMULATIVE_AVERAGE)
+    return html.Div(dcc.Graph(figure=fig), id=PerformanceIds.CUMULATIVE_AVERAGE)

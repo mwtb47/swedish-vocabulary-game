@@ -8,6 +8,8 @@ answers = """
         W.English,
         W.Swedish,
         W.WordGroup,
+        P.PartOfSpeech,
+        C.WordCategory,
         M.Mark,
         M.TranslationDirectionID,
         M.Timestamp,

@@ -8,7 +8,7 @@ Functions:
 import pandas as pd
 import polars as pl
 
-from database.connectivity import connection_uri, connect
+import database
 
 
 def to_pandas(query: str) -> pd.DataFrame:
@@ -20,7 +20,7 @@ def to_pandas(query: str) -> pd.DataFrame:
     Returns:
         Result of SQL query as a Pandas DataFrame.
     """
-    connection = connect()
+    connection = database.connect()
     df = pd.read_sql_query(sql=query, con=connection)
     connection.close()
     return df
@@ -35,4 +35,4 @@ def to_polars(query: str) -> pl.DataFrame:
     Returns:
         Result of SQL query as a Polars DataFrame.
     """
-    return pl.read_sql(sql=query, connection_uri=connection_uri)
+    return pl.read_sql(sql=query, connection_uri=database.connection_uri)

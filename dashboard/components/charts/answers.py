@@ -5,13 +5,9 @@ import plotly.graph_objects as go
 import numpy as np
 
 from dashboard.app import db_data
-from dashboard.components import ids
-from dashboard.components.charts.layout import (
-    general_chart_layout,
-    horizontal_bar_layout,
-    line_chart_layout,
-    SummaryColours,
-)
+from dashboard.components import AnswerIds
+from dashboard.components.charts import horizontal_bar
+from dashboard.components.charts.layout import ChartLayout, SummaryColours
 from dashboard.utilities import format_enums
 
 
@@ -24,7 +20,7 @@ def plot_answers_summary(category: str) -> html.Div:
     Returns:
         Dash Core Components Graph object containing the plotted chart.
     """
-    df = db_data.count_answers_per_category(category)
+    df = db_data.count_answers_by_category(category)
 
     categories = [format_enums(cat) for cat in df.get_column(category)]
     customdata = np.stack(
@@ -37,34 +33,22 @@ def plot_answers_summary(category: str) -> html.Div:
         + "<extra></extra>"
     )
 
-    data = go.Bar(
-        y=categories,
+    fig = horizontal_bar.plot(
         x=df.get_column("Ratio").to_list(),
-        marker={"color": SummaryColours.BAR},
-        orientation="h",
+        y=categories,
         customdata=customdata,
         hovertemplate=hovertemplate,
     )
 
-    layout = dict(
-        **general_chart_layout,
-        **horizontal_bar_layout,
-    )
-
-    fig = go.Figure(data=data, layout=layout)
-
     return html.Div(
-        dcc.Graph(
-            figure=fig,
-            style={"height": "30vh"},
-        ),
+        dcc.Graph(figure=fig, style={"height": "30vh"}),
         id=f"answers-summary-{category}",
     )
 
 
 @callback(
-    Output(ids.ANSWERS_OVER_TIME, "children"),
-    Input(ids.ANSWERS_OVER_TIME_INPUT, "value"),
+    Output(AnswerIds.ANSWERS_OVER_TIME, "children"),
+    Input(AnswerIds.TIME_PERIOD_INPUT, "value"),
 )
 def plot_answers_over_time(period: str) -> dcc.Graph:
     """Plot number of answers over time.
@@ -82,7 +66,7 @@ def plot_answers_over_time(period: str) -> dcc.Graph:
     }
     rolling_period = rolling_periods[period]
 
-    df = db_data.calculate_answers_per_time_period(period, rolling_period)
+    df = db_data.count_answers_by_time_period(period, rolling_period)
 
     periods = df.get_column("Period")
     counts = df.get_column("Count")
@@ -120,8 +104,8 @@ def plot_answers_over_time(period: str) -> dcc.Graph:
     ]
 
     layout = dict(
-        **general_chart_layout,
-        **line_chart_layout,
+        **ChartLayout.GENERAL,
+        **ChartLayout.LINE,
         margin={"t": 30},
         height=600,
     )

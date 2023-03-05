@@ -5,7 +5,7 @@ from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 from dashboard.app import db_data
-from dashboard.components import ids
+from dashboard.components import DatabaseIds
 from dashboard.utilities import split_title
 
 
@@ -26,8 +26,8 @@ def update_chart_title(ID: str, category: str):
 
 
 @callback(
-    Output(ids.WORD_CATEGORY_BAR_CHART_TITLE, "children"),
-    Input(ids.ID_GROUP_SELECTOR, "value"),
+    Output(DatabaseIds.WORD_CATEGORY_BAR_CHART_TITLE, "children"),
+    Input(DatabaseIds.ID_GROUP_SELECTOR, "value"),
 )
 def update_word_category_title(ID: str):
     """_summary_
@@ -42,8 +42,8 @@ def update_word_category_title(ID: str):
 
 
 @callback(
-    Output(ids.GRAMMAR_CATEGORY_BAR_CHART_TITLE, "children"),
-    Input(ids.ID_GROUP_SELECTOR, "value"),
+    Output(DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART_TITLE, "children"),
+    Input(DatabaseIds.ID_GROUP_SELECTOR, "value"),
 )
 def update_grammar_category_title(ID: str):
     """_summary_
@@ -58,8 +58,8 @@ def update_grammar_category_title(ID: str):
 
 
 @callback(
-    Output(ids.PART_OF_SPEECH_BAR_CHART_TITLE, "children"),
-    Input(ids.ID_GROUP_SELECTOR, "value"),
+    Output(DatabaseIds.PART_OF_SPEECH_BAR_CHART_TITLE, "children"),
+    Input(DatabaseIds.ID_GROUP_SELECTOR, "value"),
 )
 def update_part_of_speech_title(ID: str):
     """_summary_
@@ -75,7 +75,7 @@ def update_part_of_speech_title(ID: str):
 
 layout = html.Div(
     children=[
-        html.H1("Database Summary", style={"height": "4vh"}),
+        html.H1("Database Summary", style={"margin-bottom": "15px"}),
         dbc.Row(
             [
                 dbc.Col(
@@ -101,7 +101,7 @@ layout = html.Div(
             [
                 "Input: ",
                 dcc.RadioItems(
-                    id=ids.ID_GROUP_SELECTOR,
+                    id=DatabaseIds.ID_GROUP_SELECTOR,
                     options=["WordID", "WordGroup"],
                     value="WordID",
                     inputStyle={"margin-right": "2px"},
@@ -113,22 +113,22 @@ layout = html.Div(
             [
                 dbc.Col(
                     [
-                        html.Div(id=ids.WORD_CATEGORY_BAR_CHART_TITLE),
-                        html.Div(id=ids.WORD_CATEGORY_BAR_CHART),
+                        html.Div(id=DatabaseIds.WORD_CATEGORY_BAR_CHART_TITLE),
+                        html.Div(id=DatabaseIds.WORD_CATEGORY_BAR_CHART),
                     ],
                     className="rounded-border",
                 ),
                 dbc.Col(
                     [
-                        html.Div(id=ids.PART_OF_SPEECH_BAR_CHART_TITLE),
-                        html.Div(id=ids.PART_OF_SPEECH_BAR_CHART),
+                        html.Div(id=DatabaseIds.PART_OF_SPEECH_BAR_CHART_TITLE),
+                        html.Div(id=DatabaseIds.PART_OF_SPEECH_BAR_CHART),
                     ],
                     className="rounded-border",
                 ),
                 dbc.Col(
                     [
-                        html.Div(id=ids.GRAMMAR_CATEGORY_BAR_CHART_TITLE),
-                        html.Div(id=ids.GRAMMAR_CATEGORY_BAR_CHART),
+                        html.Div(id=DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART_TITLE),
+                        html.Div(id=DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART),
                     ],
                     className="rounded-border",
                 ),
