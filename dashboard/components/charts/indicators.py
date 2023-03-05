@@ -1,4 +1,4 @@
-"""Module docstring"""
+"""Module with a function to plot a gauge chart."""
 
 from dash import dcc
 import plotly.graph_objects as go
@@ -9,17 +9,20 @@ def plot_gauge(
     axis_limit: int,
     value_format: str = ".0f",
     threshold: int = None,
-    """_summary_
 ) -> dcc.Graph:
+    """Plot a bullet chart.
 
     Args:
-        score: _description_
-        upper_limit: _description_
-        is_percentage:
-        threshold:
+        score: Value to display on the bullet chart.
+        axis_limit: Upper bound displayed on the bullet chart.
+        value_format: String format for the display value. If the format
+            contains '%', the axis values will also be formatted as
+            percentages. Defaults to '0.f'.
+        threshold: Value of threshold line to display on the bullet
+            chart. Defaults to None.
 
     Returns:
-        _description_
+        Dash Core Components Graph object with the plotted chart.
     """
 
     gauge = {

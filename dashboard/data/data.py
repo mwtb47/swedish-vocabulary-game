@@ -20,7 +20,7 @@ from dashboard.utilities import format_percentage
 
 
 def start_of_today() -> datetime:
-    """Return datatime object for today.
+    """Return datetime object for today.
 
     The time is set to midnight, i.e. the start of the day.
 
@@ -43,6 +43,10 @@ def add_missing_dates(df: pl.DataFrame) -> pl.DataFrame:
 
     Returns:
         DataFrame with missing dates added.
+
+        Columns:
+            Date: Datetime
+            Daily Answers: Int
     """
     dates = df.get_column("Date")
     low: datetime = dates.min()
@@ -60,14 +64,31 @@ def add_missing_dates(df: pl.DataFrame) -> pl.DataFrame:
 
 
 def add_period_columns(df: pl.DataFrame, period: str) -> pl.DataFrame:
-    """_summary_
+    """Add a period and period sort column to the DataFrame.
+
+    The period column gives the date for each entry in the specified
+    period format. E.g. if the date value is '2022-12-01' and the period
+    is Month, the Period value will be "Dec '22".
+
+    The Period Sort column assigned an integer value to each period
+    which allows them to be sorted in chronological order. This is
+    needed as week and month periods are strings and therefore do not
+    sort chronologically.
+
+    Note: ISO weeks and years are used.
 
     Args:
-        df: _description_
-        period: _description_
+        df: DataFrame to add Period and Period Sort columns to.
+        period: Period format to use. Day, Week or Month.
 
     Returns:
-        _description_
+        DataFrame with Period and Period Sort columns added.
+
+        Columns:
+            Date: Datetime
+            Daily Answers: Int
+            Period: Datetime | String
+            Period Sort: Int
     """
     # fmt: off
     if period == "Day":
@@ -120,13 +141,14 @@ def aggregate_marks(marks: pl.DataFrame) -> pl.DataFrame:
 
 
 class Data:
-    """"""
+    """_summary_"""
 
     def __init__(self) -> None:
+        """_summary_"""
         self.fetch()
 
     def fetch(self) -> None:
-        """"""
+        """Fetch data from the database."""
         self._marks = db.to_polars("SELECT * FROM Marks")
         self._words = db.to_polars(db.views.words_info)
         self._answers = db.to_polars(db.views.answers)
@@ -134,12 +156,12 @@ class Data:
 
     @property
     def answer_count(self) -> int:
-        """The number of answers given."""
+        """Number of answers given."""
         return self._marks.shape[0]
 
     @property
     def answer_count_this_week(self) -> int:
-        """The number of answers this calendar week."""
+        """Number of answers this calendar week."""
         today = datetime.today()
         week_start = (today - timedelta(days=today.weekday())).replace(
             hour=0, minute=0, second=0, microsecond=0
@@ -151,19 +173,15 @@ class Data:
 
     @property
     def answer_count_today(self) -> int:
-        """The number of answers during the current day."""
+        """Number of answers during the current day."""
         today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
         return self._marks.filter(
             pl.col("Timestamp") >= datetime.timestamp(today)
         ).shape[0]
 
     @property
-        """The percentage of English to Swedish answers.
-
-        This is the percentage of all answers given which were answered
-        in Swedish.
-        """
     def swedish_answer_percentage(self) -> None:
+        """Percentage of all answers answered in Swedish."""
         return (
             self._marks.filter(pl.col("TranslationDirectionID") == 1).shape[0]
             / self._marks.shape[0]
@@ -171,12 +189,12 @@ class Data:
 
     @property
     def percent_correct(self) -> float:
-        """The percentage of correct answers."""
+        """Percentage of correct answers."""
         return format_percentage(self._marks.get_column("Mark").mean())
 
     @property
     def percent_daily_target_achieved(self) -> float:
-        """The percentage of days where daily target achieved."""
+        """Percentage of days where the daily target was achieved."""
         return format_percentage(
             self._aggregated_marks.with_column(
                 pl.when(pl.col("Daily Answers") >= 80)
@@ -190,7 +208,7 @@ class Data:
 
     @property
     def percent_weekly_target_achieved(self) -> float:
-        """The percentage of weeks where weekly target achieved."""
+        """Percentage of weeks where the weekly target was achieved."""
         return format_percentage(
             self._aggregated_marks.groupby(pl.col("Date").dt.week())
             .agg(pl.col("Daily Answers").sum().alias("Weekly Answers"))
@@ -206,12 +224,12 @@ class Data:
 
     @property
     def unique_word_count(self) -> int:
-        """The number of unique word or phrase pairs."""
+        """Number of unique word or phrase pairs."""
         return self._words.shape[0]
 
     @property
     def unique_word_group_count(self) -> int:
-        """The number of unique word groups."""
+        """Number of unique word groups."""
         return self._words.get_column("WordGroup").unique().len()
 
     def count_answers_by_category(self, category: str) -> pl.DataFrame:
@@ -235,14 +253,20 @@ class Data:
             .sort("Ratio")
         )
 
-        """_summary_
     def calculate_mean_marks_by_category(self, category: str) -> pl.DataFrame:
+        """Calculate mean mark per attribute of the specified category.
 
         Args:
-            category: _description_
+            category: Attribute to group by, either GrammarCategory,
+                PartofSpeech or WordCategory
 
         Returns:
-            _description_
+            DataFrame with mean mark per attribute of the specified
+            category.
+
+            Columns:
+                Category: Attributes of the specified category.
+                Mean: Mean mark for all answers per attribute.
         """
         return (
             self._answers.groupby(category)
@@ -251,15 +275,25 @@ class Data:
             .rename({category: "Category"})
         )
 
-        """_summary_
     def count_answers_by_time_period(self, period: str, rolling_period) -> pl.DataFrame:
+        """Calculate answer count by time period with a rolling average.
 
         Args:
-            period: _description_
-            rolling_period: _description_
+            period: Time interval to show answer count by. Day, Week or
+                Month.
+            rolling_period: Number of periods to use in the rolling
+                average.
 
         Returns:
-            _description_
+            DataFrame containing answer counts aggregated by the
+            specified period and a rolling average.
+
+            Columns:
+                Period: Datetime | String
+                Period Sort: Int
+                Count: Int
+                Rolling Average: Float
+
         """
         df = add_period_columns(self._aggregated_marks, period)
 
@@ -279,6 +313,12 @@ class Data:
 
         Returns:
             _description_
+
+            Columns:
+                Date: Datetime
+                WordCategory: Str
+                Average: Float
+                Cumulative Average: Float
         """
         all_answers = self._answers.with_column(pl.lit("All").alias("WordCategory"))
         df = pl.concat([all_answers, self._answers])
@@ -300,15 +340,22 @@ class Data:
             )
         )
 
-        """Count the number of words per category.
     def count_words_by_category(self, group_by: str, count_by: str) -> pl.DataFrame:
+        """Count unique WordIDs or WordGroups per category.
 
         Args:
-            field: _description_
-            category:
+            group_by: Attribute to group by, either GrammarCategory,
+                PartofSpeech or WordCategory
+            count_by: Attribute to count by, either WordID or
+                WordCategory.
 
         Returns:
-            _description_
+            DataFrame with a count of either WordIDs or WordGroups per
+            category.
+
+            Columns:
+                Category: String
+                Count: Int
         """
         return (
             self._words.groupby(group_by)

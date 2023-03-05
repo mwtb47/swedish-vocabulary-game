@@ -20,13 +20,14 @@ dash.register_page(__name__, path="/", name="Answers Summary", title="Answers")
     Input(AnswerIds.TIME_PERIOD_INPUT, "value"),
 )
 def update_chart_title(period: str):
-    """_summary_
+    """Update chart title text based on time period input.
 
     Args:
-        period: _description_
+        period: Either Day, Week, or Month. The value is taken from the
+            'time-period-input' selector.
 
     Returns:
-        _description_
+        html.H6 component with updated title text.
     """
     return html.H6(f"Answers Count per {period}")
 

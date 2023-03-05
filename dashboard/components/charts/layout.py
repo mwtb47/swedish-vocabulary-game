@@ -1,6 +1,20 @@
+"""Module with classes containing chart layout specifications.
+
+Classes:
+    ChartLayout: Layout specifications for different chart types.
+    PerformanceColours: Performance chart colours.
+    SummaryColours: Answer and database summary chart colours.
+"""
 
 
 class ChartLayout:
+    """Class with layout specifications for different chart types.
+
+    Attributes:
+        GENERAL: Layout specifications used on all charts.
+        HORIZONTAL_BAR: Layout specifications for horizontal bar charts.
+        LINE: Layout specifications for line charts.
+    """
 
     GENERAL = {
         "font": {
@@ -50,7 +64,13 @@ class ChartLayout:
 
 
 class PerformanceColours:
-    """Class with colours for performance chart."""
+    """Class with colours for performance charts.
+
+    Attributes:
+        GREEN: Green rgba code.
+        YELLOW: Yellow rgba code.
+        RED: Red rgba code.
+    """
 
     GREEN = "rgba(20, 125, 0, 0.8)"
     YELLOW = "rgba(255, 191, 0, 0.8)"
@@ -58,7 +78,13 @@ class PerformanceColours:
 
 
 class SummaryColours:
-    """Class with colours for summary bar chart."""
+    """Class with colours for answer and database summary charts.
+
+    Attributes:
+        BAR: rgba code for bars.
+        LINE: rgba code for lines.
+        AVERAGE_LINE: rgba code for rolling average line.
+    """
 
     BAR = "rgba(50, 160, 200, 0.8)"
     LINE = "rgba(50, 160, 200, 0.8)"

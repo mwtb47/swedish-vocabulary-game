@@ -1,4 +1,4 @@
-"""Module docstring"""
+"""Module with functions to plot charts on the performance summary page."""
 
 from dash import dcc, html
 import plotly.graph_objects as go
@@ -13,13 +13,16 @@ from dashboard.utilities import format_enums
 
 
 def add_colours(df: pl.DataFrame) -> pl.DataFrame:
-    """_summary_
+    """Add BarColour column to DataFrame.
+
+    Attributes with a mean score >= 0.8 are assigned green, >= 0.7
+    yellow, and <0.7 red.
 
     Args:
-        df: _description_
+        df: DataFrame to add colour column to.
 
     Returns:
-        _description_
+        DataFrame with added BarColour column.
     """
     return df.with_column(
         pl.when(pl.col("Mean") >= 0.8)
@@ -31,15 +34,17 @@ def add_colours(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-    """_summary_
 def plot_marks_summary(category: str, height: int = 450) -> html.Div:
+    """Plot horizontal bar chart with mean marks per category attribute.
 
     Args:
-        category: _description_
-        height: _description_
+        category: Category to aggregate marks by. This can be
+            GrammarCategory, PartofSpeech or WordCategory.
+        height: Height of the plot in pixels. Defaults to 450.
 
     Returns:
-        _description_
+        html.Div containing a Dash Core Components Graph object with
+        the plotted chart.
     """
     df = db_data.calculate_mean_marks_by_category(category)
     df = add_colours(df)
@@ -62,7 +67,16 @@ def plot_marks_summary(category: str, height: int = 450) -> html.Div:
 
 
 def plot_cumulative_average() -> html.Div:
-    """"""
+    """Plot line chart showing cumulative average mean score.
+
+    The line chart shows the cumulative average mean score over time for
+    each word category, including an All category which includes all
+    words.
+
+    Returns:
+        html.Div containing a Dash Core Components Graph object with
+        the plotted chart.
+    """
     df = db_data.calculate_cumulative_average_score()
     word_categories = df.get_column("WordCategory").unique().sort()
 

@@ -1,8 +1,4 @@
-"""Module with function to create the app layout.
-
-Functions:
-    create_layout: Create the app layout.
-"""
+"""Module with a function to create the app layout."""
 
 import dash
 from dash import html
@@ -13,7 +9,7 @@ def create_layout() -> html.Div:
     """Create the app layout.
 
     Returns:
-        Dash HTML Div containing the app layout.
+        html.Div containing the app layout.
     """
 
     return html.Div(

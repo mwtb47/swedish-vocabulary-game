@@ -1,4 +1,4 @@
-"""Module docstring"""
+"""Module with functions to plot charts on the answers summary page."""
 
 from dash import dcc, html, Input, Output, callback
 import plotly.graph_objects as go
@@ -12,13 +12,14 @@ from dashboard.utilities import format_enums
 
 
 def plot_answers_summary(category: str) -> html.Div:
-    """Plot answers summary chart.
+    """Plot a horizontal bar chart showing answers
 
     Args:
         category: Category to be used for the y-axis.
 
     Returns:
-        Dash Core Components Graph object containing the plotted chart.
+        html.Div containing a Dash Core Components Graph object with
+        the plotted chart.
     """
     df = db_data.count_answers_by_category(category)
 
@@ -51,13 +52,22 @@ def plot_answers_summary(category: str) -> html.Div:
     Input(AnswerIds.TIME_PERIOD_INPUT, "value"),
 )
 def plot_answers_over_time(period: str) -> dcc.Graph:
-    """Plot number of answers over time.
+    """Plot a line chart number of answers over time.
+
+    Time on the x-axis can be displayed by day, week number or month.
+    The chart contains a line displaying the number of answers for each
+    unit of the selected period as well as a rolling average. The
+    duration over which the rolling averages are calculated vary by
+    period:
+        Day: 30 days
+        Week: 4 weeks
+        Month: 3 months
 
     Args:
         period: Time period to use for the x-axis.
 
     Returns:
-        Dash Core Components Graph object containing the plotted chart.
+        Dash Core Components Graph object with the plotted chart.
     """
     rolling_periods = {
         "Day": 30,
