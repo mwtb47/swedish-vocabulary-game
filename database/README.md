@@ -8,34 +8,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 
 &nbsp;
 
-## GrammarCategories
-
-| Field Name | Data Type | Attributes | Description |
-| ---------- | --------- | ---------- | ----------- |
-| GrammarCategoryID | INTEGER | PRIMARY KEY, AUTOINCREMENT | Unique identifier for the grammar category. |
-| GrammarCategory | TEXT | NOT NULL | Description of the grammar category. These include the the types of adjectives (utrum, neutrum, plural), the different forms of a noun (singular and plural versions of definite and indefinite) etc. |
-
-&nbsp;
-
-## Hints
-
-| Field Name | Data Type | Attributes | Description |
-| ---------- | --------- | ---------- | ----------- |
-| WordGroup | INTEGER | PRIMARY KEY, NOT NULL | The word group. |
-| Hint | TEXT | NOT NULL | Context hint which is displayed along with the question to remove any ambiguity about the intended translation of the word or phrase. |
-
-&nbsp;
-
-## Links
-
-| Field Name | Data Type | Attributes | Description |
-| ---------- | --------- | ---------- | ----------- |
-| WordGroup | INTEGER | PRIMARY KEY, NOT NULL | The word group. |
-| WiktionaryLink | TEXT | NOT NULL | URL for the word group's wiktionary page. |
-
-&nbsp;
-
-## Marks
+## Answer
 
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
@@ -47,7 +20,34 @@ Below is a diagram of the database's structure and a summary of each table. This
 
 &nbsp;
 
-## Parts Of Speech
+## GrammarCategory
+
+| Field Name | Data Type | Attributes | Description |
+| ---------- | --------- | ---------- | ----------- |
+| GrammarCategoryID | INTEGER | PRIMARY KEY, AUTOINCREMENT | Unique identifier for the grammar category. |
+| GrammarCategory | TEXT | NOT NULL | Description of the grammar category. These include the the types of adjectives (utrum, neutrum, plural), the different forms of a noun (singular and plural versions of definite and indefinite) etc. |
+
+&nbsp;
+
+## Hint
+
+| Field Name | Data Type | Attributes | Description |
+| ---------- | --------- | ---------- | ----------- |
+| WordGroup | INTEGER | PRIMARY KEY, NOT NULL | The word group. |
+| Hint | TEXT | NOT NULL | Context hint which is displayed along with the question to remove any ambiguity about the intended translation of the word or phrase. |
+
+&nbsp;
+
+## Link
+
+| Field Name | Data Type | Attributes | Description |
+| ---------- | --------- | ---------- | ----------- |
+| WordGroup | INTEGER | PRIMARY KEY, NOT NULL | The word group. |
+| WiktionaryLink | TEXT | NOT NULL | URL for the word group's wiktionary page. |
+
+&nbsp;
+
+## PartOfSpeech
 
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
@@ -56,7 +56,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 
 &nbsp;
 
-## TranslationDirections
+## TranslationDirection
 
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
@@ -65,7 +65,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 
 &nbsp;
 
-## Word Categories
+## WordCategory
 
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |
@@ -74,7 +74,7 @@ Below is a diagram of the database's structure and a summary of each table. This
 
 &nbsp;
 
-## Words
+## Word
 
 | Field Name | Data Type | Attributes | Description |
 | ---------- | --------- | ---------- | ----------- |

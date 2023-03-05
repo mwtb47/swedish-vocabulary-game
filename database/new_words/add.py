@@ -126,7 +126,7 @@ class NewWords:
         Returns:
             Integer to be used as next id.
         """
-        df = db.to_pandas(f"""SELECT {attribute} FROM Words""")
+        df = db.to_pandas(f"""SELECT {attribute} FROM Word""")
         return df[attribute].max() + 1
 
     def __check_not_duplicated(self, word_pair: WordPair) -> bool:
@@ -139,7 +139,7 @@ class NewWords:
             True if the word or phrase pair is not already in the
             database, False if it is.
         """
-        current_words = db.to_pandas("SELECT * FROM Words")
+        current_words = db.to_pandas("SELECT * FROM Word")
         current_pairs = [
             (row.English, row.Swedish, row.GrammarCategoryID)
             for row in current_words.itertuples()
@@ -169,7 +169,7 @@ class NewWords:
             word_pair: The WordPair object.
         """
         query = """
-            INSERT INTO Words (
+            INSERT INTO Word (
                 English,
                 Swedish,
                 PartOfSpeechID,
@@ -197,7 +197,7 @@ class NewWords:
             context_hint: The context hint of the word pair.
         """
         query = """
-            INSERT INTO Hints (
+            INSERT INTO Hint (
                 WordGroup,
                 Hint
             )
@@ -214,7 +214,7 @@ class NewWords:
             wiktionary_link: Wiktionary link for word pair.
         """
         query = """
-            INSERT INTO Links (
+            INSERT INTO Link (
                 WordGroup,
                 WiktionaryLink
             )

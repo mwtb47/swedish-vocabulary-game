@@ -109,7 +109,7 @@ class Status:
         """
         marks = pd.DataFrame(self.marks)
         connection = db.connect()
-        marks.to_sql("Marks", connection, if_exists="append", index=False)
+        marks.to_sql("Answer", connection, if_exists="append", index=False)
         db.commit_and_close(connection)
 
     def question_number_in_round(self, questions_per_round: int) -> int:

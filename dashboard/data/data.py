@@ -149,7 +149,7 @@ class Data:
 
     def fetch(self) -> None:
         """Fetch data from the database."""
-        self._marks = db.to_polars("SELECT * FROM Marks")
+        self._marks = db.to_polars("SELECT * FROM Answer")
         self._words = db.to_polars(db.views.words_info)
         self._answers = db.to_polars(db.views.answers)
         self._aggregated_marks = aggregate_marks(self._marks)

@@ -32,7 +32,7 @@ def count_answers() -> tuple[int, int]:
         Tuple with the number of answers on current day and number of
         answers during current week.
     """
-    df = db.to_pandas("SELECT * FROM Marks")
+    df = db.to_pandas("SELECT * FROM Answer")
     today = datetime.now().date()
     df["date"] = unix_to_date(df["Timestamp"])
     df["week"] = [date.isocalendar().week for date in df.date]
