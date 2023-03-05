@@ -18,15 +18,42 @@ def create_layout() -> html.Div:
 
     return html.Div(
         [
-            dbc.NavbarSimple(
-                children=[
-                    dbc.NavItem(dbc.NavLink(page["name"], href=page["relative_path"]))
-                    for page in dash.page_registry.values()
+            dbc.Row(
+                [
+                    dbc.Col(
+                        html.H3(
+                            "Vocabulary Game Dashboard",
+                            style={
+                                "position": "relative",
+                                "top": "50%",
+                                "transform": "translateY(-50%)",
+                            },
+                        ),
+                    ),
+                    dbc.Col(
+                        html.Div(
+                            [
+                                dbc.NavLink(
+                                    "Answers Summary",
+                                    href="/",
+                                    className="nav-button",
+                                ),
+                                dbc.NavLink(
+                                    "Database Summary",
+                                    href="/database",
+                                    className="nav-button",
+                                ),
+                                dbc.NavLink(
+                                    "Performance Summary",
+                                    href="/performance",
+                                    className="nav-button",
+                                ),
+                            ],
+                            style={"height": "100%"},
+                        ),
+                    ),
                 ],
-                brand="Vocabulary Game Dashboard",
-                brand_href="/",
-                color="dark",
-                dark=True,
+                style={"background-color": "grey"},
             ),
             dash.page_container,
         ],

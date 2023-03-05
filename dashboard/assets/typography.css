@@ -5,6 +5,13 @@ body {
     margin: 2%;
 }
 
+.nav-button {
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .card {
     background-color: rgba(0, 0, 0, 0);
     font-size: 40px;
