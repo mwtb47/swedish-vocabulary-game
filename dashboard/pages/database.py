@@ -22,7 +22,9 @@ def update_chart_title(ID: str, category: str):
     Returns:
         _description_
     """
-    return html.H6(f"{split_title(ID)} Count per {category}", className="text-center")
+    return html.H6(
+        f"{split_title(ID)} Count per {category}", className="container-title"
+    )
 
 
 @callback(
@@ -75,12 +77,13 @@ def update_part_of_speech_title(ID: str):
 
 layout = html.Div(
     children=[
-        html.H1("Database Summary", style={"margin-bottom": "15px"}),
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        html.H6("Number of Words in Database", className="text-center"),
+                        html.H6(
+                            "Number of Words in Database", className="container-title"
+                        ),
                         html.Div(db_data.unique_word_count, className="card"),
                     ],
                     className="rounded-border",
@@ -89,7 +92,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Number of Word Groups in Database",
-                            className="text-center",
+                            className="container-title",
                         ),
                         html.Div(db_data.unique_word_group_count, className="card"),
                     ],
@@ -97,42 +100,52 @@ layout = html.Div(
                 ),
             ],
         ),
-        html.Div(
-            [
-                "Input: ",
-                dcc.RadioItems(
-                    id=DatabaseIds.ID_GROUP_SELECTOR,
-                    options=["WordID", "WordGroup"],
-                    value="WordID",
-                    inputStyle={"margin-right": "2px"},
-                    labelStyle={"margin-right": "10px"},
-                ),
-            ],
-        ),
         dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        html.Div(id=DatabaseIds.WORD_CATEGORY_BAR_CHART_TITLE),
-                        html.Div(id=DatabaseIds.WORD_CATEGORY_BAR_CHART),
-                    ],
-                    className="rounded-border",
-                ),
-                dbc.Col(
-                    [
-                        html.Div(id=DatabaseIds.PART_OF_SPEECH_BAR_CHART_TITLE),
-                        html.Div(id=DatabaseIds.PART_OF_SPEECH_BAR_CHART),
-                    ],
-                    className="rounded-border",
-                ),
-                dbc.Col(
-                    [
-                        html.Div(id=DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART_TITLE),
-                        html.Div(id=DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART),
-                    ],
-                    className="rounded-border",
-                ),
-            ],
+            dbc.Col(
+                [
+                    html.Div(
+                        dcc.RadioItems(
+                            id=DatabaseIds.ID_GROUP_SELECTOR,
+                            options=["WordID", "WordGroup"],
+                            value="WordID",
+                            inputStyle={"margin-right": "2px"},
+                            labelStyle={"margin-right": "10px"},
+                        ),
+                    ),
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    html.Div(
+                                        id=DatabaseIds.WORD_CATEGORY_BAR_CHART_TITLE
+                                    ),
+                                    html.Div(id=DatabaseIds.WORD_CATEGORY_BAR_CHART),
+                                ],
+                                className="rounded-border",
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Div(
+                                        id=DatabaseIds.PART_OF_SPEECH_BAR_CHART_TITLE
+                                    ),
+                                    html.Div(id=DatabaseIds.PART_OF_SPEECH_BAR_CHART),
+                                ],
+                                className="rounded-border",
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Div(
+                                        id=DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART_TITLE
+                                    ),
+                                    html.Div(id=DatabaseIds.GRAMMAR_CATEGORY_BAR_CHART),
+                                ],
+                                className="rounded-border",
+                            ),
+                        ],
+                    ),
+                ],
+                className="rounded-border one-per-row",
+            ),
         ),
     ],
 )

@@ -127,11 +127,11 @@ def aggregate_marks(marks: pl.DataFrame) -> pl.DataFrame:
     date range, assigning them response counts of 0.
 
     Args:
-        marks: DataFrame with Marks database table.
+        marks: DataFrame with Answer database table.
 
     Returns:
         A DataFrame with an answer count by day for all days in the
-        Marks table date range.
+        Answer table date range.
     """
     dates = marks.select(
         (pl.col("Timestamp") * 1000000).cast(pl.Datetime).cast(pl.Date).alias("Date")

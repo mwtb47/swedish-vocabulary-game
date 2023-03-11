@@ -42,7 +42,7 @@ def plot_answers_summary(category: str) -> html.Div:
     )
 
     return html.Div(
-        dcc.Graph(figure=fig, style={"height": "30vh"}),
+        dcc.Graph(figure=fig),
         id=f"answers-summary-{category}",
     )
 

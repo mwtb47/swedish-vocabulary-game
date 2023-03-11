@@ -29,27 +29,23 @@ def update_chart_title(period: str):
     Returns:
         html.H6 component with updated title text.
     """
-    return html.H6(f"Answers Count per {period}")
+    return html.H6(f"Answers Count per {period}", className="container-title")
 
 
 layout = html.Div(
     children=[
-        html.H1(
-            children="Summary of Answers",
-            style={"margin-bottom": "15px"},
-        ),
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        html.H6("Total Answers", className="text-center"),
+                        html.H6("Total Answers", className="container-title"),
                         html.Div(db_data.answer_count, className="card"),
                     ],
                     className="rounded-border six-per-row",
                 ),
                 dbc.Col(
                     [
-                        html.H6("Weekly Answers Target", className="text-center"),
+                        html.H6("Weekly Answers Target", className="container-title"),
                         html.Div(
                             plot_gauge(db_data.answer_count_this_week, 560),
                             id=AnswerIds.ANSWER_COUNT_WEEKLY,
@@ -59,7 +55,7 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        html.H6("Daily Answers Target", className="text-center"),
+                        html.H6("Daily Answers Target", className="container-title"),
                         html.Div(
                             plot_gauge(db_data.answer_count_today, 80),
                             AnswerIds.ANSWER_COUNT_TODAY,
@@ -69,7 +65,7 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        html.H6("Daily Target Success", className="text-center"),
+                        html.H6("Daily Target Success", className="container-title"),
                         html.Div(
                             db_data.percent_daily_target_achieved,
                             className="card",
@@ -79,7 +75,7 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        html.H6("Weekly Target Success", className="text-center"),
+                        html.H6("Weekly Target Success", className="container-title"),
                         html.Div(
                             db_data.percent_weekly_target_achieved,
                             className="card",
@@ -89,9 +85,7 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        html.H6(
-                            "% English to Swedish Answers", className="text-center"
-                        ),
+                        html.H6("% English to Swedish", className="container-title"),
                         html.Div(
                             plot_gauge(
                                 score=db_data.swedish_answer_percentage,
@@ -112,7 +106,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Ratio of Total Answers to Words in Database per Part of Speech",
-                            className="text-center",
+                            className="container-title",
                         ),
                         plot_answers_summary("PartOfSpeech"),
                     ],
@@ -122,7 +116,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Ratio of Total Answers to Words in Database per Grammar Category",
-                            className="text-center",
+                            className="container-title",
                         ),
                         plot_answers_summary("GrammarCategory"),
                     ],
@@ -132,7 +126,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Ratio of Total Answers to Words in Database per Word Category",
-                            className="text-center",
+                            className="container-title",
                         ),
                         plot_answers_summary("WordCategory"),
                     ],
@@ -152,10 +146,7 @@ layout = html.Div(
                             labelStyle={"margin-right": "10px"},
                         ),
                     ),
-                    dbc.Row(
-                        id=AnswerIds.ANSWERS_OVER_TIME_TITLE,
-                        className="text-center",
-                    ),
+                    dbc.Row(id=AnswerIds.ANSWERS_OVER_TIME_TITLE),
                     dbc.Row(html.Div(id=AnswerIds.ANSWERS_OVER_TIME)),
                 ],
                 className="rounded-border one-per-row",

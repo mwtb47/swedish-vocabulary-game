@@ -13,12 +13,11 @@ dash.register_page(__name__, name="Performance Summary")
 
 layout = html.Div(
     children=[
-        html.H1(children="Performance Summary", style={"margin-bottom": "15px"}),
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        html.H6("Overall % Correct", className="text-center"),
+                        html.H6("Overall % Correct", className="container-title"),
                         html.Div(db_data.percent_correct, className="card"),
                     ],
                     className="rounded-border",
@@ -27,9 +26,9 @@ layout = html.Div(
                     [
                         html.H6(
                             "Mean Score per Translation Direction",
-                            className="text-center",
+                            className="container-title",
                         ),
-                        plot_marks_summary("TranslationDirection", height=200),
+                        plot_marks_summary("TranslationDirection", height=120),
                     ],
                     className="rounded-border",
                 ),
@@ -41,7 +40,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Mean Score per Part of Speech",
-                            className="text-center",
+                            className="container-title",
                         ),
                         plot_marks_summary("PartOfSpeech"),
                     ],
@@ -51,7 +50,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Mean Score per Grammar Category",
-                            className="text-center",
+                            className="container-title",
                         ),
                         plot_marks_summary("GrammarCategory"),
                     ],
@@ -61,7 +60,7 @@ layout = html.Div(
                     [
                         html.H6(
                             "Mean Score per Word Category",
-                            className="text-center",
+                            className="container-title",
                         ),
                         plot_marks_summary("WordCategory"),
                     ],
@@ -74,7 +73,7 @@ layout = html.Div(
                 [
                     html.H6(
                         "Cumulative Mean Score",
-                        className="text-center",
+                        className="container-title",
                     ),
                     plot_cumulative_average(),
                 ],

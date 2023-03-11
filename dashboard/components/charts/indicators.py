@@ -53,13 +53,13 @@ def plot_gauge(
         number={"valueformat": value_format},
     )
 
-    layout = dict(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={"color": "rgb(220,220,220)"},
-        margin={"l": 30, "r": 30, "t": 30, "b": 30},
-        height=100,
-    )
+    layout = {
+        "paper_bgcolor": "rgba(0,0,0,0)",
+        "plot_bgcolor": "rgba(0,0,0,0)",
+        "font": {"color": "rgb(220,220,220)"},
+        "margin": {"l": 30, "r": 30, "t": 30, "b": 30},
+        "height": 100,
+    }
 
     fig = go.Figure(data=data, layout=layout)
 

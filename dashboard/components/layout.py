@@ -1,8 +1,17 @@
 """Module with a function to create the app layout."""
 
 import dash
-from dash import html
+from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
+
+
+@callback(Output("subheader", "children"), [Input("url", "pathname")])
+def callback_func(pathname):
+    if pathname == "/":
+        return "Answers Summary"
+    if pathname == "/database":
+        return "Database Summary"
+    return "Performance Summary"
 
 
 def create_layout() -> html.Div:
@@ -17,8 +26,12 @@ def create_layout() -> html.Div:
             dbc.Row(
                 [
                     dbc.Col(
-                        html.H3(
-                            "Vocabulary Game Dashboard",
+                        html.Div(
+                            [
+                                html.H2("Vocabulary Game Dashboard"),
+                                html.H4(id="subheader"),
+                                dcc.Location(id="url"),
+                            ],
                             style={
                                 "position": "relative",
                                 "top": "50%",
@@ -45,12 +58,12 @@ def create_layout() -> html.Div:
                                     className="nav-button",
                                 ),
                             ],
-                            style={"height": "100%"},
+                            style={"height": "100%", "float": "right"},
                         ),
                     ),
                 ],
-                style={"background-color": "grey"},
             ),
+            html.Hr(className="header-divider"),
             dash.page_container,
         ],
     )

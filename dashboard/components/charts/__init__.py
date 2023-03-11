@@ -7,3 +7,16 @@ from .layout import (
     PerformanceColours,
     SummaryColours,
 )
+
+
+__all__ = [
+    "plot_answers_summary",
+    "plot_answers_over_time",
+    "plot_database_summary",
+    "plot_cumulative_average",
+    "plot_marks_summary",
+    "plot_gauge",
+    "ChartLayout",
+    "PerformanceColours",
+    "SummaryColours",
+]
