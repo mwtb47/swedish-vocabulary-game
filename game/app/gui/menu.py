@@ -131,7 +131,7 @@ class Menu:
             label_text="part of speech",
             relx=0.6,
             rely=0.25,
-            table="PartsOfSpeech",
+            table="PartOfSpeech",
             column="PartOfSpeech",
         )
         self.word_categories = CheckboxEntry(
@@ -139,7 +139,7 @@ class Menu:
             label_text="word category",
             relx=0.6,
             rely=0.5,
-            table="WordCategories",
+            table="WordCategory",
             column="WordCategory",
         )
 

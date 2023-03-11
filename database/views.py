@@ -8,29 +8,31 @@ answers = """
         W.English,
         W.Swedish,
         W.WordGroup,
-        M.Mark,
-        M.TranslationDirectionID,
-        M.Timestamp,
+        P.PartOfSpeech,
+        C.WordCategory,
+        A.Mark,
+        A.TranslationDirectionID,
+        A.Timestamp,
         G.GrammarCategory,
         H.Hint,
         L.WiktionaryLink,
         D.TranslationDirection
     FROM
-        Marks M
-    JOIN Words W
-        ON W.WordID = M.WordID
-    JOIN PartsOfSpeech P
+        Answer A
+    JOIN Word W
+        ON W.WordID = A.WordID
+    JOIN PartOfSpeech P
         ON W.PartOfSpeechID = P.PartOfSpeechID
-    JOIN WordCategories C
+    JOIN WordCategory C
         ON W.WordCategoryID = C.WordCategoryID
-    JOIN GrammarCategories G
+    JOIN GrammarCategory G
         ON W.GrammarCategoryID = G.GrammarCategoryID
-    LEFT JOIN Hints H
+    LEFT JOIN Hint H
         ON W.WordGroup = H.WordGroup
-    LEFT JOIN Links L
+    LEFT JOIN Link L
         ON W.WordGroup = L.WiktionaryLink
-    LEFT JOIN TranslationDirections D
-        ON M.TranslationDirectionID == D.TranslationDirectionID
+    LEFT JOIN TranslationDirection D
+        ON A.TranslationDirectionID == D.TranslationDirectionID
 """
 
 
@@ -40,10 +42,10 @@ checkboxes = """
         P.PartOfSpeech,
         C.WordCategory
     FROM
-        Words W
-    JOIN PartsOfSpeech P
+        Word W
+    JOIN PartOfSpeech P
         ON W.PartOfSpeechID = P.PartOfSpeechID
-    JOIN WordCategories C
+    JOIN WordCategory C
         ON W.WordCategoryID = C.WordCategoryID
 """
 
@@ -55,24 +57,24 @@ game_words = """
         W.English,
         W.Swedish,
         W.WordGroup,
-        M.Mark,
-        M.Timestamp,
+        A.Mark,
+        A.Timestamp,
         G.GrammarCategory,
         H.Hint,
         L.WiktionaryLink
     FROM
-        Words W
-    LEFT OUTER JOIN Marks M
-        ON W.WordID = M.WordID
-    JOIN PartsOfSpeech P
+        Word W
+    LEFT OUTER JOIN Answer A
+        ON W.WordID = A.WordID
+    JOIN PartOfSpeech P
         ON W.PartOfSpeechID = P.PartOfSpeechID
-    JOIN WordCategories C
+    JOIN WordCategory C
         ON W.WordCategoryID = C.WordCategoryID
-    JOIN GrammarCategories G
+    JOIN GrammarCategory G
         ON W.GrammarCategoryID = G.GrammarCategoryID
-    LEFT JOIN Hints H
+    LEFT JOIN Hint H
         ON W.WordGroup = H.WordGroup
-    LEFT JOIN Links L
+    LEFT JOIN Link L
         ON W.WordGroup = L.WiktionaryLink
     WHERE
         P.PartOfSpeech IN ({parts_of_speech})
@@ -93,15 +95,15 @@ words_info = """
         H.Hint,
         L.WiktionaryLink
     FROM
-        Words W
-    JOIN PartsOfSpeech P
+        Word W
+    JOIN PartOfSpeech P
         ON W.PartOfSpeechID = P.PartOfSpeechID
-    JOIN WordCategories C
+    JOIN WordCategory C
         ON W.WordCategoryID = C.WordCategoryID
-    JOIN GrammarCategories G
+    JOIN GrammarCategory G
         ON W.GrammarCategoryID = G.GrammarCategoryID
-    LEFT JOIN Hints H
+    LEFT JOIN Hint H
         ON W.WordGroup = H.WordGroup
-    LEFT JOIN Links L
+    LEFT JOIN Link L
         ON W.WordGroup = L.WiktionaryLink
 """

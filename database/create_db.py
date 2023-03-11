@@ -20,22 +20,7 @@ import sqlite3
 
 
 statement = """
-CREATE TABLE GrammarCategories (
-    GrammarCategoryID INTEGER PRIMARY KEY NOT NULL,
-    GrammarCategory   TEXT    NOT NULL
-);
-
-CREATE TABLE Hints (
-    WordGroup INTEGER PRIMARY KEY NOT NULL,
-    Hint      TEXT    NOT NULL
-);
-
-CREATE TABLE Links (
-    WordGroup      INTEGER PRIMARY KEY NOT NULL,
-    WiktionaryLink TEXT    NOT NULL
-);
-
-CREATE TABLE Marks (
+CREATE TABLE Answer (
     AnswerID               INTEGER PRIMARY KEY AUTOINCREMENT,
     WordID                 INTEGER NOT NULL,
     Mark                   INTEGER NOT NULL,
@@ -43,22 +28,42 @@ CREATE TABLE Marks (
     Timestamp              REAL    NOT NULL,
 
     FOREIGN KEY (WordID)
-        REFERENCES Words (WordID),
+        REFERENCES Word (WordID),
     FOREIGN KEY (TranslationDirectionID)
-        REFERENCES TranslationDirections (TranslationDirectionID)
+        REFERENCES TranslationDirection (TranslationDirectionID)
 );
 
-CREATE TABLE TranslationDirections (
+CREATE TABLE GrammarCategory (
+    GrammarCategoryID INTEGER PRIMARY KEY NOT NULL,
+    GrammarCategory   TEXT    NOT NULL
+);
+
+CREATE TABLE Hint (
+    WordGroup INTEGER PRIMARY KEY NOT NULL,
+    Hint      TEXT    NOT NULL
+);
+
+CREATE TABLE Link (
+    WordGroup      INTEGER PRIMARY KEY NOT NULL,
+    WiktionaryLink TEXT    NOT NULL
+);
+
+CREATE TABLE PartOfSpeech (
+    PartOfSpeechID INTEGER PRIMARY KEY NOT NULL,
+    PartOfSpeech   TEXT    NOT NULL
+);
+
+CREATE TABLE TranslationDirection (
     TranslationDirectionID INTEGER PRIMARY KEY NOT NULL,
     TranslationDirection   TEXT    NOT NULL
 );
 
-CREATE TABLE WordCategories (
+CREATE TABLE WordCategory (
     WordCategoryID INTEGER PRIMARY KEY NOT NULL,
     WordCategory   TEXT    NOT NULL
 );
 
-CREATE TABLE Words (
+CREATE TABLE Word (
     WordID            INTEGER PRIMARY KEY AUTOINCREMENT,
     {language1}       TEXT    NOT NULL,
     {language2}       TEXT    NOT NULL,
@@ -68,11 +73,11 @@ CREATE TABLE Words (
     GrammarCategoryID INTEGER NOT NULL,
 
     FOREIGN KEY (WordCategoryID)
-        REFERENCES WordCategories (WordCategoryID),
+        REFERENCES WordCategory (WordCategoryID),
     FOREIGN KEY (PartOfSpeechID)
-        REFERENCES PartsOfSpeech (PartsOfSpeechID),
+        REFERENCES PartOfSpeech (PartOfSpeechID),
     FOREIGN KEY (GrammarCategoryID)
-        REFERENCES GrammarCategories (GrammarCategoryID)
+        REFERENCES GrammarCategory (GrammarCategoryID)
 );
 """
 

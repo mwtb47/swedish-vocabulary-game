@@ -23,8 +23,8 @@ def remove_old_marks() -> pd.DataFrame:
     Remove all marks for word ids which are no longer present in the
     words table.
     """
-    words = db.to_pandas("SELECT * FROM Words")
-    marks = db.to_pandas("SELECT * FROM Marks")
+    words = db.to_pandas("SELECT * FROM Word")
+    marks = db.to_pandas("SELECT * FROM Answer")
     merged = words.merge(
         marks,
         on="WordID",
@@ -61,7 +61,7 @@ def commit(new_marks: pd.DataFrame) -> None:
         new_marks: DataFrame to replace the marks table.
     """
     connection = db.connect()
-    new_marks.to_sql("Marks", connection, if_exists="replace", index=False)
+    new_marks.to_sql("Answer", connection, if_exists="replace", index=False)
     db.commit_and_close(connection)
 
 
